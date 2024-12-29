@@ -1,0 +1,22 @@
+{
+  "printWidth": 120,
+  "singleQuote": true,
+  "semi": false,
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+
+  "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+
+  "importOrder": [
+    "^@?[a-zA-Z]+.+",
+    "^@/(?!.*\\.(css|scss|less)$)",
+    "^\\.\\.?/(?!.*.(css|scss|less)$)",
+    "^.(?!(css|scss|less)$)[^.]*$",
+    "(.css|.scss|.less)$"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": false,
+  "importOrderGroupNamespaceSpecifiers": false
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="renderer" content="webkit" />
+    <meta name="force-rendering" content="webkit" />
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <link rel="icon" href="/favicon-96.png" />
+    <link rel="apple-touch-icon" href="/favicon-96.png" />
+    <title>%VITE_WEBSITE_TITLE%</title>
+    <!--[if IE]>
+      <style>
+        #app {
+          display: none;
+        }
+      </style>
+    <![endif]-->
+  </head>
+
+  <body>
+    <!--[if IE]>
+      <h1 style="position: absolute; width: 100%; text-align: center; top: 45%">
+        <noscript>您的浏览器似乎不支持 Javascript，请开启此功能或下载使用支持的浏览器。</noscript>
+      </h1>
+    <![endif]-->
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if (window.Cypress) {
+        window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = window.parent.__REACT_DEVTOOLS_GLOBAL_HOOK__
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+kind: pipeline
+name: default
+
+workspace:
+  path: /home/node
+
+steps:
+  - name: install-and-build
+    image: node:20.13.0
+    volumes:
+      - name: pnpm-cache
+        path: /root/.local/share/pnpm
+    commands:
+      - npm i -g pnpm
+      - pnpm i
+      - pnpm run build
+
+  - name: deploy-upload-cdn
+    image: plugins/s3
+    settings:
+      endpoint: https://cos.ap-hongkong.myqcloud.com
+      region: ap-hongkong
+      bucket: paperplane-cdn-1253277322
+      access_key:
+        from_secret: COS_SECRET_ID
+      secret_key:
+        from_secret: COS_SECRET_KEY
+      source: dist/**/*
+      target: /paperplane-web-console
+      strip_prefix: dist
+
+  - name: deploy-local
+    image: ubuntu:22.04
+    volumes:
+      - name: webroot
+        path: /webroot
+    commands:
+      - mkdir -p /webroot/paperplane-web-console/
+      - cp -rf ./dist/* /webroot/paperplane-web-console/
+
+volumes:
+  - name: webroot
+    host:
+      path: /root/www
+  - name: pnpm-cache
+    host:
+      path: /root/.pnpm-cache
+
+trigger:
+  branch:
+    - master

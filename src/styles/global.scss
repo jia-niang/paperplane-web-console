@@ -1,0 +1,17 @@
+body {
+  overflow-y: scroll;
+}
+
+.pa-vc {
+  display: flex;
+  align-items: center;
+}
+
+.pa-text {
+  color: var(--td-font-gray-1);
+  font: var(--td-font-link-large);
+}
+
+.pa-fff {
+  color: #fff;
+}
