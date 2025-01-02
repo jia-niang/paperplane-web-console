@@ -17,7 +17,7 @@ export default defineConfig(({ mode, command }) => {
   }
 
   return {
-    base: command === 'serve' ? env.VITE_BASE_URL : env.VITE_CDN_URL || env.VITE_BASE_URL,
+    base: command === 'serve' || mode === 'development' ? env.VITE_BASE_URL : env.VITE_CDN_URL || env.VITE_BASE_URL,
 
     resolve: {
       alias: {
