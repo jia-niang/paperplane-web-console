@@ -11,6 +11,7 @@ steps:
       - name: pnpm-cache
         path: /root/.local/share/pnpm
     commands:
+      - npm i -g pnpm
       - pnpm i
       - pnpm -F @repo/web run build
 
@@ -61,11 +62,9 @@ steps:
       script:
         - cd /root/project-config/paperplane-web-console
         - |
-          docker run -t --rm --name paperplane-web-console-prisma \
-          --network root_default -e NODE_ENV=production \
-          -v ./.env.production.local:/paperplane-web-console/.env.production.local:ro \
-          paperplanecc/paperplane-web-console:${DRONE_COMMIT_SHA:0:8} \
-          pnpm run db:deploy
+          docker run -t --rm --name paperplane-web-console-prisma --network root_default -e NODE_ENV=production \
+          -v ./.env.production.local:/paperplane-web-console/packages/server/.env.production.local:ro \
+          paperplanecc/paperplane-web-console:${DRONE_COMMIT_SHA:0:8} pnpm db:deploy
 
   - name: server-deploy
     image: appleboy/drone-ssh
