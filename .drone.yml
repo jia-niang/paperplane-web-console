@@ -5,19 +5,15 @@ workspace:
   path: /source
 
 steps:
-  - name: website-build
+  - name: website-build-and-prune
     image: node:20.13.0
     volumes:
       - name: pnpm-cache
-        path: /root/.local/share/pnpm
+        path: /root/.pnpm-store
     commands:
       - npm i -g pnpm
       - pnpm i
       - pnpm build:web
-
-  - name: server-prepare-prune-dir
-    image: node:20.13.0
-    commands:
       - pnpm turbo prune @repo/server --docker
 
   - name: server-build-image
@@ -26,7 +22,7 @@ steps:
       - name: docker-sock
         path: /var/run/docker.sock
       - name: pnpm-cache
-        path: /root/.local/share/pnpm
+        path: /root/.pnpm-store
     commands:
       - docker build --progress plain --compress -t paperplanecc/paperplane-web-console:${DRONE_COMMIT_SHA:0:8} .
 
