@@ -13,4 +13,4 @@ services:
       - '6200:6200'
     extra_hosts:
       - host.docker.internal:host-gateway
-    command: bash -c "pnpm i --force && pnpm turbo dev"
+    command: bash -c "pnpm i && pnpm dev"
