@@ -13,7 +13,7 @@ steps:
     commands:
       - npm i -g pnpm
       - pnpm i
-      - pnpm -F @repo/web run build
+      - pnpm build:web
 
   - name: server-prepare-prune-dir
     image: node:20.13.0
