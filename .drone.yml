@@ -5,6 +5,20 @@ workspace:
   path: /source
 
 steps:
+  - name: website-build
+    image: node:20.13.0
+    volumes:
+      - name: pnpm-cache
+        path: /root/.local/share/pnpm
+    commands:
+      - pnpm i
+      - pnpm -F @repo/web run build
+
+  - name: server-prepare-prune-dir
+    image: node:20.13.0
+    commands:
+      - pnpm turbo prune @repo/server --docker
+
   - name: server-build-image
     image: docker:dind
     volumes:
@@ -66,16 +80,6 @@ steps:
         - docker tag paperplanecc/paperplane-web-console:${DRONE_COMMIT_SHA:0:8} paperplanecc/paperplane-web-console:production
         - cd /root/project-config/paperplane-web-console
         - docker compose up -d
-
-  - name: website-build
-    image: node:20.13.0
-    volumes:
-      - name: pnpm-cache
-        path: /root/.local/share/pnpm
-    commands:
-      - corepack enable
-      - pnpm i
-      - pnpm -F @repo/web run build
 
   - name: website-deploy-upload-cdn
     image: plugins/s3
