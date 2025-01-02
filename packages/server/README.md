@@ -23,7 +23,7 @@
 本地开发启动（端口 `6100`）：
 
 ```bash
-pnpm run dev
+pnpm dev:server
 ```
 
 ---
@@ -31,11 +31,15 @@ pnpm run dev
 生产环境打包：
 
 ```bash
-pnpm run build
+pnpm build:server
 ```
 
 已打包后，在生产环境下运行：
 
 ```bash
-pnpm run start:prod
+# 根目录
+pnpm -F @repo/server start:prod
+
+# 仅限在此目录可用
+pnpm start:prod
 ```

@@ -4,9 +4,12 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "turbo dev",
+    "dev:server": "turbo -F @repo/server dev",
+    "dev:web": "turbo -F @repo/web dev",
     "build": "turbo build",
     "build:server": "turbo -F @repo/server build",
     "build:web": "turbo -F @repo/web build",
+    "turbo": "turbo",
     "lint": "turbo lint",
     "format": "turbo format",
     "check-types": "turbo check-types",

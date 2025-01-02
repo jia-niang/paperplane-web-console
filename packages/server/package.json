@@ -2,8 +2,10 @@
   "name": "@repo/server",
   "private": true,
   "scripts": {
-    "dev": "pnpm run start:dev --preserveWatchOutput",
+    "dev": "pnpm start:dev --preserveWatchOutput",
+    "dev:server": "pnpm dev",
     "build": "dotenv -c production -- nest build",
+    "build:server": "pnpm build",
     "start": "dotenv -c development -- nest start",
     "start:dev": "dotenv -c development -- nest start --watch",
     "start:debug": "dotenv -c development -- nest start --debug --watch",

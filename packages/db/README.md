@@ -14,9 +14,9 @@
 每次修改 Schema 后，请生成数据库实体：
 
 ```bash
-pnpm run db:gen
+pnpm db:gen
 # 或
-pnpm run db:generate
+pnpm db:generate
 ```
 
 - 此项目中 Prisma 在安装依赖后并 **不会** 自动生成实体（原因见文末），所以刚安装好依赖后，其他子包中的代码可能会标红报错；
@@ -29,9 +29,9 @@ pnpm run db:generate
 修改 Schema 完成后，需要将新版数据结构同步到开发环境数据库，同时生成迁移 SQL 文件：
 
 ```bash
-pnpm run db:mi
+pnpm db:mi
 # 或
-pnpm run db:migrate
+pnpm db:migrate
 ```
 
 - 如果 Schema 有改动，请确保在 Git Commit 前执行过此指令，生成迁移 SQL 文件一同提交。
@@ -41,7 +41,7 @@ pnpm run db:migrate
 本地开发时，**放弃数据库内现有数据** 并直接应用最新版 Schema：
 
 ```bash
-pnpm run db:push
+pnpm db:push
 ```
 
 ---
@@ -49,7 +49,7 @@ pnpm run db:push
 生产环境部署数据库改动：
 
 ```bash
-pnpm run db:deploy
+pnpm db:deploy
 ```
 
 - 请确保 CI/CD 会执行这一步。

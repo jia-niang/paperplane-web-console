@@ -4,8 +4,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite --clearScreen false",
+    "dev:web": "pnpm dev",
     "build": "vite build",
-    "preview": "vite preview",
+    "build:web": "pnpm build",
+    "build:preview": "vite build --mode development",
+    "preview": "vite build --mode development && vite preview",
     "format": "prettier --list-different \"src/**/*.{ts,tsx,css,scss}\"",
     "lint": "eslint src",
     "check-types": "tsc --noEmit"
