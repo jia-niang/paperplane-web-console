@@ -1,0 +1,16 @@
+# 本地开发专用 Docker Compose
+# 注意：Windows 的目录挂载性能很差，修改文件后无法触发重新编译，请使用 WSL
+
+services:
+  paperplane-web-console-local:
+    image: paperplanecc/paperplane-api-base:1.1.0
+    container_name: paperplane-web-console-local
+    working_dir: /paperplane-web-console
+    volumes:
+      - ./:/paperplane-web-console
+    ports:
+      - '6100:6100'
+      - '6200:6200'
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    command: bash -c "pnpm i --force && pnpm turbo dev"

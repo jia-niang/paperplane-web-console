@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "declaration": true,
+    "declarationMap": true,
+    "lib": [
+      "esnext"
+    ],
+    "allowJs": true,
+    "esModuleInterop": true,
+    "incremental": false,
+    "outDir": "dist"
+  },
+  "include": [
+    "src"
+  ]
+}

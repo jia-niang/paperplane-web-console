@@ -2,20 +2,82 @@ kind: pipeline
 name: default
 
 workspace:
-  path: /home/node
+  path: /source
 
 steps:
-  - name: install-and-build
+  - name: server-build-image
+    image: docker:dind
+    volumes:
+      - name: docker-sock
+        path: /var/run/docker.sock
+      - name: pnpm-cache
+        path: /root/.local/share/pnpm
+    commands:
+      - docker build --progress plain --compress -t paperplanecc/paperplane-web-console:${DRONE_COMMIT_SHA:0:8} .
+
+  - name: server-stop-old-container
+    image: docker:dind
+    failure: ignore
+    volumes:
+      - name: docker-sock
+        path: /var/run/docker.sock
+    commands:
+      - docker stop paperplane-web-console
+      - docker rm paperplane-web-console
+
+  - name: server-rename-old-image
+    image: docker:dind
+    failure: ignore
+    volumes:
+      - name: docker-sock
+        path: /var/run/docker.sock
+    commands:
+      - docker tag paperplanecc/paperplane-web-console:production paperplanecc/paperplane-web-console:previous-prod
+      - docker rmi paperplanecc/paperplane-web-console:production
+
+  - name: server-prisma-sync-db
+    image: appleboy/drone-ssh
+    settings:
+      host:
+        - 'paperplane.cc'
+      username: root
+      key:
+        from_secret: DEPLOY_SSH_PRIKEY
+      command_timeout: 5m
+      script:
+        - cd /root/project-config/paperplane-web-console
+        - |
+          docker run -t --rm --name paperplane-web-console-prisma \
+          --network root_default -e NODE_ENV=production \
+          -v ./.env.production.local:/paperplane-web-console/.env.production.local:ro \
+          paperplanecc/paperplane-web-console:${DRONE_COMMIT_SHA:0:8} \
+          pnpm run db:deploy
+
+  - name: server-deploy
+    image: appleboy/drone-ssh
+    settings:
+      host:
+        - 'paperplane.cc'
+      username: root
+      key:
+        from_secret: DEPLOY_SSH_PRIKEY
+      command_timeout: 5m
+      script:
+        - docker tag paperplanecc/paperplane-web-console:${DRONE_COMMIT_SHA:0:8} paperplanecc/paperplane-web-console:production
+        - cd /root/project-config/paperplane-web-console
+        - docker compose up -d
+
+  - name: website-build
     image: node:20.13.0
     volumes:
       - name: pnpm-cache
         path: /root/.local/share/pnpm
     commands:
-      - npm i -g pnpm
+      - corepack enable
       - pnpm i
-      - pnpm run build
+      - pnpm -F @repo/web run build
 
-  - name: deploy-upload-cdn
+  - name: website-deploy-upload-cdn
     image: plugins/s3
     settings:
       endpoint: https://cos.ap-hongkong.myqcloud.com
@@ -25,26 +87,102 @@ steps:
         from_secret: COS_SECRET_ID
       secret_key:
         from_secret: COS_SECRET_KEY
-      source: dist/**/*
+      source: packages/web/dist/**/*
       target: /paperplane-web-console
-      strip_prefix: dist
+      strip_prefix: packages/web/dist
 
-  - name: deploy-local
+  - name: website-backup-old
+    image: ubuntu:22.04
+    volumes:
+      - name: webroot
+        path: /webroot
+    commands:
+      - mkdir -p /webroot/paperplane-web-console-bak/
+      - rm -rf /webroot/paperplane-web-console-bak/*
+      - cp -rf /webroot/paperplane-web-console/ /webroot/paperplane-web-console-bak/
+
+  - name: website-deploy
     image: ubuntu:22.04
     volumes:
       - name: webroot
         path: /webroot
     commands:
       - mkdir -p /webroot/paperplane-web-console/
-      - cp -rf ./dist/* /webroot/paperplane-web-console/
+      - cp -rf ./packages/web/dist/* /webroot/paperplane-web-console/
+
+  - name: clean-image
+    image: docker:dind
+    failure: ignore
+    volumes:
+      - name: docker-sock
+        path: /var/run/docker.sock
+    commands:
+      - docker rmi paperplanecc/paperplane-web-console:previous-prod
+      - docker rmi paperplanecc/paperplane-web-console:${DRONE_COMMIT_SHA:0:8}
+
+  - name: clean-website-backup
+    image: ubuntu:22.04
+    failure: ignore
+    volumes:
+      - name: webroot
+        path: /webroot
+    commands:
+      - rm -rf /webroot/paperplane-web-console-bak/*
+
+  - name: rollback-handle-docker
+    image: docker:dind
+    when:
+      status:
+        - failure
+    volumes:
+      - name: docker-sock
+        path: /var/run/docker.sock
+    commands:
+      - docker stop paperplane-web-console || true
+      - docker rm   paperplane-web-console || true
+      - docker rmi  paperplanecc/paperplane-web-console:production || true
+      - docker rmi  paperplanecc/paperplane-web-console:${DRONE_COMMIT_SHA:0:8} || true
+
+  - name: rollback-handle-ssh
+    image: appleboy/drone-ssh
+    when:
+      status:
+        - failure
+    settings:
+      host:
+        - 'paperplane.cc'
+      username: root
+      key:
+        from_secret: DEPLOY_SSH_PRIKEY
+      command_timeout: 5m
+      script:
+        - docker tag paperplanecc/paperplane-web-console:previous-prod paperplanecc/paperplane-web-console:production || true
+        - docker rmi paperplanecc/paperplane-web-console:previous-prod || true
+        - cd /root/project-config/paperplane-web-console
+        - docker compose up -d
+
+  - name: rollback-handle-website
+    image: ubuntu:22.04
+    when:
+      status:
+        - failure
+    volumes:
+      - name: webroot
+        path: /webroot
+    commands:
+      - cp -rf /webroot/paperplane-web-console-bak/* /webroot/paperplane-web-console/
+      - rm -rf /webroot/paperplane-web-console-bak/*
 
 volumes:
-  - name: webroot
+  - name: docker-sock
     host:
-      path: /root/www
+      path: /var/run/docker.sock
   - name: pnpm-cache
     host:
       path: /root/.pnpm-cache
+  - name: webroot
+    host:
+      path: /root/www
 
 trigger:
   branch:

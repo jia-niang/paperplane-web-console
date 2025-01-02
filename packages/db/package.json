@@ -1,0 +1,43 @@
+{
+  "name": "@repo/db",
+  "scripts": {
+    "postdb:gen": "pnpm tsc",
+    "dev": "pnpm tsc --watch",
+    "build": "pnpm tsc",
+    "db:gen": "pnpm run db:generate",
+    "db:generate": "prisma generate",
+    "db:mi": "pnpm run db:migrate",
+    "db:migrate": "dotenv -c development -- prisma migrate dev",
+    "db:push": "dotenv -c development -- prisma db push",
+    "db:deploy": "dotenv -c production -- prisma migrate deploy"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": {
+        "node": "./dist/index.js",
+        "default": "./dist/index.js"
+      },
+      "import": {
+        "node": "./dist/index.js",
+        "default": "./dist/index.js"
+      },
+      "default": "./dist/index.js"
+    },
+    "./index": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./*": "./*"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.1.0",
+    "dotenv-cli": "^7.4.2"
+  },
+  "devDependencies": {
+    "prisma": "^6.1.0"
+  }
+}

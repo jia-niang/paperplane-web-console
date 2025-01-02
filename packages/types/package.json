@@ -1,0 +1,13 @@
+{
+  "name": "@types/repo",
+  "private": true,
+  "types": "src/index.d.ts",
+  "scripts": {
+    "format": "prettier --list-different \"src/**/*.ts\"",
+    "lint": "eslint src",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0"
+  }
+}

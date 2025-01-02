@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <% if(darkTheme) {%>
+    <style>
+      :root {
+        --text: #000;
+        --ts: #fff;
+      }
+    </style>
+    <% } else {%>
+    <style>
+      :root {
+        --text: #fff;
+        --ts: #000;
+      }
+    </style>
+    <% } %>
+
+    <style>
+      @font-face {
+        font-family: fzxinshusong;
+        src: url('<%= serviceUrl %>/res/fonts/fzxinshusong.ttf') format('truetype');
+      }
+      @font-face {
+        font-family: pingfang;
+        src: url('<%= serviceUrl %>/res/fonts/pingfang.ttf') format('truetype');
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        overflow: visible;
+      }
+      body {
+        margin: 0;
+      }
+      .BMap_cpyCtrl {
+        display: none;
+      }
+      .anchorBL {
+        display: none;
+      }
+      .main {
+        position: relative;
+        font-family: fzxinshusong;
+        border-radius: 30px;
+        font-weight: 600;
+        color: var(--text);
+        text-shadow: 0 0.06em 0.06em var(--ts);
+        width: 1500px;
+        height: 800px;
+        background-image: url('<%= bgUrl %>');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        padding: 50px;
+      }
+      .title {
+        font-size: 150px;
+      }
+      .sub-title {
+        font-size: 60px;
+      }
+      .weathers {
+        margin-top: 70px;
+      }
+      .weather {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 30px;
+        text-align: center;
+      }
+      .weather-title {
+        font-size: 60px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--text);
+      }
+      .weather-info {
+        font-size: 50px;
+        margin-top: 20px;
+      }
+      .weather-icon {
+        height: 120px;
+        width: 120px;
+        margin-top: 10px;
+      }
+      .weather-temp {
+        font-size: 50px;
+        margin-top: 10px;
+      }
+      .oilprice {
+        display: inline-flex;
+        flex-direction: column;
+      }
+      .oilprice-title {
+        font-size: 60px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--text);
+      }
+      .oilprices {
+        margin-top: 20px;
+      }
+      .oilprice-item {
+        display: flex;
+        margin-bottom: 10px;
+      }
+      .oilprice-kind {
+        font-size: 50px;
+      }
+      .oilprice-price {
+        font-size: 50px;
+        margin-left: 20px;
+      }
+      .shorts {
+        font-family: pingfang;
+        font-weight: 300;
+        font-size: 30px;
+        margin-top: 20px;
+      }
+      .stock {
+        position: absolute;
+        font-size: 50px;
+        top: 30px;
+        right: 40px;
+        text-align: right;
+      }
+      .map {
+        position: absolute;
+        border-radius: 20px;
+        bottom: 40px;
+        right: 40px;
+        width: 650px;
+        height: 650px;
+        opacity: 0.8;
+      }
+      .map-desc {
+        position: absolute;
+        padding: 10px 20px 4px;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        display: inline-block;
+        font-size: 50px;
+        top: 140px;
+        right: 70px;
+        text-align: right;
+        z-index: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="title">下班了</div>
+
+      <% if (restDays <= 0) { %>
+      <div class="sub-title">今天是发薪日🥳</div>
+      <% } else { %>
+      <div class="sub-title">发薪倒计时 <%= restDays %> 天</div>
+      <% } %>
+
+      <div class="weathers">
+        <div class="weather">
+          <div class="weather-title">天气</div>
+          <div class="weather-info"><%= todayWeather %></div>
+          <img class="weather-icon" src="<%= todayWeatherUrl %>" alt="" />
+          <div class="weather-temp"><%= todayTemperature %></div>
+        </div>
+
+        <div class="weather">
+          <div class="weather-title">明天</div>
+          <div class="weather-info"><%= tomorrowWeather %></div>
+          <img class="weather-icon" src="<%= tomorrowWeatherUrl %>" alt="" />
+          <div class="weather-temp"><%= tomorrowTemperature %></div>
+        </div>
+
+        <div class="oilprice">
+          <div class="oilprice-title">油价</div>
+
+          <div class="oilprices">
+            <div class="oilprice-item">
+              <div class="oilprice-kind">92#</div>
+              <div class="oilprice-price">￥<%= h92 %></div>
+            </div>
+
+            <div class="oilprice-item">
+              <div class="oilprice-kind">95#</div>
+              <div class="oilprice-price">￥<%= h95 %></div>
+            </div>
+
+            <div class="oilprice-item">
+              <div class="oilprice-kind">98#</div>
+              <div class="oilprice-price">￥<%= h98 %></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="shorts">
+          <%= date %> · <%= shortUrl %>
+        </div>
+      </div>
+
+      <img class="map" onload="window.mapOK = true" src="<%= trafficImage %>" />
+      <div class="map-desc">交通拥堵状况</div>
+
+      <div class="stock">
+        <%= company %>
+        <% if(stockText) { %>
+           / 股价：<%= stockText %>
+        <% } %>
+      </div>
+    </div>
+  </body>
+</html>

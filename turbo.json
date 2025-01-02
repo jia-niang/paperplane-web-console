@@ -1,0 +1,25 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "dev": {
+      "dependsOn": ["@repo/db#db:gen"],
+      "persistent": true,
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["@repo/db#db:gen"],
+      "outputs": ["dist/**"]
+    },
+
+    "check-types": {},
+    "lint": {},
+    "format": {},
+
+    "db:gen": { "cache": false },
+    "db:generate": { "cache": false },
+    "db:push": { "cache": false },
+    "db:mi": { "cache": false },
+    "db:migrate": { "cache": false },
+    "db:deploy": { "cache": false }
+  }
+}
