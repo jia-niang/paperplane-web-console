@@ -5,8 +5,15 @@ const reactRefresh = require('eslint-plugin-react-refresh')
 const globals = require('globals')
 const tseslint = require('typescript-eslint')
 
+/**
+ * ESLint v9 目前默认暂不支持 monorepo 使用各个目录自己的配置
+ * 除非开启 --flag unstable_config_lookup_from_file 标志
+ *
+ * 参考 https://eslint.org/docs/latest/use/configure/configuration-files#experimental-configuration-file-resolution
+ */
+
 module.exports = tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['**/dist'] },
 
   // ↓ 以下规则适用于：packages/server
   {
@@ -55,8 +62,10 @@ module.exports = tseslint.config(
     rules: {},
   },
 
+  // ↓ 全局忽略
   {
-    // ↓ 全局规则
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ['packages/**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unused-vars': 'warn',
