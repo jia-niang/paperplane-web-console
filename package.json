@@ -15,6 +15,7 @@
     "lint": "turbo lint",
     "format": "turbo format",
     "check-types": "turbo check-types",
+    "prod-start:server": "pnpm -F @repo/server run start:prod",
     "db:gen": "turbo db:gen",
     "db:generate": "turbo db:generate",
     "db:push": "turbo db:push",
