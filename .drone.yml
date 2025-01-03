@@ -71,7 +71,7 @@ steps:
   - name: website-extract-dist
     image: docker:dind
     volumes:
-      - name: dockersock
+      - name: docker-sock
         path: /var/run/docker.sock
     commands:
       - docker cp paperplane-web-console:/paperplane-web-console/package/web/dist ./
