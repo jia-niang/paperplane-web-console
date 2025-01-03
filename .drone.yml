@@ -107,7 +107,7 @@ steps:
         path: /webroot
     commands:
       - mkdir -p /webroot/paperplane-web-console/
-      - cp -rf /paperplane-web-console/dist/* /webroot/paperplane-web-console/
+      - cp -rf ./dist/* /webroot/paperplane-web-console/
 
   - name: clean-image
     image: docker:dind
