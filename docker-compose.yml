@@ -7,7 +7,7 @@ services:
     container_name: paperplane-web-console-local
     working_dir: /paperplane-web-console
     volumes:
-      - ./:/paperplane-web-console
+      - ./:/paperplane-web-console:cached
     ports:
       - '6100:6100'
       - '6200:6200'

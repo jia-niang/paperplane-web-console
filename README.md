@@ -61,6 +61,27 @@ docker compose up
 docker exec -it paperplane-web-console-local bash
 ```
 
+需知：
+
+- 代码创建出的文件属于用户 `root`，而 `wsl` 如果用其它用户登录，可能没法直接删除这些文件；
+- 如果曾在 Windows 上运行过 `pnpm i` 安装依赖，这些依赖项在 Docker 中不兼容，启动时可能会报错，遇到此情况请删除项目中所有 `node_modules` 再运行 `docker compose up`。
+
+## 使用 VSCode 的 “开发容器” 在 Docker 中运行
+
+此方法会使用 `.devcontainer` 目录以及其中的配置文件，请确保已安装 Docker 以及 [VSCode 远程开发扩展](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)。
+
+步骤：
+
+- 点击 VSCode 左侧边栏的 “远程资源管理器”；
+- 下拉菜单选择 “开发容器”，此处会列出当前运行的 Docker 容器；
+- 点击 “+” 图标，在弹出的菜单中选择 “在容器中打开当前文件夹”，此时 VSCode 会自动创建一个 Docker 容器，将拷贝项目文件放入并连接到容器内的文件系统和终端，此时请稍作等待，因为 VSCode 需要在容器中安装扩展以及 Git 等工具；
+- 这种方式不会自动安装依赖，请打开终端并运行 `pnpm i`，依赖安装完成后，可以运行 `pnpm i` 启动。
+
+Windows 用户需知：
+
+- Windows 系统下直接启动开发容器，修改文件仍然无法及时反馈到容器中。如果有实时调试的需求，请在 wsl 环境中克隆项目并从中启动开发容器；
+- 如果曾在 Windows 上运行过 `pnpm i` 安装依赖，这些依赖项在 Docker 中不兼容，启动时可能会报错，遇到此情况请删除项目中所有 `node_modules` 再运行 `docker compose up`。
+
 ## 本机直接运行
 
 需求 Node.js 的 20 及以上版本，[点此下载最新版](https://nodejs.org/) 或者 [点此选择一个版本下载](https://nodejs.org/en/download/releases)。
