@@ -49,7 +49,7 @@
     "node": ">=20"
   },
   "lint-staged": {
-    ".{ts,tsx}": [
+    "*.{ts,tsx}": [
       "eslint",
       "prettier --list-different"
     ],
