@@ -74,7 +74,7 @@ steps:
       - name: docker-sock
         path: /var/run/docker.sock
     commands:
-      - docker cp paperplane-web-console:/paperplane-web-console/package/web/dist ./
+      - docker cp paperplane-web-console:/paperplane-web-console/packages/web/dist ./
 
   - name: website-deploy-upload-cdn
     image: plugins/s3
