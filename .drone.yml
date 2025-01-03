@@ -86,7 +86,7 @@ steps:
         from_secret: COS_SECRET_ID
       secret_key:
         from_secret: COS_SECRET_KEY
-      source: /paperplane-web-console/dist/**/*
+      source: ./dist/**/*
       target: /paperplane-web-console
       strip_prefix: /paperplane-web-console/dist
 
