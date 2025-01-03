@@ -5,16 +5,10 @@ workspace:
   path: /source
 
 steps:
-  - name: website-build-and-prune
+  - name: prepare
     image: node:20.13.0
-    volumes:
-      - name: pnpm-cache
-        path: /source/.pnpm-store
     commands:
-      - npm i -g pnpm
-      - pnpm i
-      - pnpm build:web
-      - pnpm turbo prune @repo/server --docker
+      - npm run ci:prepare-docker
 
   - name: server-build-image
     image: docker:dind
@@ -74,6 +68,14 @@ steps:
         - cd /root/project-config/paperplane-web-console
         - docker compose up -d
 
+  - name: website-extract-dist
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker cp paperplane-web-console:/paperplane-web-console/package/web/dist ./
+
   - name: website-deploy-upload-cdn
     image: plugins/s3
     settings:
@@ -84,9 +86,9 @@ steps:
         from_secret: COS_SECRET_ID
       secret_key:
         from_secret: COS_SECRET_KEY
-      source: packages/web/dist/**/*
+      source: /paperplane-web-console/dist/**/*
       target: /paperplane-web-console
-      strip_prefix: packages/web/dist
+      strip_prefix: /paperplane-web-console/dist
 
   - name: website-backup-old
     image: ubuntu:22.04
@@ -105,7 +107,7 @@ steps:
         path: /webroot
     commands:
       - mkdir -p /webroot/paperplane-web-console/
-      - cp -rf ./packages/web/dist/* /webroot/paperplane-web-console/
+      - cp -rf /paperplane-web-console/dist/* /webroot/paperplane-web-console/
 
   - name: clean-image
     image: docker:dind
@@ -124,7 +126,7 @@ steps:
       - name: webroot
         path: /webroot
     commands:
-      - rm -rf /webroot/paperplane-web-console-bak/*
+      - rm -rf /webroot/paperplane-web-console-bak
 
   - name: rollback-handle-docker
     image: docker:dind
@@ -174,9 +176,6 @@ volumes:
   - name: docker-sock
     host:
       path: /var/run/docker.sock
-  - name: pnpm-cache
-    host:
-      path: /root/.pnpm-cache
   - name: webroot
     host:
       path: /root/www

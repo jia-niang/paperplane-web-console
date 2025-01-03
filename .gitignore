@@ -26,5 +26,6 @@ dist-ssr
 *.sw?
 
 out
+.deps
 .turbo
 .pnpm-store

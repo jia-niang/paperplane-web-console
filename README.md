@@ -102,10 +102,10 @@ pnpm build
 
 ## 生产环境：使用 Dockerfile 构建镜像
 
-- 构建镜像前，**必须运行 `pnpm turbo prune @repo/server --docker` 生成一份仅包含项目依赖项的目录结构**，Dockerfile 中有用到这个目录，不存在则会报错；这是为了利用 Layer 机制加快构建，具体可参考 `@repo/server` 包的 [README.md](./packages/server/README.md)；
+- 构建镜像前，**必须运行 `pnpm ci:prepare-docker` 生成一份仅包含项目依赖项的目录结构**，这是为了利用 Layer 机制加快构建，Dockerfile 中有用到这个目录，不存在则会报错；
 - 可以使用 `docker build -t <镜像名> .` 在本地构建生产包，如果 npm 连接不畅通，可以添加 `--build-arg NPM_REGISTRY=https://registry.npmmirror.com` 参数；
-- 生产镜像仅含后端，暴露 `6100` 端口；前端因为是输出静态文件，因此不在镜像考虑范围内，镜像不包含前端；
-- 所有 `.local` 后缀的环境变量文件不会包含在镜像内，运行时请自行挂载到 `/paperplane-web-console/packages/server/env.production.local`。
+- 生产镜像仅运行服务端，暴露 `6100` 端口；前端文件可通过命令 `docker cp <容器名>:/paperplane-web-console/package/web/dist/ <目标位置>` 复制出来；
+- 所有 `.local` 后缀的环境变量文件不会包含在镜像内，运行时请自行挂载到 `/paperplane-web-console/packages/server/env.production.local` 以及 `/paperplane-web-console/packages/db/env.production.local`。
 
 ## 关于基础镜像
 

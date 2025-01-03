@@ -9,6 +9,7 @@
     "build": "turbo build",
     "build:server": "turbo -F @repo/server build",
     "build:web": "turbo -F @repo/web build",
+    "ci:prepare-docker": "node ./ci/prepare-docker.js",
     "turbo": "turbo",
     "lint": "turbo lint",
     "format": "turbo format",
