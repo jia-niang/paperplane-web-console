@@ -77,8 +77,9 @@ docker exec -it paperplane-web-console-local bash
 - 点击 “+” 图标，在弹出的菜单中选择 “在容器中打开当前文件夹”，此时 VSCode 会自动创建一个 Docker 容器，将拷贝项目文件放入并连接到容器内的文件系统和终端，此时请稍作等待，因为 VSCode 需要在容器中安装扩展以及 Git 等工具；
 - 这种方式不会自动安装依赖，请打开终端并运行 `pnpm i`，依赖安装完成后，可以运行 `pnpm i` 启动。
 
-Windows 用户需知：
+需知：
 
+- VSCode 会自动管理 SSH 密钥，但如果提交代码时仍报错无权限，请执行 `ssh-add`；如果使用 HTTPS 克隆或者使用 GPG 密钥，请参考 [官网文档](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)；
 - Windows 系统下直接启动开发容器，修改文件仍然无法及时反馈到容器中。如果有实时调试的需求，请在 wsl 环境中克隆项目并从中启动开发容器；
 - 如果曾在 Windows 上运行过 `pnpm i` 安装依赖，这些依赖项在 Docker 中不兼容，启动时可能会报错，遇到此情况请删除项目中所有 `node_modules` 再运行 `docker compose up`。
 
