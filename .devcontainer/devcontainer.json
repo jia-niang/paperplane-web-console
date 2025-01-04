@@ -37,7 +37,8 @@
         "j69.ejs-beautify",
         "styled-components.vscode-styled-components",
         "eamodio.gitlens",
-        "VisualStudioExptTeam.vscodeintellicode"
+        "VisualStudioExptTeam.vscodeintellicode",
+        "bradlc.vscode-tailwindcss"
       ]
     }
   },
