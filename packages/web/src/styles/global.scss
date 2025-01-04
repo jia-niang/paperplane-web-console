@@ -1,3 +1,10 @@
+@use 'tdesign-react/dist/reset.css' as *;
+@use 'atropos/scss' as *;
+
+@use './fonts/source-code-pro/index.scss' as *;
+@use './fonts/fz-yansong/index.scss' as *;
+@use './fonts/swift/index.scss' as *;
+
 body {
   overflow-y: scroll;
 }

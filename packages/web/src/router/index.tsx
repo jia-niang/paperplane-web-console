@@ -51,4 +51,4 @@ traverseTree(routerConfig, item => {
   item.handle = { ...pick(item, ['title', 'breadcrumbTitle']), ...item.handle }
 })
 
-export const router = createBrowserRouter(routerConfig, { basename: import.meta.env.VITE_BASE_URL })
+export const browserRouter = createBrowserRouter(routerConfig, { basename: import.meta.env.VITE_BASE_URL })

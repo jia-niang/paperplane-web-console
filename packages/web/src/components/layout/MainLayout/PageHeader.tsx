@@ -1,18 +1,13 @@
 import { css } from '@emotion/react'
-import 'atropos/css'
 import Atropos from 'atropos/react'
 import { uniqBy } from 'lodash-es'
 import { useLocation, useMatches, useNavigate } from 'react-router'
 import { HomeIcon } from 'tdesign-icons-react'
 import { Breadcrumb, Link, Space } from 'tdesign-react'
 
-import { RouterHandleType, router } from '@/router'
-
-import '@/styles/fonts/font-title/index.scss'
+import { RouterHandleType } from '@/router'
 
 const { BreadcrumbItem } = Breadcrumb
-
-const currentYear = new Date().getFullYear()
 
 export default function PageHeader(): RC {
   const location = useLocation()
@@ -22,14 +17,14 @@ export default function PageHeader(): RC {
 
   const currentRoutes = uniqBy(useMatches(), 'pathname')
 
-  const homepageCopyright = `PaperPlane.cc © ${currentYear}`
-
   const breadcrumb = (
     <Breadcrumb maxItemWidth="120px">
       {currentRoutes.map(route => {
         if (route.pathname === '/') {
           return (
-            <BreadcrumbItem key={route.id} icon={<HomeIcon />} router={routerForBreadcrumbItem} to="/"></BreadcrumbItem>
+            <BreadcrumbItem key={route.id} icon={<HomeIcon />} router={routerForBreadcrumbItem} to="/">
+              {location.pathname === '/' ? '已位于首页' : undefined}
+            </BreadcrumbItem>
           )
         }
 
@@ -51,18 +46,12 @@ export default function PageHeader(): RC {
         <div className="flex h-[60px] items-center">
           <Space>
             <Link size="large" theme="primary" href="/">
-              工具箱
-            </Link>
-            <Link size="large" theme="default" href="https://paperplane.cc/" target="_blank">
-              博客
-            </Link>
-            <Link size="large" theme="default" href="https://tl.paperplane.cc/" target="_blank">
-              动态
+              Web Console
             </Link>
             <Link
               size="large"
               theme="default"
-              href="https://git.paperplane.cc/jia-niang/paperplane-app"
+              href="https://git.paperplane.cc/jia-niang/paperplane-web-console"
               target="_blank"
             >
               源码
@@ -70,7 +59,7 @@ export default function PageHeader(): RC {
             <Link
               size="large"
               theme="default"
-              href="https://drone.paperplane.cc/jia-niang/paperplane-app"
+              href="https://drone.paperplane.cc/jia-niang/paperplane-web-console"
               target="_blank"
             >
               CI/CD
@@ -89,7 +78,7 @@ export default function PageHeader(): RC {
               color: var(--td-gray-color-6);
             `}
           >
-            {location.pathname === '/' ? homepageCopyright : breadcrumb}
+            {breadcrumb}
           </div>
         </div>
 
@@ -112,7 +101,7 @@ export default function PageHeader(): RC {
               right: 0;
               top: -10px;
               height: 10px;
-              clip-path: polygon(26px 0, 16px 100%, 36px 100%);
+              clip-path: polygon(50px 0, 40px 100%, 60px 100%);
               background: #d46d72;
               background-image: linear-gradient(90deg, #963db3, #bf3caf, #e3419e, #fe4b83, #ff5e64, #ff7747);
             }
@@ -123,14 +112,13 @@ export default function PageHeader(): RC {
             duration={150}
             activeOffset={30}
             highlight={false}
-            onClick={() => void router.navigate('/')}
+            onClick={() => void navigate('/')}
             css={css`
               display: inline-block;
               width: 960px;
               height: 120px;
               cursor: pointer;
-              font-family: font-title;
-              font-style: italic;
+              font-family: swift;
               display: inline-block;
               text-align: center;
               padding: 0 20px;
@@ -140,7 +128,7 @@ export default function PageHeader(): RC {
               user-select: none;
             `}
           >
-            纸飞机/工具箱
+            PaperPlane Web Console
           </Atropos>
         </div>
       </div>

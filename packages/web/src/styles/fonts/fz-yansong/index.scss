@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'fz-yansong';
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src:
+    url('@/styles/fonts/fz-yansong/fz-yansong-zhun.woff2') format('woff2'),
+    url('@/styles/fonts/fz-yansong/fz-yansong-zhun.woff') format('woff'),
+    url('@/styles/fonts/fz-yansong/fz-yansong-zhun.eot') format('embedded-opentype'),
+    url('@/styles/fonts/fz-yansong/fz-yansong-zhun.ttf') format('truetype');
+}

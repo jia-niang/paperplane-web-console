@@ -21,39 +21,39 @@ export default function HomePage(): RC {
   return (
     <PageLayout>
       <div className="mb-[-60px] mr-[-60px]">
-        <HomeEntryCard iconImage={openAiIcon} bgColor="#9B3DB3" bgImage={openAiBg} href="/gpt">
-          <div className="text-decoration-none ml-[18px] text-[40px] text-white">GPT-3.5</div>
+        <HomeEntryCard iconImage={openAiIcon} bgColor="var(--brand-main)" bgImage={openAiBg} href="/gpt">
+          <div className="text-decoration-none ml-[18px] text-[40px] text-white">GPT-4o</div>
         </HomeEntryCard>
 
-        <HomeEntryCard iconImage={robotIcon} bgColor="#E4419D" bgImage={robotBg} href="/robot">
+        <HomeEntryCard iconImage={robotIcon} bgColor="var(--brand-main)" bgImage={robotBg} href="/robot">
           <div className="text-decoration-none ml-[18px] text-center text-white">
             <div className="text-[30px]">消息机器人</div>
             <div className="text-[18px]">（企微/钉钉/飞书）</div>
           </div>
         </HomeEntryCard>
 
-        <HomeEntryCard iconImage={nginxIcon} bgColor="#FF6D54" bgImage={nginxBg} href="/">
+        <HomeEntryCard iconImage={nginxIcon} bgColor="var(--brand-main)" bgImage={nginxBg} href="/">
           <div className="text-decoration-none ml-[18px] text-center text-white">
             <div className="text-[30px]">Nginx 助手</div>
             <div className="text-[18px]">（未完工）</div>
           </div>
         </HomeEntryCard>
 
-        <HomeEntryCard iconImage={shortsIcon} bgColor="#B13CB0" bgImage={shortsBg} href="/">
+        <HomeEntryCard iconImage={shortsIcon} bgColor="var(--brand-main)" bgImage={shortsBg} href="/">
           <div className="text-decoration-none ml-[18px] text-center text-white">
             <div className="text-[30px]">短网址生成</div>
             <div className="text-[18px]">（未完工）</div>
           </div>
         </HomeEntryCard>
 
-        <HomeEntryCard iconImage={gitIcon} bgColor="#F04691" bgImage={gitBg} href="/">
+        <HomeEntryCard iconImage={gitIcon} bgColor="var(--brand-main)" bgImage={gitBg} href="/">
           <div className="text-decoration-none ml-[18px] text-center text-white">
             <div className="text-[30px]">Git 周报助手</div>
             <div className="text-[18px]">（未完工）</div>
           </div>
         </HomeEntryCard>
 
-        <HomeEntryCard iconImage={canvasIcon} bgColor="#FF665C" bgImage={canvasBg} href="/">
+        <HomeEntryCard iconImage={canvasIcon} bgColor="var(--brand-main)" bgImage={canvasBg} href="/">
           <div className="text-decoration-none ml-[18px] text-center text-white">
             <div className="text-[30px]">Canvas 画板</div>
             <div className="text-[18px]">（未完工）</div>

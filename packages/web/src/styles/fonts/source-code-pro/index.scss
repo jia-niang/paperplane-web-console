@@ -1,0 +1,59 @@
+@font-face {
+  font-family: 'source-code-pro';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200;
+  src:
+    local('Source Code Pro Extra Light'),
+    local('Source Code Pro-Extra Light'),
+    url('@/styles/fonts/source-code-pro/source-code-pro-latin-200.woff2') format('woff2'),
+    url('@/styles/fonts/source-code-pro/source-code-pro-latin-200.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'source-code-pro';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src:
+    local('Source Code Pro Regular'),
+    local('Source Code Pro-Regular'),
+    url('@/styles/fonts/source-code-pro/source-code-pro-latin-400.woff2') format('woff2'),
+    url('@/styles/fonts/source-code-pro/source-code-pro-latin-400.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'source-code-pro';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src:
+    local('Source Code Pro SemiBold'),
+    local('Source Code Pro-SemiBold'),
+    url('@/styles/fonts/source-code-pro/source-code-pro-latin-600.woff2') format('woff2'),
+    url('@/styles/fonts/source-code-pro/source-code-pro-latin-600.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'source-code-pro';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src:
+    local('Source Code Pro Bold'),
+    local('Source Code Pro-Bold'),
+    url('@/styles/fonts/source-code-pro/source-code-pro-latin-700.woff2') format('woff2'),
+    url('@/styles/fonts/source-code-pro/source-code-pro-latin-700.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'source-code-pro';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 900;
+  src:
+    local('Source Code Pro Black'),
+    local('Source Code Pro-Black'),
+    url('@/styles/fonts/source-code-pro/source-code-pro-latin-900.woff2') format('woff2'),
+    url('@/styles/fonts/source-code-pro/source-code-pro-latin-900.woff') format('woff');
+}

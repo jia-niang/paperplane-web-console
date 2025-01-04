@@ -5,10 +5,9 @@ import 'dayjs/locale/zh-cn'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider } from 'react-router'
 import { ConfigProvider, merge } from 'tdesign-react'
-import 'tdesign-react/dist/reset.css'
 import zhConfig from 'tdesign-react/es/locale/zh_CN'
 
-import { router } from '@/router'
+import { browserRouter } from '@/router'
 import { ensureClientId } from '@/utils/clientId'
 
 import '@/styles/global.scss'
@@ -23,12 +22,12 @@ const globalConfig = merge(zhConfig, {})
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
-const emotionCacheConfig = createCache({ key: 'paperplane-app-default', nonce: 'emotion' })
+const emotionCacheConfig = createCache({ key: 'paperplane-web-console-default', nonce: 'emotion' })
 
 root.render(
   <ConfigProvider globalConfig={globalConfig}>
     <CacheProvider value={emotionCacheConfig}>
-      <RouterProvider router={router} />
+      <RouterProvider router={browserRouter} />
     </CacheProvider>
   </ConfigProvider>
 )
