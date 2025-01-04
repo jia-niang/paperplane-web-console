@@ -2,6 +2,7 @@
   "private": true,
   "packageManager": "pnpm@9.15.2",
   "scripts": {
+    "bootstrap": "pnpm i && pnpm dev",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
     "dev": "turbo dev",
