@@ -3,14 +3,12 @@ import { last } from 'lodash-es'
 import { Fragment } from 'react'
 import { Outlet, useMatches } from 'react-router'
 
-import { RouteObjectType } from '@/router'
-
 import PageHeader from './PageHeader'
 
 export default function MainLayout(): RC {
   const currentRoute = last(useMatches())
 
-  const routeMeta = currentRoute?.handle as RouteObjectType | undefined
+  const routeMeta = currentRoute?.handle
 
   useTitle(
     routeMeta?.title

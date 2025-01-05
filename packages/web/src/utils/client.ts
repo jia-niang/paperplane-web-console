@@ -1,6 +1,8 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CreateAxiosDefaults } from 'axios'
 import { notification } from 'tdesign-react'
 
+import { useUserStore } from '@/services/currentUser'
+
 /** 完全原始的 axios client */
 const rawClient = axios.create()
 
@@ -55,15 +57,22 @@ client.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 /** 处理错误响应 */
 function errorResponseHandler(error?: AxiosResponse<IErrorBody<any>> | AxiosError) {
   if (typeof (error as AxiosResponse<IErrorBody>)?.data?.message === 'string') {
+    // 常规后端错误
     notification.error({
       title: '发生错误',
       content: (error as AxiosResponse<IErrorBody>)?.data?.message,
     })
   } else if (typeof (error as AxiosError)?.message === 'string') {
+    // 服务器错误，例如 Nginx 层就报错了，请求未达后端
     notification.error({
       title: '发生错误',
       content: (error as AxiosError)?.message,
     })
+  }
+
+  if ((error as AxiosResponse<IErrorBody>)?.data?.code === 401) {
+    // 401 错误，自动注销
+    useUserStore.getState().logout()
   }
 }
 

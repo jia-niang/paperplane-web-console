@@ -18,9 +18,9 @@ import {
 } from 'tdesign-icons-react'
 import { Button, Col, Popconfirm, Radio, Row, Space, Tabs, Tag, Textarea, Tooltip, notification } from 'tdesign-react'
 
+import { gptMultipleChatApi } from '@/apis/ai'
 import openAiIcon from '@/assets/icon/logo-openai.svg?no-inline'
 import PageLayout from '@/components/layout/PageLayout'
-import { gptMultipleChatApi } from '@/services/ai'
 import { useGloalSetting } from '@/services/globalSetting'
 import { SK_GPT_RECORDS } from '@/utils/clientStore'
 
