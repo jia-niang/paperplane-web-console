@@ -1,10 +1,10 @@
 import { MessageRobotType } from '@repo/db'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
+import { useNavigate, useParams } from 'react-router'
 import { SendIcon } from 'tdesign-icons-react'
 import {
   Alert,
   Button,
-  Checkbox,
   Form,
   Input,
   Space,
@@ -22,7 +22,6 @@ import wechatbizRobotIcon from '@/assets/icon/robot-icons/logo-wechatbiz.svg'
 import PageLayout from '@/components/layout/PageLayout'
 
 import RobotToggler from './RobotToggler'
-import useRobotRemeberConfig from './useRobotRemeberConfig'
 
 const { FormItem } = Form
 
@@ -38,33 +37,30 @@ const tabConfig: IRobotTabConfig[] = [
     type: MessageRobotType.WXBIZ,
     name: '企业微信',
     icon: wechatbizRobotIcon,
-    tips: '企业微信支持的消息：纯文字；支持使用手机号来 @ 群成员。其他消息类型支持正在开发中。',
-    // tips: '企业微信支持的消息：纯文字、不带图片的 Markdown、单张图片；支持使用手机号来 @ 群成员。',
+    tips: '企业微信支持的消息：纯文字、不带图片的 Markdown、单张图片；支持使用手机号来 @ 群成员。其他消息类型支持正在开发中。',
   },
 
   {
     type: MessageRobotType.DINGTALK,
     name: '钉钉',
     icon: dingtalkRobotIcon,
-    tips: '钉钉支持的消息：纯文字；支持使用手机号来 @ 群成员。其他消息类型支持正在开发中。',
-    // tips: '钉钉支持的消息：纯文字、带图片的 Markdown、单张图片；支持使用手机号来 @ 群成员。',
+    tips: '钉钉支持的消息：纯文字、带图片的 Markdown、单张图片；支持使用手机号来 @ 群成员。其他消息类型支持正在开发中。',
   },
 
   {
     type: MessageRobotType.FEISHU,
     name: '飞书',
     icon: feishukRobotIcon,
-    tips: '飞书支持的消息：纯文字；暂不支持发图；暂不支持 @ 群成员（可以 @ 全体）。其他消息类型支持正在开发中。',
-    // tips: '飞书支持的消息：纯文字、不带图片的 Markdown；暂不支持发图；暂不支持 @ 群成员（可以 @ 全体）。',
+    tips: '飞书支持的消息：纯文字；不带图片的 Markdown；暂不支持发图；暂不支持 @ 群成员（可以 @ 全体）。其他消息类型支持正在开发中。',
   },
 ]
 
 /** 消息机器人 */
 export default function RobotPage(): RC {
-  const [remeberConfig, setRemeberConfig, resetRemeberConfig] = useRobotRemeberConfig()
-  const [tab, setTab] = useState<IRobotTabConfig>(() =>
-    remeberConfig.isRemeber ? tabConfig.find(t => t.type === remeberConfig.tabType)! : tabConfig[0]
-  )
+  const navigate = useNavigate()
+  const robotType = useParams().robotType?.toUpperCase() as MessageRobotType
+
+  const tab = useMemo(() => tabConfig.find(t => t.type === robotType)!, [robotType])
 
   const [form] = Form.useForm()
   const isAtAll = Form.useWatch('atAll', form)
@@ -107,10 +103,7 @@ export default function RobotPage(): RC {
     <PageLayout>
       <RobotToggler
         value={tab}
-        onChange={newTab => {
-          setTab(newTab)
-          setRemeberConfig(t => ({ ...t!, tabType: newTab.type }))
-        }}
+        onChange={newTab => void navigate('../' + newTab.type.toLowerCase(), { relative: 'path' })}
         tabConfig={tabConfig}
       />
 
@@ -128,26 +121,13 @@ export default function RobotPage(): RC {
           <Textarea placeholder="输入消息内容" />
         </FormItem>
 
-        <FormItem
-          name="accessToken"
-          label="AccessToken"
-          initialData={remeberConfig.isRemeber ? remeberConfig.accessToken : ''}
-          rules={[{ required: true }]}
-        >
-          <Input
-            placeholder="输入 AccessToken"
-            onChange={v => void setRemeberConfig(t => ({ ...t!, accessToken: v }))}
-          />
+        <FormItem name="accessToken" label="AccessToken" rules={[{ required: true }]}>
+          <Input placeholder="输入 AccessToken" />
         </FormItem>
 
         {tab.type !== MessageRobotType.WXBIZ ? (
-          <FormItem
-            name="secret"
-            label="secret"
-            initialData={remeberConfig.isRemeber ? remeberConfig.secret : ''}
-            rules={[{ required: true }]}
-          >
-            <Input placeholder="输入 secret" onChange={v => void setRemeberConfig(t => ({ ...t!, secret: v }))} />
+          <FormItem name="secret" label="secret" rules={[{ required: true }]}>
+            <Input placeholder="输入 secret" />
           </FormItem>
         ) : null}
 
@@ -163,19 +143,6 @@ export default function RobotPage(): RC {
       </Form>
 
       <Space direction="vertical" className="mt-[30px] flex text-center">
-        <Checkbox
-          checked={remeberConfig.isRemeber}
-          onChange={checked => {
-            if (checked) {
-              setRemeberConfig(t => ({ ...t!, isRemeber: checked }))
-            } else {
-              resetRemeberConfig()
-            }
-          }}
-        >
-          记住机器人配置
-        </Checkbox>
-
         <Button
           onClick={() => void form.submit()}
           suffix={<SendIcon />}

@@ -1,3 +1,4 @@
+import { MessageRobotType } from '@repo/db'
 import { pick } from 'lodash-es'
 import { ReactNode } from 'react'
 import { createBrowserRouter, Navigate, RouteObject } from 'react-router'
@@ -35,8 +36,9 @@ export const routerConfig: RouteObjectType[] = [
         element: lazy(() => import('@/pages/gpt')),
       },
 
+      { path: 'robot', element: <Navigate to={MessageRobotType.WXBIZ.toLowerCase()} replace /> },
       {
-        path: 'robot',
+        path: 'robot/:robotType',
         title: '消息机器人',
         element: lazy(() => import('@/pages/robot')),
       },
