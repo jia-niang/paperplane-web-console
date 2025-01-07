@@ -28,6 +28,7 @@ export class UserController {
     return userInfo
   }
 
+  @Public()
   @Get('/current')
   async current(@UserId() id: string) {
     return this.authService.current(id)

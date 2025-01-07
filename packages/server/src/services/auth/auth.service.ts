@@ -32,7 +32,7 @@ export class AuthService {
   }
 
   async current(id: string) {
-    return this.userService.getUserById(id)
+    return id ? this.userService.getUserById(id) : null
   }
 
   async logout() {
