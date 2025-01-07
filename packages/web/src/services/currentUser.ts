@@ -1,4 +1,4 @@
-import { User } from '@repo/db'
+import { Role, User } from '@repo/db'
 import useSWR from 'swr'
 import { create } from 'zustand'
 
@@ -29,4 +29,17 @@ export function useCurrentUser() {
 
 export function useCurrentUserSWR() {
   return useSWR<User | null>(`/user/current`, currentUserApi)
+}
+
+export function useAccess(target?: Role) {
+  const currentUser = useCurrentUser()
+  const accessPriorit = [Role.USER, Role.STAFF, Role.ADMIN]
+
+  if (!target) {
+    return true
+  } else if (!currentUser) {
+    return false
+  } else {
+    return accessPriorit.indexOf(currentUser.role) >= accessPriorit.indexOf(target)
+  }
 }

@@ -32,14 +32,14 @@ export const routerConfig: RouteObjectType[] = [
 
       {
         path: 'gpt',
-        title: 'GPT 问答',
+        title: 'GPT-4o',
         element: lazy(() => import('@/pages/gpt')),
       },
 
       { path: 'robot', element: <Navigate to={MessageRobotType.WXBIZ.toLowerCase()} replace /> },
       {
         path: 'robot/:robotType',
-        title: '消息机器人',
+        title: 'OA 机器人',
         element: lazy(() => import('@/pages/robot')),
       },
 
