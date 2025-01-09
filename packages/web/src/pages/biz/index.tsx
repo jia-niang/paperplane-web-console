@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { AddIcon, City1Icon, MapLocationIcon, ViewListIcon } from 'tdesign-icons-react'
 import { Button, Col, Loading, Row, Tree } from 'tdesign-react'
 
@@ -6,7 +6,7 @@ import PageLayout from '@/components/layout/PageLayout'
 import Title from '@/components/text/Title'
 import { useAllCompaniesSWR, useWorkplacesByCompanyIdSWR } from '@/services/bizService'
 
-import { BizLockType, urlId, useBiz } from './common'
+import { urlId, useBiz } from './common'
 import CompanyForm from './forms/CompamyForm'
 import WorkplaceForm from './forms/WorkplaceForm'
 
@@ -14,8 +14,7 @@ const ROOT_ID = '_root'
 const empty: any[] = []
 
 export default function BizPage(): RC {
-  const { companyId, workplaceId, toCompany, toWorkplace } = useBiz()
-  const [lock, setLock] = useState<BizLockType>()
+  const { lock, companyId, workplaceId, toCompany, toWorkplace } = useBiz()
 
   const { data: companyList, isLoading: companyListLoading, mutate: refreshCompanyList } = useAllCompaniesSWR()
 
@@ -47,14 +46,6 @@ export default function BizPage(): RC {
     [workplaceList]
   )
 
-  const addCompanyHandler = () => {
-    toCompany(true)
-  }
-
-  const addWorkplaceHandler = () => {
-    toWorkplace(true)
-  }
-
   return (
     <PageLayout>
       <Row gutter={25}>
@@ -75,7 +66,13 @@ export default function BizPage(): RC {
               line
               expandAll
             />
-            <Button onClick={addCompanyHandler} disabled={!!lock} size="small" shape="round" icon={<AddIcon />}>
+            <Button
+              onClick={() => void toCompany(true)}
+              disabled={!!lock}
+              size="small"
+              shape="round"
+              icon={<AddIcon />}
+            >
               新增公司
             </Button>
           </Loading>
@@ -96,26 +93,24 @@ export default function BizPage(): RC {
               line
               expandAll
             />
-            <Button onClick={addWorkplaceHandler} disabled={!!lock} size="small" shape="round" icon={<AddIcon />}>
+            <Button
+              onClick={() => void toWorkplace(true)}
+              disabled={!!lock}
+              size="small"
+              shape="round"
+              icon={<AddIcon />}
+            >
               新增工作地点
             </Button>
           </Loading>
         </Col>
 
         <Col span={4}>
-          <CompanyForm
-            locked={!!lock}
-            onLockedChange={locked => void setLock(locked ? 'company' : undefined)}
-            onFresh={() => refreshCompanyList()}
-          />
+          <CompanyForm onFresh={() => refreshCompanyList()} />
         </Col>
 
         <Col span={4}>
-          <WorkplaceForm
-            locked={lock === 'workplace'}
-            onLockedChange={locked => void setLock(locked ? 'workplace' : undefined)}
-            onFresh={() => refreshWorkplaceList()}
-          />
+          <WorkplaceForm onFresh={() => refreshWorkplaceList()} />
         </Col>
       </Row>
     </PageLayout>

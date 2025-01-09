@@ -1,5 +1,5 @@
 import { Company } from '@repo/db'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Form, Input, InputNumber, Loading, Popconfirm, Space, SubmitContext, TimePicker } from 'tdesign-react'
 
 import { addCompanyApi, deleteCompanyApi, editCompanyApi } from '@/apis/biz'
@@ -21,26 +21,15 @@ const defaultCompany: Partial<Company> = { offworkTimeOfDay: '18:00' as unknown 
 export interface ICompanyFormProps extends IBizFormProps {}
 
 export default function CompanyForm(props: ICompanyFormProps): RC {
-  const { locked, onLockedChange, onFresh } = props
+  const { onFresh } = props
 
   const [form] = useForm()
-  const { companyId, isAddCompany, toCompany } = useBiz()
-  const [isEdit, setIsEdit] = useState(false)
+  const { lock, setLock, companyId, isAddCompany, toCompany } = useBiz()
 
   const { data, isLoading, mutate: refresh } = useCompanyByIdSWR(urlId(companyId))
   const formData = useMemo(() => converCompany2FormData(data), [data])
 
-  useEffect(() => {
-    form.reset()
-  }, [companyId, form, data])
-
-  useEffect(() => {
-    if (isAddCompany) {
-      onLockedChange?.(true)
-    } else {
-      onLockedChange?.(isEdit)
-    }
-  }, [isAddCompany, isEdit, onLockedChange])
+  useEffect(() => void form.reset(), [companyId, form, data])
 
   const submitHandler = async (submit: SubmitContext) => {
     if (submit.validateResult !== true) {
@@ -52,10 +41,10 @@ export default function CompanyForm(props: ICompanyFormProps): RC {
     const result = await api(formData)
 
     await onFresh?.()
+    setLock(null)
     if (isAddCompany) {
       toCompany(result.id)
     } else {
-      setIsEdit(false)
       refresh(result)
       form.reset()
     }
@@ -73,7 +62,7 @@ export default function CompanyForm(props: ICompanyFormProps): RC {
         initialData={isAddCompany ? defaultCompany : formData}
         form={form}
         onSubmit={submitHandler}
-        disabled={!isEdit && !isAddCompany}
+        disabled={lock !== 'company' && !isAddCompany}
         resetType="initial"
         layout="vertical"
         labelAlign="top"
@@ -115,9 +104,9 @@ export default function CompanyForm(props: ICompanyFormProps): RC {
       </Form>
 
       <Space>
-        {!isAddCompany && !isEdit ? (
+        {!isAddCompany && lock !== 'company' ? (
           <>
-            <BizEditButton onClick={() => void setIsEdit(true)} disabled={locked}>
+            <BizEditButton onClick={() => void setLock('company')} disabled={!!lock}>
               编辑
             </BizEditButton>
             <Popconfirm
@@ -135,15 +124,15 @@ export default function CompanyForm(props: ICompanyFormProps): RC {
               }
               showArrow
             >
-              <BizCancelButton disabled={locked}>删除</BizCancelButton>
+              <BizCancelButton disabled={!!lock}>删除</BizCancelButton>
             </Popconfirm>
           </>
-        ) : !isAddCompany && isEdit ? (
+        ) : !isAddCompany && lock === 'company' ? (
           <>
             <BizOkButton onClick={() => void form.submit()}>完成编辑</BizOkButton>
             <BizCancelButton
               onClick={() => {
-                setIsEdit(false)
+                setLock(null)
                 form.reset()
               }}
             >

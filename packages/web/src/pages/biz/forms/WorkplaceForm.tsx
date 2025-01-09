@@ -1,5 +1,5 @@
 import { Workplace } from '@repo/db'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Form, Input, Loading, Popconfirm, Select, Space, SubmitContext } from 'tdesign-react'
 
 import { addWorkplaceApi, deleteWorkplaceApi, editWorkplaceApi } from '@/apis/biz'
@@ -18,25 +18,14 @@ const defaultWorkplace: Partial<Workplace> = {}
 export interface IWorkplaceFormProps extends IBizFormProps {}
 
 export default function WorkplaceForm(props: IWorkplaceFormProps): RC {
-  const { locked, onLockedChange, onFresh } = props
+  const { onFresh } = props
 
   const [form] = useForm()
-  const { companyId, workplaceId, isAddWorkplace, toWorkplace } = useBiz()
-  const [isEdit, setIsEdit] = useState(false)
+  const { lock, setLock, companyId, workplaceId, isAddWorkplace, toWorkplace } = useBiz()
 
   const { data, isLoading, mutate: refresh } = useWorkplaceByPathIdsSWR(companyId, urlId(workplaceId))
 
-  useEffect(() => {
-    form.reset()
-  }, [companyId, form, data])
-
-  useEffect(() => {
-    if (isAddWorkplace) {
-      onLockedChange?.(true)
-    } else {
-      onLockedChange?.(isEdit)
-    }
-  }, [isAddWorkplace, isEdit, onLockedChange])
+  useEffect(() => void form.reset(), [companyId, form, data])
 
   const submitHandler = async (submit: SubmitContext) => {
     if (submit.validateResult !== true) {
@@ -48,10 +37,10 @@ export default function WorkplaceForm(props: IWorkplaceFormProps): RC {
     const result = await api(companyId!, formData)
 
     await onFresh?.()
+    setLock(null)
     if (isAddWorkplace) {
       toWorkplace(result.id)
     } else {
-      setIsEdit(false)
       refresh(result)
       form.reset()
     }
@@ -69,7 +58,7 @@ export default function WorkplaceForm(props: IWorkplaceFormProps): RC {
         initialData={isAddWorkplace ? defaultWorkplace : data}
         form={form}
         onSubmit={submitHandler}
-        disabled={!isEdit && !isAddWorkplace}
+        disabled={lock !== 'workplace' && !isAddWorkplace}
         className="mb-6"
         resetType="initial"
         layout="vertical"
@@ -118,9 +107,9 @@ export default function WorkplaceForm(props: IWorkplaceFormProps): RC {
       </Form>
 
       <Space>
-        {!isAddWorkplace && !isEdit ? (
+        {!isAddWorkplace && lock !== 'workplace' ? (
           <>
-            <BizEditButton onClick={() => void setIsEdit(true)} disabled={locked}>
+            <BizEditButton onClick={() => void setLock('workplace')} disabled={!!lock}>
               编辑
             </BizEditButton>
             <Popconfirm
@@ -132,15 +121,15 @@ export default function WorkplaceForm(props: IWorkplaceFormProps): RC {
               content="确认删除此工作地点吗？"
               showArrow
             >
-              <BizCancelButton disabled={locked}>删除</BizCancelButton>
+              <BizCancelButton disabled={!!lock}>删除</BizCancelButton>
             </Popconfirm>
           </>
-        ) : !isAddWorkplace && isEdit ? (
+        ) : !isAddWorkplace && lock === 'workplace' ? (
           <>
             <BizOkButton onClick={() => void form.submit()}>完成编辑</BizOkButton>
             <BizCancelButton
               onClick={() => {
-                setIsEdit(false)
+                setLock(null)
                 form.reset()
               }}
             >
