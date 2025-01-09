@@ -3,7 +3,7 @@ import { Button, Dropdown, DropdownOption, Link, notification, Space, Tag } from
 import { logoutApi } from '@/apis/user'
 import { usePageHeader } from '@/components/layout/MainLayout/usePageHeader'
 import LoginForm from '@/components/user/LoginForm'
-import { useCurrentUserSWR } from '@/services/currentUser'
+import { useCurrentUserSWR } from '@/services/userService'
 
 const loginFormElement = <LoginForm />
 

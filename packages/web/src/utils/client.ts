@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CreateAxiosDefaults } from 'axios'
 import { notification } from 'tdesign-react'
 
-import { useUserStore } from '@/services/currentUser'
+import { useUserStore } from '@/services/userService'
 
 /** 完全原始的 axios client */
 const rawClient = axios.create()

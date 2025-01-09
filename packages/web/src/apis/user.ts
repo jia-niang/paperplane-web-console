@@ -3,7 +3,7 @@ import { tap } from 'lodash-es'
 import { mutate } from 'swr'
 
 import { browserRouter } from '@/router'
-import { useUserStore } from '@/services/currentUser'
+import { useUserStore } from '@/services/userService'
 import { client } from '@/utils/client'
 
 export async function signUpApi(user: User) {

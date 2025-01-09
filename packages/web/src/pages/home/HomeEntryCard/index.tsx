@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import { NavLink } from 'react-router'
 import { KeyIcon } from 'tdesign-icons-react'
 
-import { useAccess } from '@/services/currentUser'
+import { useAccess } from '@/services/userService'
 
 export interface IHomeEntryCardProps extends IProps {
   iconImage: string
