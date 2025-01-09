@@ -8,7 +8,7 @@ export class BusinessController {
   constructor(private readonly businessService: BusinessService) {}
 
   @Post('/company')
-  async addCompany(company: Company) {
+  async addCompany(@Body() company: Company) {
     return this.businessService.addCompany(company)
   }
 
@@ -33,7 +33,7 @@ export class BusinessController {
   }
 
   @Post('/company/:companyId/workplace')
-  async addWorkplaceToCompany(@Param('companyId') companyId: string, workplace: Workplace) {
+  async addWorkplaceToCompany(@Param('companyId') companyId: string, @Body() workplace: Workplace) {
     return this.businessService.addWorkplaceToCompany(companyId, workplace)
   }
 

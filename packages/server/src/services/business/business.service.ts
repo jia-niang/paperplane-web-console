@@ -32,7 +32,7 @@ export class BusinessService {
   async addWorkplaceToCompany(companyId: string, workplace: Workplace) {
     await this.prisma.company.findFirstOrThrow({ where: { id: companyId } })
 
-    return this.prisma.workplace.create({ data: workplace })
+    return this.prisma.workplace.create({ data: { ...workplace, companyId } })
   }
 
   async listWorkCitiesOfCompany(companyId: string) {
