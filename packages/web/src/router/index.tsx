@@ -10,6 +10,12 @@ import { traverseTree } from '@/utils/traverseTree'
 
 import lazy from './lazy'
 
+export type RouteObjectType = RouteObject &
+  RouterHandleType & {
+    children?: RouteObjectType[]
+    handle?: RouterHandleType
+  }
+
 export type RouterHandleType = {
   /** 网页标题 */
   title?: string
@@ -18,11 +24,7 @@ export type RouterHandleType = {
   breadcrumbTitle?: ReactNode
 }
 
-export type RouteObjectType = RouteObject &
-  RouterHandleType & {
-    children?: RouteObjectType[]
-    handle?: RouterHandleType
-  }
+const bizPage = lazy(() => import('@/pages/biz'))
 
 export const routerConfig: RouteObjectType[] = [
   {
@@ -43,7 +45,13 @@ export const routerConfig: RouteObjectType[] = [
         element: lazy(() => import('@/pages/robot')),
       },
 
-      { path: 'biz', title: '公司/工作地', element: lazy(() => import('@/pages/biz')) },
+      {
+        path: 'biz/company/:companyId/workplace/:workplaceId',
+        title: '公司/工作地',
+        element: bizPage,
+      },
+      { path: 'biz/company/:companyId', title: '公司/工作地', element: bizPage },
+      { path: 'biz', title: '公司/工作地', element: bizPage },
 
       { path: '404', title: '页面不见了', element: <Page404 /> },
       { path: '*', element: <Navigate to="/404" replace /> },
