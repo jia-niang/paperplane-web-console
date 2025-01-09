@@ -1,6 +1,8 @@
 import { User } from '@repo/db'
+import { tap } from 'lodash-es'
 import { mutate } from 'swr'
 
+import { browserRouter } from '@/router'
 import { useUserStore } from '@/services/currentUser'
 import { client } from '@/utils/client'
 
@@ -18,18 +20,12 @@ export async function loginApi(name: string, password: string) {
 }
 
 export async function currentUserApi() {
-  return client
-    .get<User>(`/user/current`, { quiet: true })
-    .then(user => {
-      useUserStore.getState().login(user)
-
-      return user
-    })
-    .catch(() => null)
+  return client.get<User>(`/user/current`, { quiet: true }).then(user => tap(user, useUserStore.getState().login))
 }
 
 export async function logoutApi() {
   return client.post<void>(`/user/logout`).then(() => {
+    browserRouter.navigate(`/`)
     useUserStore.getState().logout()
     mutate(`/user/current`, null)
   })
