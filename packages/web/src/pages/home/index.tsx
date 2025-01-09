@@ -28,8 +28,10 @@ export default function HomePage(): RC {
           </div>
         </HomeEntryCard>
 
-        <HomeEntryCard iconImage={bizIcon} bgImage={bizBg} href="/" role={Role.ADMIN}>
-          <div className="text-decoration-none ml-[18px] text-[40px] text-white">业务后台</div>
+        <HomeEntryCard iconImage={bizIcon} bgImage={bizBg} href="/biz" role={Role.USER}>
+          <div className="text-decoration-none ml-[18px] text-[30px] leading-[1.3em] text-white">
+            公司/工作地 数据后台
+          </div>
         </HomeEntryCard>
       </div>
     </PageLayout>

@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider } from 'react-router'
+import { SWRConfig } from 'swr'
 import { ConfigProvider, merge } from 'tdesign-react'
 import zhConfig from 'tdesign-react/es/locale/zh_CN'
 
@@ -25,9 +26,11 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 const emotionCacheConfig = createCache({ key: 'paperplane-web-console-default', nonce: 'emotion' })
 
 root.render(
-  <ConfigProvider globalConfig={globalConfig}>
-    <CacheProvider value={emotionCacheConfig}>
-      <RouterProvider router={browserRouter} />
-    </CacheProvider>
-  </ConfigProvider>
+  <SWRConfig value={{ refreshWhenHidden: false }}>
+    <ConfigProvider globalConfig={globalConfig}>
+      <CacheProvider value={emotionCacheConfig}>
+        <RouterProvider router={browserRouter} />
+      </CacheProvider>
+    </ConfigProvider>
+  </SWRConfig>
 )

@@ -43,6 +43,8 @@ export const routerConfig: RouteObjectType[] = [
         element: lazy(() => import('@/pages/robot')),
       },
 
+      { path: 'biz', title: '公司/工作地', element: lazy(() => import('@/pages/biz')) },
+
       { path: '404', title: '页面不见了', element: <Page404 /> },
       { path: '*', element: <Navigate to="/404" replace /> },
     ],

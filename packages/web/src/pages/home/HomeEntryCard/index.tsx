@@ -47,7 +47,7 @@ export function HomeEntryCard(props: IHomeEntryCardProps) {
     <NavLink
       className={clsx(className, 'text-decoration-none relative mb-[30px] mr-[30px] inline-block')}
       style={style}
-      to={href}
+      to={isAccess ? href : '/'}
     >
       {roleComponent}
 
