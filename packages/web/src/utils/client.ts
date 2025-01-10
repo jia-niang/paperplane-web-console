@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CreateAxiosDefaults } from 'axios'
 import { notification } from 'tdesign-react'
 
+import { navigate } from '@/services/routerService'
 import { useUserStore } from '@/services/userService'
 
 /** 完全原始的 axios client */
@@ -72,6 +73,7 @@ function errorResponseHandler(error?: AxiosResponse<IErrorBody<any>> | AxiosErro
 
   if ((error as AxiosResponse<IErrorBody>)?.data?.code === 401) {
     // 401 错误，自动注销
+    navigate(`/`)
     useUserStore.getState().logout()
   }
 }

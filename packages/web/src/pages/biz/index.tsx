@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { AddIcon, City1Icon, MapLocationIcon, ViewListIcon } from 'tdesign-icons-react'
-import { Button, Col, Loading, Row, Tree } from 'tdesign-react'
+import { Button, Col, Loading, Row, Space, Tree } from 'tdesign-react'
 
 import PageLayout from '@/components/layout/PageLayout'
 import Title from '@/components/text/Title'
@@ -50,59 +50,64 @@ export default function BizPage(): RC {
     <PageLayout>
       <Row gutter={25}>
         <Col span={4}>
-          <Loading loading={companyListLoading}>
-            <Tree
-              data={companiesTree}
-              actived={[companyId as string]}
-              className="mb-4"
-              disabled={!!lock}
-              onActive={([id]) => {
-                if (![undefined, ROOT_ID, companyId].includes(id as string)) {
-                  toCompany(id as string)
-                }
-              }}
-              icon={node => (node.data.value === ROOT_ID ? <ViewListIcon /> : <City1Icon />)}
-              activable
-              line
-              expandAll
-            />
-            <Button
-              onClick={() => void toCompany(true)}
-              disabled={!!lock}
-              size="small"
-              shape="round"
-              icon={<AddIcon />}
-            >
-              新增公司
-            </Button>
-          </Loading>
+          <Space size="large" direction="vertical">
+            <Loading loading={companyListLoading} delay={250}>
+              <Tree
+                data={companiesTree}
+                actived={[companyId as string]}
+                disabled={!!lock}
+                onActive={([id]) => {
+                  if (![undefined, ROOT_ID, companyId].includes(id as string)) {
+                    toCompany(id as string)
+                  }
+                }}
+                icon={node => (node.data.value === ROOT_ID ? <ViewListIcon /> : <City1Icon />)}
+                activable
+                line
+                expandAll
+              />
+              <Button
+                className="mt-4"
+                onClick={() => void toCompany(true)}
+                disabled={!!lock}
+                size="small"
+                shape="round"
+                icon={<AddIcon />}
+              >
+                新增公司
+              </Button>
+            </Loading>
 
-          <Loading loading={workplaceListLoading}>
-            <Tree
-              data={workplacesTree}
-              actived={[workplaceId as string]}
-              className="mb-4 mt-12"
-              disabled={!!lock}
-              onActive={([id]) => {
-                if (![undefined, ROOT_ID, workplaceId].includes(id as string)) {
-                  toWorkplace(id as string)
-                }
-              }}
-              icon={node => (node.data.value === ROOT_ID ? <City1Icon /> : <MapLocationIcon />)}
-              activable
-              line
-              expandAll
-            />
-            <Button
-              onClick={() => void toWorkplace(true)}
-              disabled={!!lock}
-              size="small"
-              shape="round"
-              icon={<AddIcon />}
-            >
-              新增工作地点
-            </Button>
-          </Loading>
+            <Loading loading={workplaceListLoading} delay={250}>
+              <Tree
+                data={workplacesTree}
+                actived={[workplaceId as string]}
+                disabled={!!lock}
+                onActive={([id]) => {
+                  if (![undefined, ROOT_ID, workplaceId].includes(id as string)) {
+                    toWorkplace(id as string)
+                  }
+                }}
+                empty={null}
+                icon={node => (node.data.value === ROOT_ID ? <City1Icon /> : <MapLocationIcon />)}
+                activable
+                line
+                expandAll
+              />
+              {urlId(companyId) ? (
+                <Button
+                  className="mt-4"
+                  onClick={() => void toWorkplace(true)}
+                  disabled={!!lock}
+                  size="small"
+                  shape="round"
+                  icon={<AddIcon />}
+                >
+                  新增工作地点
+                </Button>
+              ) : null}
+            </Loading>
+          </Space>
         </Col>
 
         <Col span={4}>

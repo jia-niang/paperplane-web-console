@@ -1,16 +1,9 @@
 import { createInstance } from 'localforage'
 
+const LOCAL_FORAGE_DB_NAME = 'paperplane-web-console' as const
+
 /** localforage 实例，管理客户端本地存储 */
-export const clientStore = createInstance({ name: 'paperplane-web-console', version: 1 })
+export const clientStore = createInstance({ name: LOCAL_FORAGE_DB_NAME, version: 1 })
 
 /** 客户端 ID */
-export const SK_CLIENT_ID = `cid`
-
-/** 网站设置 */
-export const SK_SETTING = `setting`
-
-/** GPT 提问记录 */
-export const SK_GPT_RECORDS = `gpt-record`
-
-/** 机器人配置 */
-export const SK_ROBOT_CONFIG = `robot-config`
+export const LF_CLIENT_ID = `cid`

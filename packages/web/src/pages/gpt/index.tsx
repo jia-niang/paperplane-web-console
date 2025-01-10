@@ -21,8 +21,8 @@ import { Button, Col, Popconfirm, Radio, Row, Space, Tabs, Tag, Textarea, Toolti
 import { gptMultipleChatApi } from '@/apis/ai'
 import openAiIcon from '@/assets/icon/logo-openai.svg?no-inline'
 import PageLayout from '@/components/layout/PageLayout'
-import { useGloalSetting } from '@/services/globalSetting'
-import { SK_GPT_RECORDS } from '@/utils/clientStore'
+import { useGptSetting } from '@/services/gptService'
+import { SK_GPT_RECORDS } from '@/utils/storeKey'
 
 import '@/styles/highlight.scss'
 
@@ -42,7 +42,7 @@ interface GptRecord {
 
 export default function GPTPage(): RC {
   const [isLoading, setIsLoading] = useState(false)
-  const isSaveHistory = useGloalSetting(setting => setting.gptSetting.saveHisotry)
+  const isSaveHistory = useGptSetting(setting => setting.saveHisotry)
 
   const [cursor, setCursor] = useState(0)
   const [records, setRecords] = useLocalStorageState(SK_GPT_RECORDS, {
@@ -454,7 +454,7 @@ export default function GPTPage(): RC {
 
                   <Popconfirm
                     onConfirm={() => {
-                      useGloalSetting.setState({ gptSetting: { saveHisotry: !isSaveHistory } })
+                      useGptSetting.setState({ saveHisotry: !isSaveHistory })
                       notification.success({
                         title: '操作成功',
                         content: `已${isSaveHistory ? '停止' : '开启'}记录问答历史`,

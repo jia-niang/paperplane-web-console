@@ -1,66 +1,19 @@
 import { css } from '@emotion/react'
-import { usePrevious } from 'ahooks'
 import Atropos from 'atropos/react'
-import { uniqBy } from 'lodash-es'
 import { motion, AnimatePresence } from 'motion/react'
-import { useMemo } from 'react'
-import { NavLink, useLocation, useMatches, useNavigate } from 'react-router'
-import { HomeIcon } from 'tdesign-icons-react'
-import { Breadcrumb, Link, Space } from 'tdesign-react'
+import { NavLink, useLocation } from 'react-router'
+import { Link, Space } from 'tdesign-react'
 
 import UserToolbar from '@/components/user/UserToolbar'
 
+import CustomBreadcrumb from './CustomBreadcrumb'
 import { usePageHeader } from './usePageHeader'
 
-const { BreadcrumbItem } = Breadcrumb
-
 export default function PageHeader(): RC {
-  const navigate = useNavigate()
-
-  const routerForBreadcrumbItem = useMemo(() => ({ push: navigate }), [navigate])
-
   const location = useLocation()
   const isHomepage = location.pathname === '/'
 
-  const currentRoutes = uniqBy(useMatches(), 'pathname')
-  const lastRoutes = usePrevious(currentRoutes) || currentRoutes
-  const navRoutes = isHomepage ? lastRoutes : currentRoutes
-
   const pageHeader = usePageHeader()
-
-  const breadcrumb = (
-    <Breadcrumb key="_breadcrumb" className="justify-center py-[10px]" maxItemWidth="120px">
-      {navRoutes.map(route => {
-        return (
-          <BreadcrumbItem
-            key={route.id}
-            router={routerForBreadcrumbItem}
-            to={route.pathname}
-            icon={route.pathname === '/' ? <HomeIcon size="20px" /> : undefined}
-            css={css`
-              font-size: 20px;
-              line-height: 20px;
-              color: #fff;
-              &:last-child,
-              .t-breadcrumb__inner,
-              .t-breadcrumb__inner-text,
-              .t-breadcrumb__inner:active,
-              .t-link:hover,
-              .t-breadcrumb__separator .t-icon,
-              .t-breadcrumb__inner:hover {
-                color: #fff;
-                font-size: 20px;
-                line-height: 20px;
-                animation: none;
-              }
-            `}
-          >
-            {route.pathname === '/' ? null : route.handle?.breadcrumbTitle || route.handle?.title || '(未知)'}
-          </BreadcrumbItem>
-        )
-      })}
-    </Breadcrumb>
-  )
 
   return (
     <header>
@@ -170,7 +123,7 @@ export default function PageHeader(): RC {
               ) : null}
             </AnimatePresence>
 
-            {breadcrumb}
+            <CustomBreadcrumb />
           </Atropos>
         </div>
       </div>

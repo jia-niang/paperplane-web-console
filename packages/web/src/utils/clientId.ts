@@ -1,4 +1,4 @@
-import { clientStore, SK_CLIENT_ID } from './clientStore'
+import { clientStore, LF_CLIENT_ID } from './clientStore'
 
 function uuid(len: number = 8): string {
   const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
@@ -14,14 +14,14 @@ function uuid(len: number = 8): string {
 
 /** 获取客户端 ID */
 export function ensureClientId() {
-  const storagedClientId = clientStore.getItem(SK_CLIENT_ID)
+  const storagedClientId = clientStore.getItem(LF_CLIENT_ID)
 
   if (storagedClientId) {
     return storagedClientId
   }
 
   const newClientId = uuid()
-  clientStore.setItem(SK_CLIENT_ID, newClientId)
+  clientStore.setItem(LF_CLIENT_ID, newClientId)
 
   return newClientId
 }

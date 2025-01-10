@@ -20,8 +20,13 @@ export type RouterHandleType = {
   /** 网页标题 */
   title?: string
 
-  /** 覆盖面包屑导航中使用的标题 */
-  breadcrumbTitle?: ReactNode
+  /** 配置面包屑导航 */
+  breadcrumb?: IBreadcrumbConfig
+}
+
+export interface IBreadcrumbConfig {
+  /** 配置面包屑导航 */
+  overrideTitle?: ReactNode
 }
 
 const bizPage = lazy(() => import('@/pages/biz'))
@@ -60,7 +65,7 @@ export const routerConfig: RouteObjectType[] = [
 ]
 
 traverseTree(routerConfig, item => {
-  item.handle = { ...pick(item, ['title', 'breadcrumbTitle']), ...item.handle }
+  item.handle = { ...pick(item, ['title', 'breadcrumb']), ...item.handle }
 })
 
 export const browserRouter = createBrowserRouter(routerConfig, { basename: import.meta.env.VITE_BASE_URL })
