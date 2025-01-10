@@ -3,6 +3,7 @@ import { ReactNode } from 'react'
 import { createBrowserRouter, Navigate, RouteObject } from 'react-router'
 
 import MainLayout from '@/components/layout/MainLayout'
+import BizLoading from '@/pages/biz/loading'
 import Page404 from '@/pages/fallbacks/page-404'
 import HomePage from '@/pages/home'
 import { handleRouteTree } from '@/services/routerService'
@@ -50,12 +51,12 @@ const routerConfig: RouteObjectType[] = handleRouteTree([
           {
             path: 'company/:companyId',
             breadcrumb: '公司',
-            element: lazy(() => import('@/pages/biz/forms/CompamyForm')),
+            element: lazy(() => import('@/pages/biz/forms/CompamyForm'), { fallback: <BizLoading /> }),
             children: [
               {
                 path: 'workplace/:workplaceId',
                 breadcrumb: '工作地',
-                element: lazy(() => import('@/pages/biz/forms/WorkplaceForm')),
+                element: lazy(() => import('@/pages/biz/forms/WorkplaceForm'), { fallback: <BizLoading /> }),
               },
             ],
           },
