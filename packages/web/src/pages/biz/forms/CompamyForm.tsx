@@ -49,7 +49,7 @@ export default function CompanyForm(): RC {
     }
   }
 
-  useCustomRoute(`/biz/company/:companyId/*`, { title: data?.company })
+  useCustomRoute(`/biz/company/:companyId/*`, { breadcrumb: data?.company })
 
   if (!companyId) {
     return null

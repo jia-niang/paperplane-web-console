@@ -41,7 +41,7 @@ export default function CustomBreadcrumb(): RC {
               }
             `}
           >
-            {item.link === '/' ? null : item.breadcrumbTitle}
+            {item.link === '/' ? null : item.breadcrumb}
           </BreadcrumbItem>
         )
       })}

@@ -25,7 +25,9 @@ export default function WorkplaceForm(): RC {
 
   useEffect(() => void form.reset(), [companyId, form, data])
 
-  useCustomRoute(`/biz/company/:companyId/workplace/:workplaceId`, { title: data?.city })
+  useCustomRoute(`/biz/company/:companyId/workplace/:workplaceId`, {
+    breadcrumb: data?.city,
+  })
 
   const submitHandler = async (submit: SubmitContext) => {
     if (submit.validateResult !== true) {

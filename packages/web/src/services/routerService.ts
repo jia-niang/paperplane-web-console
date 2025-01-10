@@ -1,5 +1,5 @@
 import { useTitle } from 'ahooks'
-import { last, noop, pick, uniqBy } from 'lodash-es'
+import { noop, pick, uniqBy } from 'lodash-es'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useLocation, useMatch, useMatches, useNavigate } from 'react-router'
 import { create } from 'zustand'
@@ -60,10 +60,10 @@ function useCustomRouteStack(): ICustomRoute[] {
         id: item.id,
         link: item.pathname,
         title: matchCustomConfig?.title || item.handle.title,
-        breadcrumbTitle:
+        breadcrumb:
           matchCustomConfig?.breadcrumb ||
           matchCustomConfig?.title ||
-          item.handle.breadcrumb?.overrideTitle ||
+          item.handle.breadcrumb ||
           item.handle.title ||
           `(未知)`,
       }
@@ -77,7 +77,7 @@ export interface ICustomRoute {
   id: string
   link?: string
   title: string
-  breadcrumbTitle: ReactNode
+  breadcrumb: ReactNode
 }
 
 /** 面包屑导航专用的 route 栈 */
@@ -106,13 +106,12 @@ export function handleRouteTree(routes: RouteObjectType[]): RouteObjectType[] {
 
 /** 定制当前页面的标题和面包屑导航 */
 export function useCustomRoute(path: string, options: ICustomBreadcrumbOptions) {
-  const optionsMemo = useMemo(() => options, [options])
   const match = useMatch(path)
   const key = match?.pathnameBase
 
   useEffect(() => {
     if (key) {
-      useRouterStore.getState().configCustomBreadcrumb(key, optionsMemo)
+      useRouterStore.getState().configCustomBreadcrumb(key, options)
     }
 
     return () => {
@@ -120,7 +119,7 @@ export function useCustomRoute(path: string, options: ICustomBreadcrumbOptions) 
         useRouterStore.getState().removeCustomBreadcrumb(key)
       }
     }
-  }, [path, optionsMemo, key])
+  }, [path, options, key])
 }
 
 /** 安装路由和网站 title 控制 */
@@ -131,8 +130,8 @@ export function useSetupRouter() {
   useEffect(() => void setNavigate(navigate), [navigate, setNavigate])
 
   const routes = useCustomRouteStack()
-  const lastRoute = last(routes)
-  const title = lastRoute?.title
+  const routeWithTitle = routes.findLast(t => t.title)
+  const title = routeWithTitle?.title
 
   useTitle(title ? `${title} | ${import.meta.env.VITE_WEBSITE_TITLE}` : `${import.meta.env.VITE_WEBSITE_TITLE}`)
 }

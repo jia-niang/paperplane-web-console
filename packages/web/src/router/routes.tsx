@@ -19,13 +19,8 @@ export type RouterHandleType = {
   /** 网页标题 */
   title?: string
 
-  /** 配置面包屑导航 */
-  breadcrumb?: IBreadcrumbConfig
-}
-
-export interface IBreadcrumbConfig {
-  /** 配置面包屑导航 */
-  overrideTitle?: ReactNode
+  /** 覆写面包屑导航 */
+  breadcrumb?: ReactNode
 }
 
 const bizPage = lazy(() => import('@/pages/biz'))
@@ -58,12 +53,12 @@ const routerConfig: RouteObjectType[] = handleRouteTree([
         children: [
           {
             path: 'company/:companyId',
-            title: '公司',
+            breadcrumb: '公司',
             element: bizCompanyPage,
             children: [
               {
                 path: 'workplace/:workplaceId',
-                title: '工作地',
+                breadcrumb: '工作地',
                 element: bizWorkplacePage,
               },
             ],
