@@ -1,4 +1,4 @@
-const STORAGE_KEY_PREFIX = 'cc.paperplane.console' as const
+const STORAGE_KEY_PREFIX = 'cc.paperplane.console.' as const
 
 function prefix(arg1: string | TemplateStringsArray, ...restArgs: string[]) {
   if (typeof arg1 === 'string') {
