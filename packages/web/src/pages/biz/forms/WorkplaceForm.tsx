@@ -124,7 +124,9 @@ export default function WorkplaceForm(): RC {
                 content="确认删除此工作地点吗？"
                 showArrow
               >
-                <BizCancelButton disabled={!!lock}>删除</BizCancelButton>
+                <>
+                  <BizCancelButton disabled={!!lock}>删除</BizCancelButton>
+                </>
               </Popconfirm>
             </>
           ) : !isAddWorkplace && lock === 'workplace' ? (

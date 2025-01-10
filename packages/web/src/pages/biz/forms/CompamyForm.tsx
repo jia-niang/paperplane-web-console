@@ -127,7 +127,9 @@ export default function CompanyForm(): RC {
                   }
                   showArrow
                 >
-                  <BizCancelButton disabled={!!lock}>删除</BizCancelButton>
+                  <>
+                    <BizCancelButton disabled={!!lock}>删除</BizCancelButton>
+                  </>
                 </Popconfirm>
               </>
             ) : !isAddCompany && lock === 'company' ? (
