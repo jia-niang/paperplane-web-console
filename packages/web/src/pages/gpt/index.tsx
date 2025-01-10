@@ -470,9 +470,11 @@ export default function GPTPage(): RC {
                     showArrow
                     theme="default"
                   >
-                    <Button variant="text" theme="primary" shape="round" size="small" icon={<HistoryIcon />} block>
-                      {isSaveHistory ? '停止' : '开启'}记录
-                    </Button>
+                    <>
+                      <Button variant="text" theme="primary" shape="round" size="small" icon={<HistoryIcon />} block>
+                        {isSaveHistory ? '停止' : '开启'}记录
+                      </Button>
+                    </>
                   </Popconfirm>
 
                   <Popconfirm
@@ -485,9 +487,11 @@ export default function GPTPage(): RC {
                     showArrow
                     theme="default"
                   >
-                    <Button variant="text" theme="primary" shape="round" size="small" icon={<ClearIcon />} block>
-                      清空历史
-                    </Button>
+                    <>
+                      <Button variant="text" theme="primary" shape="round" size="small" icon={<ClearIcon />} block>
+                        清空历史
+                      </Button>
+                    </>
                   </Popconfirm>
                 </Space>
               </div>
