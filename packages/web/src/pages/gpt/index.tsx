@@ -42,7 +42,7 @@ interface GptRecord {
 
 export default function GPTPage(): RC {
   const [isLoading, setIsLoading] = useState(false)
-  const isSaveHistory = useGptSetting(setting => setting.saveHisotry)
+  const isSaveHistory = useGptSetting(setting => setting.saveHistory)
 
   const [cursor, setCursor] = useState(0)
   const [records, setRecords] = useLocalStorageState(SK_GPT_RECORDS, {
@@ -454,7 +454,7 @@ export default function GPTPage(): RC {
 
                   <Popconfirm
                     onConfirm={() => {
-                      useGptSetting.setState({ saveHisotry: !isSaveHistory })
+                      useGptSetting.setState({ saveHistory: !isSaveHistory })
                       notification.success({
                         title: '操作成功',
                         content: `已${isSaveHistory ? '停止' : '开启'}记录问答历史`,
