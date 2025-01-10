@@ -23,10 +23,6 @@ export type RouterHandleType = {
   breadcrumb?: ReactNode
 }
 
-const bizPage = lazy(() => import('@/pages/biz'))
-const bizCompanyPage = lazy(() => import('@/pages/biz/forms/CompamyForm'))
-const bizWorkplacePage = lazy(() => import('@/pages/biz/forms/WorkplaceForm'))
-
 const routerConfig: RouteObjectType[] = handleRouteTree([
   {
     element: <MainLayout />,
@@ -49,17 +45,17 @@ const routerConfig: RouteObjectType[] = handleRouteTree([
       {
         path: 'biz',
         title: '公司/工作地',
-        element: bizPage,
+        element: lazy(() => import('@/pages/biz')),
         children: [
           {
             path: 'company/:companyId',
             breadcrumb: '公司',
-            element: bizCompanyPage,
+            element: lazy(() => import('@/pages/biz/forms/CompamyForm')),
             children: [
               {
                 path: 'workplace/:workplaceId',
                 breadcrumb: '工作地',
-                element: bizWorkplacePage,
+                element: lazy(() => import('@/pages/biz/forms/WorkplaceForm')),
               },
             ],
           },
