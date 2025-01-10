@@ -28,6 +28,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "highlight.js": "^11.11.1",
+    "immer": "^10.1.1",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
     "motion": "^11.15.0",

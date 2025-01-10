@@ -1,7 +1,4 @@
 /// <reference types="vite/client" />
-import type { AgnosticRouteMatch } from 'react-router'
-
-import type { RouterHandleType } from './router'
 
 interface ImportMetaEnv {
   readonly MODE: 'development' | 'production'
@@ -14,15 +11,4 @@ interface ImportMetaEnv {
 
 interface ImportMeta {
   readonly env: ImportMetaEnv
-}
-
-declare module 'react-router' {
-  interface UIMatch<Data = unknown, Handle = RouterHandleType> {
-    id: string
-    pathname: string
-    params: AgnosticRouteMatch['params']
-    data: Data
-    handle: Handle
-  }
-  function useMatches(): UIMatch<unknown, RouterHandleType>[]
 }

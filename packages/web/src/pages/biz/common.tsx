@@ -7,10 +7,6 @@ export type BizLockType = 'company' | 'workplace' | null
 
 export const required = [{ required: true }]
 
-export interface IBizFormProps {
-  onFresh?(): Promise<any>
-}
-
 export function urlId(id?: string) {
   return id === BIZ_ADD_URL ? undefined : id
 }

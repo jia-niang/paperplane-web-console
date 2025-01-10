@@ -1,12 +1,11 @@
 import { MessageRobotType } from '@repo/db'
-import { pick } from 'lodash-es'
 import { ReactNode } from 'react'
 import { createBrowserRouter, Navigate, RouteObject } from 'react-router'
 
 import MainLayout from '@/components/layout/MainLayout'
 import Page404 from '@/pages/fallbacks/page-404'
 import HomePage from '@/pages/home'
-import { traverseTree } from '@/utils/traverseTree'
+import { handleRouteTree } from '@/services/routerService'
 
 import lazy from './lazy'
 
@@ -30,8 +29,10 @@ export interface IBreadcrumbConfig {
 }
 
 const bizPage = lazy(() => import('@/pages/biz'))
+const bizCompanyPage = lazy(() => import('@/pages/biz/forms/CompamyForm'))
+const bizWorkplacePage = lazy(() => import('@/pages/biz/forms/WorkplaceForm'))
 
-export const routerConfig: RouteObjectType[] = [
+const routerConfig: RouteObjectType[] = handleRouteTree([
   {
     element: <MainLayout />,
     children: [
@@ -51,21 +52,29 @@ export const routerConfig: RouteObjectType[] = [
       },
 
       {
-        path: 'biz/company/:companyId/workplace/:workplaceId',
+        path: 'biz',
         title: '公司/工作地',
         element: bizPage,
+        children: [
+          {
+            path: 'company/:companyId',
+            title: '公司',
+            element: bizCompanyPage,
+            children: [
+              {
+                path: 'workplace/:workplaceId',
+                title: '工作地',
+                element: bizWorkplacePage,
+              },
+            ],
+          },
+        ],
       },
-      { path: 'biz/company/:companyId', title: '公司/工作地', element: bizPage },
-      { path: 'biz', title: '公司/工作地', element: bizPage },
 
       { path: '404', title: '页面不见了', element: <Page404 /> },
       { path: '*', element: <Navigate to="/404" replace /> },
     ],
   },
-]
-
-traverseTree(routerConfig, item => {
-  item.handle = { ...pick(item, ['title', 'breadcrumb']), ...item.handle }
-})
+])
 
 export const browserRouter = createBrowserRouter(routerConfig, { basename: import.meta.env.VITE_BASE_URL })
