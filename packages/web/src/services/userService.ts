@@ -1,8 +1,10 @@
 import { Role, User } from '@repo/db'
+import { useMemo } from 'react'
+import { useLocation } from 'react-router'
 import useSWR, { mutate } from 'swr'
 import { create } from 'zustand'
 
-import { currentUserApi } from '@/apis/user'
+import { currentUserApi, giteaOAuthLoginApi, githubOAuthLoginApi } from '@/apis/user'
 
 import { navigate } from './routerService'
 
@@ -55,4 +57,26 @@ export function useAccess(target?: Role) {
   } else {
     return accessPriorit.indexOf(currentUser.role) >= accessPriorit.indexOf(target)
   }
+}
+
+export function useGitHubHref() {
+  const location = useLocation()
+  const nextUrl = useMemo(() => window.location.origin + location.pathname, [location.pathname])
+
+  const { data } = useSWR([`/user/login/github/href`, nextUrl], () => githubOAuthLoginApi(nextUrl), {
+    refreshInterval: 9 * 60 * 1000,
+  })
+
+  return data
+}
+
+export function useGiteaHref() {
+  const location = useLocation()
+  const nextUrl = useMemo(() => window.location.origin + location.pathname, [location.pathname])
+
+  const { data } = useSWR([`/user/login/gitea/href`, nextUrl], () => giteaOAuthLoginApi(nextUrl), {
+    refreshInterval: 9 * 60 * 1000,
+  })
+
+  return data
 }

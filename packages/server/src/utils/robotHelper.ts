@@ -21,7 +21,7 @@ export async function feishuUpload(imageUrl: string, appId: string, appSecret: s
         image: Readable.from(image),
       },
     })
-    .then(res => res.image_key)
+    .then(res => res!.image_key!)
 }
 
 async function defaultReduceSizeByFile(file: Buffer): Promise<Buffer> {

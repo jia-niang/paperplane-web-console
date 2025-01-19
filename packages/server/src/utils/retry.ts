@@ -2,7 +2,7 @@ export interface IRetryOption {
   retries?: number
 }
 
-const defaultRetryOptions: IRetryOption = {
+const defaultRetryOptions = {
   retries: 3,
 }
 
@@ -24,4 +24,6 @@ export async function retry<TFnResult = any>(
       }
     }
   }
+
+  throw new Error()
 }

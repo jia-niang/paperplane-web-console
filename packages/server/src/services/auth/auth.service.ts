@@ -23,7 +23,7 @@ export class AuthService {
   ) {}
 
   async login(username: string, password: string) {
-    const user = await this.userService.loginCheck(username, password)
+    const user = await this.userService.checkPwd(username, password)
     if (!user) {
       throw new UnauthorizedException('用户名或密码不正确，请检查后重试')
     }
@@ -78,7 +78,7 @@ export class AuthService {
           resolve()
         }
 
-        const session = JSON.parse(sessionRecord) as IAppSession
+        const session = JSON.parse(sessionRecord!) as IAppSession
         session.currentUser = newUser
         await this.redis.set('session:' + sessionId, JSON.stringify(session))
         resolve()

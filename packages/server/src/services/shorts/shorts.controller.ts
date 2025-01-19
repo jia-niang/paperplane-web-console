@@ -8,8 +8,10 @@ import { AnyRole, CurrentRole } from '@/app/role.decorator'
 
 import { ShortsService } from './shorts.service'
 
-export interface ICreateShortsBody extends Pick<Shorts, 'url' | 'type' | 'expiredAt' | 'userId'> {
+export interface ICreateShortsBody extends Pick<Shorts, 'url' | 'type'> {
   key?: string
+  expiredAt?: Date
+  userId?: string
 }
 
 export interface IShortsResult {

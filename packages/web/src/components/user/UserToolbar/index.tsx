@@ -16,14 +16,14 @@ export default function UserToolbar(props: IProps): RC {
   const dropdownClickHandler = (item: DropdownOption) => {
     if (item.value === 'logout') {
       logoutApi().then(() => {
-        notification.success({ title: `已成功注销` })
+        notification.success({ title: `已成功登出` })
       })
     }
   }
 
   const loginedToolbar = currentUser ? (
     <>
-      <Dropdown placement="left" onClick={dropdownClickHandler} options={[{ value: 'logout', content: '注销' }]}>
+      <Dropdown placement="left" onClick={dropdownClickHandler} options={[{ value: 'logout', content: '登出' }]}>
         <Link size="large" theme="default">
           {currentUser.name}
         </Link>

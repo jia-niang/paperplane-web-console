@@ -19,6 +19,8 @@ import { AuthService } from './services/auth/auth.service'
 import { RolesGuardService } from './services/auth/roles-guard.service'
 import { BusinessController } from './services/business/business.controller'
 import { BusinessService } from './services/business/business.service'
+import { CaptchaController } from './services/captcha/captcha.controller'
+import { CaptchaService } from './services/captcha/captcha.service'
 import { DailyOffworkRecorderService } from './services/daily-offwork/daily-offwork-recorder.service'
 import { DailyOffworkSchedulerService } from './services/daily-offwork/daily-offwork-scheduler.service'
 import { DailyOffworkSenderService } from './services/daily-offwork/daily-offwork-sender.service'
@@ -33,11 +35,13 @@ import { MessageQueueController } from './services/message-queue/message-queue.c
 import { MessageQueueService } from './services/message-queue/message-queue.service'
 import { MessageRobotController } from './services/message-robot/message-robot.controller'
 import { MessageRobotService } from './services/message-robot/message-robot.service'
+import { OA2Service } from './services/oa2/oa2.service'
 import { RedisService } from './services/redis/redis.service'
 import { S3Controller } from './services/s3/s3.controller'
 import { S3Service } from './services/s3/s3.service'
 import { ShortsController } from './services/shorts/shorts.controller'
 import { ShortsService } from './services/shorts/shorts.service'
+import { SignService } from './services/sign/sign.service'
 import { ThirdPartyService } from './services/third-party/third-party.service'
 import { UserController } from './services/user/user.controller'
 import { UserService } from './services/user/user.service'
@@ -47,7 +51,7 @@ import { WxBizService } from './services/wxbiz/wxbiz.service'
 export const rabbitmqConfig: RmqOptions = {
   transport: Transport.RMQ,
   options: {
-    urls: [process.env.RABBITMQ_URL],
+    urls: [process.env.RABBITMQ_URL!],
     queue: 'paperplane-web-console-default',
     queueOptions: { durable: true },
     prefetchCount: 1,
@@ -71,16 +75,16 @@ export const rabbitmqConfig: RmqOptions = {
 
         return {
           session: {
-            name: process.env.COOKIES_NAME,
-            secret: process.env.COOKIES_SECRET,
+            name: process.env.COOKIES_NAME!,
+            secret: process.env.SERVER_SECRET!,
             store: new RedisStore({
-              client: new Redis(process.env.REDIS_URL),
+              client: new Redis(process.env.REDIS_URL!),
               prefix: 'session:',
               ttl: maxAgeInSecond,
             }),
             unset: 'destroy',
             resave: false,
-            saveUninitialized: false,
+            saveUninitialized: true,
             cookie: {
               secure: process.env.NODE_ENV === 'production',
               maxAge: maxAgeInSecond * 1000,
@@ -104,6 +108,7 @@ export const rabbitmqConfig: RmqOptions = {
     MessageQueueController,
     WxBizController,
     S3Controller,
+    CaptchaController,
   ],
   providers: [
     providePrismaClientExceptionFilter(),
@@ -129,6 +134,9 @@ export const rabbitmqConfig: RmqOptions = {
     ShortsService,
     WxBizService,
     S3Service,
+    OA2Service,
+    SignService,
+    CaptchaService,
   ],
 })
 export class AppModule {}

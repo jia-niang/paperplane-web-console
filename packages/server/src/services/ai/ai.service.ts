@@ -32,7 +32,7 @@ export class AiService {
       .create({
         ...options,
         messages: [{ role: 'user', content: prompt }],
-        model: process.env.AI_MODEL,
+        model: process.env.AI_MODEL!,
       })
       .then(res => res.choices[0].message.content)
   }
@@ -43,7 +43,7 @@ export class AiService {
         ...options,
         messages: [{ role: 'user', content: prompt }],
         n,
-        model: process.env.AI_MODEL,
+        model: process.env.AI_MODEL!,
       })
       .then(res => res.choices.map(choice => choice.message.content))
   }
@@ -51,6 +51,6 @@ export class AiService {
   async weekly(text: string) {
     return this.chat(`请帮我把以下的工作内容填充为一篇完整的周报，用 markdown 格式以分点叙述的形式输出：${text}`, {
       max_tokens: 3000,
-    }).then(text => text.slice(text.indexOf('#')))
+    }).then(text => text!.slice(text!.indexOf('#')))
   }
 }

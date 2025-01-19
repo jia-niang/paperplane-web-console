@@ -34,7 +34,7 @@ export class ShortsService {
 
     // 如果指定了 Key，那么必须使用此 Key，不能使用则直接报错
     if (specifyKey) {
-      const existRecord = await this.queryRecordByKey(key)
+      const existRecord = await this.queryRecordByKey(key!)
       if (existRecord) {
         throw new Error(`此短网址已被使用`)
       }
@@ -58,7 +58,7 @@ export class ShortsService {
       }
     }
 
-    const dbResult = await this.prisma.shorts.create({ data: { ...shorts, key } })
+    const dbResult = await this.prisma.shorts.create({ data: { ...shorts, key: key! } })
     this.redisRegister(dbResult)
     const result = this.formatResult(dbResult.id, dbResult.key)
 
@@ -69,8 +69,6 @@ export class ShortsService {
     const short = await this.generateShorts({
       type: ShortsType.OFFWORK,
       url,
-      expiredAt: undefined,
-      userId: undefined,
     })
     const shortUrl = `p01.cc/d/${short.key}`
 

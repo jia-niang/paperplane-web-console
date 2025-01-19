@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
-import { MessageRobot, MessageRobotType } from '@repo/db'
+import { MessageRobot, MessageRobotType, Prisma } from '@repo/db'
 
 import { Public, UserId } from '@/app/auth.decorator'
 
@@ -16,7 +16,7 @@ export class MessageRobotController {
   constructor(private readonly messageRobotService: MessageRobotService) {}
 
   @Post('/current')
-  async addUserRobot(@UserId() userId: string, @Body() robot: MessageRobot) {
+  async addUserRobot(@UserId() userId: string, @Body() robot: Prisma.MessageRobotUncheckedCreateInput) {
     return this.messageRobotService.addUserRobot(userId, robot)
   }
 
@@ -31,7 +31,11 @@ export class MessageRobotController {
   }
 
   @Put('/current/:id')
-  async updateUserRobot(@Param('id') id: string, @Body() robot: MessageRobot, @UserId() userId: string) {
+  async updateUserRobot(
+    @Param('id') id: string,
+    @Body() robot: Prisma.MessageRobotUncheckedUpdateInput,
+    @UserId() userId: string
+  ) {
     return this.messageRobotService.updateUserRobot(userId, id, robot)
   }
 
@@ -69,7 +73,7 @@ export class MessageRobotController {
   async updateCompanyRobot(
     @Param('companyId') companyId: string,
     @Param('id') id: string,
-    @Body() robot: MessageRobot
+    @Body() robot: Prisma.MessageRobotUncheckedUpdateInput
   ) {
     return this.messageRobotService.updateCompanyRobot(companyId, id, robot)
   }

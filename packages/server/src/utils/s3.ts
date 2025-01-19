@@ -4,12 +4,12 @@ import { trimStart } from 'lodash'
 import mimeLib from 'mime'
 
 const s3Client = new S3Client({
-  region: process.env.S3_REGION,
-  endpoint: process.env.S3_ENDPOINT,
+  region: process.env.S3_REGION!,
+  endpoint: process.env.S3_ENDPOINT!,
   forcePathStyle: false,
   credentials: {
-    accessKeyId: process.env.S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
   },
 })
 
@@ -37,7 +37,7 @@ export async function uploadFile(
     Bucket: process.env.S3_BUCKET_NAME,
     Body: fileBuffer,
     Key: trimStart(key, '/'),
-    ContentType: mime || mimeLib.getType(key),
+    ContentType: mime || mimeLib.getType(key) || undefined,
   })
 
   await s3Client.send(uploadCommand)

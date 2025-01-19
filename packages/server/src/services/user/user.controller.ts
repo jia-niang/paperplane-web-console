@@ -1,4 +1,16 @@
-import { Body, Controller, Get, Post, Res, Session } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Get,
+  Headers,
+  HttpStatus,
+  ParseBoolPipe,
+  Post,
+  Query,
+  Res,
+  Session,
+} from '@nestjs/common'
 import { User } from '@repo/db'
 import { Response } from 'express'
 import { noop } from 'lodash'
@@ -29,6 +41,68 @@ export class UserController {
   }
 
   @Public()
+  @Get('/login/github/href')
+  async ghLoginHref(
+    @Res() res: Response,
+    @Headers('referer') referer: string,
+    @Query('nextUrl') nextUrl: string,
+    @Query('follow', new DefaultValuePipe(false), ParseBoolPipe) follow: boolean
+  ) {
+    const href = await this.userService.ghLoginHref({ nextUrl: nextUrl || referer })
+
+    return follow ? res.redirect(HttpStatus.FOUND, href) : res.json({ success: true, code: 200, data: href })
+  }
+
+  @Public()
+  @Get('/login/github/callback')
+  async ghLoginCb(
+    @Session() session: IAppSession,
+    @Res() res: Response,
+    @Query('code') code: string,
+    @Query('state') state: string
+  ) {
+    const { nextUrl, user } = await this.userService.ghLoginCb(code, state)
+
+    const sessionUser = await this.authService.createUserSessionData(user)
+    session.currentUser = sessionUser
+    session.save(noop)
+    await this.authService.registerUserSessions(session.id, sessionUser)
+
+    return res.redirect(HttpStatus.FOUND, nextUrl)
+  }
+
+  @Public()
+  @Get('/login/gitea/href')
+  async giteaLoginHref(
+    @Res() res: Response,
+    @Headers('referer') referer: string,
+    @Query('nextUrl') nextUrl: string,
+    @Query('follow', new DefaultValuePipe(false), ParseBoolPipe) follow: boolean
+  ) {
+    const href = await this.userService.giteaLoginHref({ nextUrl: nextUrl || referer })
+
+    return follow ? res.redirect(HttpStatus.FOUND, href) : res.json({ success: true, code: 200, data: href })
+  }
+
+  @Public()
+  @Get('/login/gitea/callback')
+  async giteaLoginCb(
+    @Session() session: IAppSession,
+    @Res() res: Response,
+    @Query('code') code: string,
+    @Query('state') state: string
+  ) {
+    const { nextUrl, user } = await this.userService.giteaLoginCb(code, state)
+
+    const sessionUser = await this.authService.createUserSessionData(user)
+    session.currentUser = sessionUser
+    session.save(noop)
+    await this.authService.registerUserSessions(session.id, sessionUser)
+
+    return res.redirect(HttpStatus.FOUND, nextUrl)
+  }
+
+  @Public()
   @Get('/current')
   async current(@UserId() id: string) {
     return this.authService.current(id)
@@ -49,7 +123,7 @@ export class UserController {
     await this.authService.unregisterUserSessions(session.id, user)
     session.destroy(noop)
     await this.authService.logout()
-    res.clearCookie(process.env.COOKIES_NAME, {
+    res.clearCookie(process.env.COOKIES_NAME!, {
       path: '/',
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

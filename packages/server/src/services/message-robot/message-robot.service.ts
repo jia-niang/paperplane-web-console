@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { MessageRobot, MessageRobotType } from '@repo/db'
+import { MessageRobot, MessageRobotType, Prisma } from '@repo/db'
 import axios from 'axios'
 import { PrismaService } from 'nestjs-prisma'
 
@@ -19,7 +19,7 @@ export class MessageRobotService {
     private readonly userService: UserService
   ) {}
 
-  async addUserRobot(userId: string, robot: MessageRobot): Promise<MessageRobot> {
+  async addUserRobot(userId: string, robot: Prisma.MessageRobotUncheckedCreateInput): Promise<MessageRobot> {
     robot.userId = userId
     robot.companyId = null
 
@@ -34,7 +34,7 @@ export class MessageRobotService {
     return this.prisma.messageRobot.findFirstOrThrow({ where: { id, userId } })
   }
 
-  async updateUserRobot(userId: string, id: string, robot: MessageRobot) {
+  async updateUserRobot(userId: string, id: string, robot: Prisma.MessageRobotUncheckedUpdateInput) {
     await this.prisma.messageRobot.findFirstOrThrow({ where: { id, userId } })
 
     return this.prisma.messageRobot.update({ where: { id, userId }, data: robot })
@@ -92,7 +92,7 @@ export class MessageRobotService {
     return this.prisma.messageRobot.findFirstOrThrow({ where: { id, companyId } })
   }
 
-  async updateCompanyRobot(companyId: string, id: string, robot: MessageRobot) {
+  async updateCompanyRobot(companyId: string, id: string, robot: Prisma.MessageRobotUncheckedUpdateInput) {
     await this.prisma.messageRobot.findFirstOrThrow({ where: { id, companyId } })
 
     return this.prisma.messageRobot.update({ where: { id, companyId }, data: robot })
@@ -172,8 +172,8 @@ export class MessageRobotService {
 
       const feishuImageKey = await feishuUpload(
         imageUrl,
-        imageExtraAuthentication?.feishuUploadAppId,
-        imageExtraAuthentication?.feishuUploadAppSecret
+        imageExtraAuthentication?.feishuUploadAppId || '',
+        imageExtraAuthentication?.feishuUploadAppSecret || ''
       )
 
       return this.sendJSONByRobotConfig(robotConfig, {
@@ -201,7 +201,7 @@ export class MessageRobotService {
   async sendJSONByRobotConfig(robotConfig: MessageRobot, messageBody: object) {
     const { type, accessToken, secret } = robotConfig
 
-    return this.sendJSONByFullConfig(type, messageBody, { accessToken, secret })
+    return this.sendJSONByFullConfig(type, messageBody, { accessToken: accessToken!, secret: secret! })
   }
 
   /** 提供机器人完整配置（类型、令牌、密钥）来发送原始 JSON 消息 */
@@ -209,7 +209,7 @@ export class MessageRobotService {
     const { accessToken, secret } = authBody
 
     if (type === MessageRobotType.DINGTALK) {
-      const { sign, timestamp } = dingtalkRobotSign(secret)
+      const { sign, timestamp } = dingtalkRobotSign(secret!)
 
       return axios
         .post(dintalkRobotUrl + accessToken + `&timestamp=${timestamp}&sign=${sign}`, messageBody)
@@ -222,7 +222,7 @@ export class MessageRobotService {
           return res
         })
     } else if (type === MessageRobotType.FEISHU) {
-      const { sign, timestamp } = feishuRobotSign(secret)
+      const { sign, timestamp } = feishuRobotSign(secret!)
 
       return axios
         .post(feishuRobotUrl + accessToken, { timestamp: String(timestamp), sign, ...messageBody })

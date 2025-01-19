@@ -26,3 +26,11 @@ export async function logoutApi() {
     useUserStore.getState().logout()
   })
 }
+
+export async function githubOAuthLoginApi(nextUrl: string) {
+  return client.get(`/user/login/github/href`, { params: { nextUrl } })
+}
+
+export async function giteaOAuthLoginApi(nextUrl: string) {
+  return client.get(`/user/login/gitea/href`, { params: { nextUrl } })
+}

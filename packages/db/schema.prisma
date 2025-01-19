@@ -21,8 +21,11 @@ model User {
   id String @id @default(cuid())
 
   name     String
-  password String
-  role     Role   @default(USER)
+  password String?
+  role     Role    @default(USER)
+
+  githubId String?
+  giteaId  String?
 
   MessageRobot MessageRobot[]
   Shorts       Shorts[]

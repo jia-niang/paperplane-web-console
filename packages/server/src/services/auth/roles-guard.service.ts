@@ -29,7 +29,7 @@ export class RolesGuardService implements CanActivate {
 
     const session: IAppSession = request.session
     const role = session?.currentUser?.role
-    const isOK = requiredRoles.includes(role)
+    const isOK = requiredRoles.includes(role!)
 
     if (!isOK) {
       throw new ForbiddenException('权限不足')

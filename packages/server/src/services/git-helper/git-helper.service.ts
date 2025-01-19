@@ -39,7 +39,7 @@ export class GitHelperService {
 
   async selectProjectById(projectId: string) {
     const result = await this.prisma.gitProject.findFirstOrThrow({ where: { id: projectId } })
-    result.privateKey = undefined
+    result.privateKey = null
 
     return result
   }
@@ -90,7 +90,7 @@ export class GitHelperService {
         url: repo.url,
         projectId,
         repoId,
-        privateKey: project.privateKey,
+        privateKey: project!.privateKey!,
       })
 
       const branches = await listRecentCommitBranches(git, 10)
@@ -100,7 +100,7 @@ export class GitHelperService {
       })
 
       await this.prisma.gitCommit.deleteMany({ where: { gitRepoId: repoId } })
-      let recentCommits = []
+      let recentCommits: any[] = []
       for (const branch of branches) {
         const commits = await listRecentCommits(git, branch, 7)
         recentCommits = uniqBy(recentCommits.concat(commits), (item: GitCommit) => item.hash)
@@ -139,7 +139,7 @@ export class GitHelperService {
       include: { GitProject: { include: { staffs: true } }, recentCommits: true },
     })
     const project = repo.GitProject
-    const staffs = project.staffs
+    const staffs = project!.staffs
 
     function lowCaseInclude(target: string, keywords: string) {
       return target.toLowerCase().includes(keywords.toLowerCase())
@@ -202,10 +202,10 @@ export class GitHelperService {
         const commitJoinText = commitList.map(t => t.message).join('\n')
         const aiText = `请根据我上周的 Git 提交记录生成一篇完整的工作周报，用 markdown 格式以分点叙述的形式输出，不需要大标题，提交记录：\n${commitJoinText}`
 
-        const weekly = await this.aiService.chat(aiText).then(text => text.slice(text.indexOf('#')))
+        const weekly = await this.aiService.chat(aiText).then(text => text!.slice(text!.indexOf('#')))
 
         await this.prisma.gitReport.create({
-          data: { content: weekly, gitProjectId: projectId, gitStaffId: staffId },
+          data: { content: weekly, gitProjectId: projectId, gitStaffId: staffId! },
         })
       }
 

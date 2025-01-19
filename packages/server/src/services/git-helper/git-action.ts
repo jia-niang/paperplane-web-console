@@ -92,7 +92,7 @@ export function generateAndWriteRSAKeyPair(projectId: string): {
 
 /** 从仓库 url 中提取仓库名称 */
 export function getRepoNameByUrl(repoUrl: string) {
-  return repoUrl.match(/\/([a-zA-Z0-9-_]+)\.git/)[1]
+  return repoUrl.match(/\/([a-zA-Z0-9-_]+)\.git/)![1]
 }
 
 /** 准备 Git 仓库暂存目录 */
@@ -119,7 +119,7 @@ function preparePrivateKeyFile(options: { projectId?: string; privateKeyValue?: 
   const sshKeyPath = repoPath + '_rsa'
 
   if (!existsSync(sshKeyPath)) {
-    writeFileSync(sshKeyPath, privateKeyValue, { flag: 'w+' })
+    writeFileSync(sshKeyPath, privateKeyValue!, { flag: 'w+' })
     chmodSync(sshKeyPath, '600')
   }
 

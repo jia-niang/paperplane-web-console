@@ -22,10 +22,10 @@
     "prod-start:server": "pnpm -F @repo/server run start:prod",
     "db:gen": "turbo db:gen",
     "db:generate": "turbo db:generate",
-    "db:push": "turbo db:push",
-    "db:mi": "turbo db:mi",
-    "db:migrate": "turbo db:migrate",
-    "db:deploy": "turbo db:deploy"
+    "db:push": "pnpm -F @repo/db run db:push",
+    "db:mi": "pnpm -F @repo/db run db:mi",
+    "db:migrate": "pnpm -F @repo/db run db:migrate",
+    "db:deploy": "pnpm -F @repo/db run db:deploy"
   },
   "workspaces": [
     "./packages/*"

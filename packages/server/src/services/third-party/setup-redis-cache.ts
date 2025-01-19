@@ -17,7 +17,9 @@ const AXIOS_REDIS_CACHE_PREFIX = 'axios-cache:'
 export function setupRedisCache(redis: Redis) {
   return buildStorage({
     async find(key) {
-      return redis.get(AXIOS_REDIS_CACHE_PREFIX + key).then(result => result && (JSON.parse(result) as StorageValue))
+      return redis
+        .get(AXIOS_REDIS_CACHE_PREFIX + key)
+        .then(result => (result ? (JSON.parse(result) as StorageValue) : undefined))
     },
 
     async set(key, value, req) {

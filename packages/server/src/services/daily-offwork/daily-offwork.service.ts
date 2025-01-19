@@ -88,7 +88,7 @@ export class DailyOffworkService {
                 imageUrl: '',
                 viewUrl: '',
                 shortUrl: '',
-                trafficImageUrl: workplaceRecord.trafficImage,
+                trafficImageUrl: workplaceRecord.trafficImage!,
 
                 companyId: company.id,
                 workplaceId: setting.belongToWorkplace.id,
@@ -189,14 +189,14 @@ export class DailyOffworkService {
     const darkTheme = darkThemeImages.includes(bgNumber)
     const bgUrl = `${process.env.SERVICE_URL}/res/offwork-bg/${bgNumber}.jpg`
 
-    const signText = companyRecord.delta > 0 ? '+' : ''
+    const signText = companyRecord.delta ? (companyRecord.delta > 0 ? '+' : '') : ''
     const stockText =
       companyRecord.todayStock && companyRecord.delta
         ? `${companyRecord.todayStock} (${signText}${companyRecord.delta})`
         : undefined
 
-    const todayWeatherUrl = this.getWeatherImageUrl(workplaceRecord.todayWid, workplaceRecord.todayWeather)
-    const tomorrowWeatherUrl = this.getWeatherImageUrl(workplaceRecord.tomorrowWid, workplaceRecord.tomorrowWeather)
+    const todayWeatherUrl = this.getWeatherImageUrl(workplaceRecord.todayWid!, workplaceRecord.todayWeather!)
+    const tomorrowWeatherUrl = this.getWeatherImageUrl(workplaceRecord.tomorrowWid!, workplaceRecord.tomorrowWeather!)
 
     const viewData = {
       ...workplace,
@@ -220,7 +220,7 @@ export class DailyOffworkService {
   /** Offwork 的 ID 视图 */
   async offworkViewDataById(viewId: string) {
     const record = await this.prisma.offworkViewRecord.findFirstOrThrow({ where: { id: viewId } })
-    const viewData = await this.offworkViewData(record.date, record.companyId, record.workplaceId)
+    const viewData = await this.offworkViewData(record.date, record.companyId!, record.workplaceId!)
 
     return viewData
   }

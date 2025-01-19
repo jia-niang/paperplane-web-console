@@ -3,7 +3,7 @@ import { Company, WorkdayRecord, Workplace } from '@repo/db'
 import dayjs from 'dayjs'
 import { noop } from 'lodash'
 import { PrismaService } from 'nestjs-prisma'
-import puppeteer, { Browser } from 'puppeteer'
+import puppeteer from 'puppeteer'
 
 import { retry } from '@/utils/retry'
 import { uploadFile } from '@/utils/s3'
@@ -128,9 +128,8 @@ export class DailyOffworkRecorderService {
 
   /** 生成 Offwork 图片 */
   async offworkViewToImage(url: string, imageKey: string): Promise<string> {
-    let browser: Browser
+    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] })
     try {
-      browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] })
       const page = await browser.newPage()
 
       await retry(
@@ -156,9 +155,8 @@ export class DailyOffworkRecorderService {
 
   /** 生成交通图 */
   private async trafficViewImageToUrl(url: string, imageKey: string): Promise<string> {
-    let browser: Browser
+    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] })
     try {
-      browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] })
       const page = await browser.newPage()
 
       await retry(
