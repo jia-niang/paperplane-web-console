@@ -26,6 +26,6 @@ dist-ssr
 *.sw?
 
 out
-.deps
+.docker-deps
 .turbo
 .pnpm-store

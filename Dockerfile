@@ -8,7 +8,7 @@ WORKDIR /paperplane-web-console
 ENV HUSKY=0
 ENV DO_NOT_TRACK=1
 
-COPY .deps /paperplane-web-console
+COPY .docker-deps /paperplane-web-console
 RUN --mount=type=cache,id=pnpm,target=/paperplane-web-console/.pnpm-store pnpm i --frozen-lockfile --registry=$NPM_REGISTRY
 
 COPY . /paperplane-web-console
