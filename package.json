@@ -70,5 +70,10 @@
     "*.{css,scss}": [
       "prettier --list-different"
     ]
+  },
+  "pnpm": {
+    "overrides": {
+      "canvas": "^3.0.1"
+    }
   }
 }
