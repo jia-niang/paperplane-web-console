@@ -25,10 +25,9 @@ module.exports = tseslint.config(
     },
     plugins: {},
     rules: {
-      '@typescript-eslint/interface-name-prefix': 'off',
+      '@typescript-eslint/no-namespace': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-empty-object-type': 'warn',
       'prefer-const': 'warn',
     },
   },
@@ -62,16 +61,11 @@ module.exports = tseslint.config(
     rules: {},
   },
 
-  // ↓ 全局忽略
+  // ↓ 全局忽略：packages/types
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['packages/**/*.{ts,tsx}'],
     rules: {
-      '@typescript-eslint/no-empty-object-type': 'off',
-      '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-empty-interface': 'off',
-      '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
     },
   },
 

@@ -38,6 +38,7 @@
     "dotenv-cli": "^7.4.2"
   },
   "devDependencies": {
-    "prisma": "^6.1.0"
+    "prisma": "^6.1.0",
+    "prisma-class-generator": "^0.2.11"
   }
 }

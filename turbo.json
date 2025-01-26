@@ -11,9 +11,9 @@
       "outputs": ["dist/**"]
     },
 
-    "check-types": {},
-    "lint": {},
-    "format": {},
+    "check-types": { "cache": false },
+    "lint": { "cache": false },
+    "format": { "cache": false },
 
     "db:gen": { "cache": false },
     "db:generate": { "cache": false },

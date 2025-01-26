@@ -1,5 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
-import { Workplace, Company } from '@repo/db'
+import { ApiOkResponse } from '@nestjs/swagger'
+
+import { Company } from '@/schema/company'
+import { Workplace } from '@/schema/workplace'
 
 import { BusinessService } from './business.service'
 
@@ -7,21 +10,26 @@ import { BusinessService } from './business.service'
 export class BusinessController {
   constructor(private readonly businessService: BusinessService) {}
 
+  /** 创建公司 */
   @Post('/company')
-  async addCompany(@Body() company: Company) {
+  async addCompany(@Body() company: Company): Promise<Company> {
     return this.businessService.addCompany(company)
   }
 
+  /** 根据 ID 获取公司 */
   @Get('/company/:id')
-  async getCompanyById(@Param('id') id: string) {
+  @ApiOkResponse({ type: Company })
+  async getCompanyById(@Param('id') id: string): Promise<Company> {
     return this.businessService.getCompanyById(id)
   }
 
+  /** 列出所有公司 */
   @Get('/company')
-  async listCompanies() {
+  async listCompanies(): Promise<Company[]> {
     return this.businessService.listCompanies()
   }
 
+  /** 更新公司信息 */
   @Put('/company/:id')
   async updateCompany(@Param('id') id: string, @Body() company: Company) {
     return this.businessService.updateCompany(id, company)

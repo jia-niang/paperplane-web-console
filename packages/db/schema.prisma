@@ -2,6 +2,14 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator prismaClassGenerator {
+  provider                = "prisma-class-generator"
+  dryRun                  = false
+  preserveDefaultNullable = true
+  separateRelationFields  = true
+  output                  = "../server/src/schema"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("POSTGRESQL_URL")
