@@ -1,5 +1,6 @@
 import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiConsumes } from '@nestjs/swagger'
 
 import { AdminRole } from '@/app/role.decorator'
 
@@ -22,6 +23,7 @@ export type IS3UploadBody = {
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}
 
+  @ApiConsumes('multipart/form-data')
   @AdminRole()
   @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
