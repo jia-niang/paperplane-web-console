@@ -14,6 +14,7 @@
 本项目对系统内已安装的应用有要求：
 
 - 必须已安装 Node.js 20 及以上版本，这是必须的运行条件；
+- 必须已安装 `package.json` 中 `"packageManager"` 字段匹配版本的 pnpm；
 - 如果有用到 `puppeteer` 相关功能（例如每日下班提醒生成图片），则需求已安装 Chrome/Chromium；
 - 如果有用到 `simple-git` 相关功能（例如 Git 周报助手），则需求已安装 Git。
 
@@ -125,7 +126,7 @@ pnpm build
 ## 生产环境：使用 Dockerfile 构建镜像
 
 - 构建镜像前，**必须运行 `pnpm ci:prepare-docker` 生成一份仅包含项目依赖项的目录结构**，这是为了利用 Layer 机制加快构建，Dockerfile 中有用到这个目录，不存在则会报错；
-- 可以使用 `docker build -t <镜像名> .` 在本地构建生产包，如果 npm 连接不畅通，可以添加 `--build-arg NPM_REGISTRY=https://registry.npmmirror.com` 参数；
+- 可以使用 `docker build -t <镜像名> .` 在本地构建生产包；
 - 生产镜像仅运行服务端，暴露 `6100` 端口；前端文件可通过命令 `docker cp <容器名>:/paperplane-web-console/package/web/dist/ <目标位置>` 复制出来；
 - 所有 `.local` 后缀的环境变量文件不会包含在镜像内，运行时请自行挂载到 `/paperplane-web-console/packages/server/env.production.local` 以及 `/paperplane-web-console/packages/db/env.production.local`。
 
