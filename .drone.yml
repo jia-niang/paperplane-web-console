@@ -4,6 +4,18 @@ name: default
 workspace:
   path: /source
 
+volumes:
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: webroot
+    host:
+      path: /root/www
+
+trigger:
+  branch:
+    - main
+
 steps:
   - name: prepare
     image: node:20.13.0
@@ -171,15 +183,3 @@ steps:
     commands:
       - cp -rf /webroot/paperplane-web-console-bak/* /webroot/paperplane-web-console/
       - rm -rf /webroot/paperplane-web-console-bak/*
-
-volumes:
-  - name: docker-sock
-    host:
-      path: /var/run/docker.sock
-  - name: webroot
-    host:
-      path: /root/www
-
-trigger:
-  branch:
-    - main
