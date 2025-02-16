@@ -74,6 +74,19 @@
   "pnpm": {
     "overrides": {
       "canvas": "^3.0.1"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@parcel/watcher",
+      "@prisma/client",
+      "@prisma/engines",
+      "bcrypt",
+      "canvas",
+      "esbuild",
+      "prisma",
+      "protobufjs",
+      "puppeteer",
+      "sharp"
+    ]
   }
 }
