@@ -1,6 +1,6 @@
 {
   "private": true,
-  "packageManager": "pnpm@9.15.2",
+  "packageManager": "pnpm@10.4.0",
   "scripts": {
     "bootstrap": "pnpm i && pnpm dev",
     "preinstall": "npx only-allow pnpm",
@@ -50,7 +50,7 @@
     "lint-staged": "^15.3.0",
     "prettier": "catalog:",
     "prettier-plugin-tailwindcss": "catalog:",
-    "turbo": "^2.3.3",
+    "turbo": "^2.4.2",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:"
   },
