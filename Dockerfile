@@ -1,4 +1,4 @@
-FROM paperplanecc/paperplane-api-base:1.1.0
+FROM paperplanecc/paperplane-api-base:1.2.0
 
 ARG NPM_REGISTRY=https://registry.npmjs.org
 
