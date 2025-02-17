@@ -5,10 +5,9 @@
 
 # 注意：Windows 的目录挂载性能很差，修改文件后无法触发重新编译，请使用 wsl
 
-
 services:
   paperplane-web-console-local:
-    image: paperplanecc/paperplane-api-base:1.1.0
+    image: paperplanecc/paperplane-api-base:1.2.0
     container_name: paperplane-web-console-local
     working_dir: /paperplane-web-console
     volumes:
