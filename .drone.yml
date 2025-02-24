@@ -103,7 +103,7 @@ steps:
       strip_prefix: dist
 
   - name: website-backup-old
-    image: ubuntu:22.04
+    image: alpine:3.20
     volumes:
       - name: webroot
         path: /webroot
@@ -113,7 +113,7 @@ steps:
       - cp -rf /webroot/paperplane-web-console/ /webroot/paperplane-web-console-bak/
 
   - name: website-deploy
-    image: ubuntu:22.04
+    image: alpine:3.20
     volumes:
       - name: webroot
         path: /webroot
@@ -132,7 +132,7 @@ steps:
       - docker rmi paperplanecc/paperplane-web-console:${DRONE_COMMIT_SHA:0:8}
 
   - name: clean-website-backup
-    image: ubuntu:22.04
+    image: alpine:3.20
     failure: ignore
     volumes:
       - name: webroot
@@ -173,7 +173,7 @@ steps:
         - docker compose up -d
 
   - name: rollback-handle-website
-    image: ubuntu:22.04
+    image: alpine:3.20
     when:
       status:
         - failure
