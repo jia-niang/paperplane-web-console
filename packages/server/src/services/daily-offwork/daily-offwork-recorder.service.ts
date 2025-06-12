@@ -145,6 +145,8 @@ export class DailyOffworkRecorderService {
       await page.close()
       browser.close()
 
+      this.logger.log(` 合成图完成，准备上传对象存储`)
+
       const result = await uploadFile(imageKey, file).then(fileInfo => fileInfo.fileUrl)
 
       return result
@@ -171,6 +173,8 @@ export class DailyOffworkRecorderService {
       const file = Buffer.from(await page.screenshot())
       await page.close()
       browser.close()
+
+      this.logger.log(` 交通图完成，准备上传对象存储`)
 
       const result = await uploadFile(imageKey, file).then(fileInfo => fileInfo.fileUrl)
 
