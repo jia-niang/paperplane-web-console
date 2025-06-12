@@ -65,10 +65,7 @@ export class ThirdPartyService {
   /** 拉取油价 API */
   async fetchOilpriceByCityKey(cityKey: string): Promise<IOffworkOilpriceInfo> {
     const res = await this.juheClient
-      .get(
-        `${process.env.THIRD_PARTY_CN_PREFIX_URL || ''}https://apis.juhe.cn/gnyj/query?key=${process.env.JUHE_OIL_PRICE_API_KEY}`,
-        redisCacheToday()
-      )
+      .get(`https://apis.juhe.cn/gnyj/query?key=${process.env.JUHE_OIL_PRICE_API_KEY}`, redisCacheToday())
       .then(response => response.data)
 
     const result = get(res, 'result', [])
@@ -82,14 +79,14 @@ export class ThirdPartyService {
     const now = dayjs()
     const currentMonthHoliday = await this.juheClient
       .get(
-        `${process.env.THIRD_PARTY_CN_PREFIX_URL || ''}https://v.juhe.cn/calendar/month?key=${process.env.JUHE_HOLIDAY_API_KEY}&year-month=${now.format('YYYY-M')}`,
+        `https://v.juhe.cn/calendar/month?key=${process.env.JUHE_HOLIDAY_API_KEY}&year-month=${now.format('YYYY-M')}`,
         redisCacheMonth()
       )
       .then(response => response.data)
       .then(res => get(res, 'result.data.holiday_array', []))
     const nextMonthHoliday = await this.juheClient
       .get(
-        `${process.env.THIRD_PARTY_CN_PREFIX_URL || ''}https://v.juhe.cn/calendar/month?key=${process.env.JUHE_HOLIDAY_API_KEY}&year-month=${now
+        `https://v.juhe.cn/calendar/month?key=${process.env.JUHE_HOLIDAY_API_KEY}&year-month=${now
           .add(1, 'month')
           .format('YYYY-M')}`,
         redisCacheMonth()
@@ -140,7 +137,7 @@ export class ThirdPartyService {
   /** 拉取股价 API */
   async fetchStockByCode(code: string): Promise<IOffworkStockInfo> {
     const res = await this.defaultClient
-      .get(`${process.env.THIRD_PARTY_CN_PREFIX_URL || ''}https://hq.sinajs.cn/list=${code}`, {
+      .get(`https://hq.sinajs.cn/list=${code}`, {
         headers: { Referer: 'https://finance.sina.com.cn' },
         ...redisCacheToday(),
       })
@@ -158,7 +155,7 @@ export class ThirdPartyService {
   async fetchTrafficByPos(lat: string, lon: string, radius: number = 1000): Promise<string> {
     const res = await this.defaultClient
       .get(
-        `${process.env.THIRD_PARTY_CN_PREFIX_URL || ''}https://api.map.baidu.com/traffic/v1/around?ak=${process.env.BAIDU_MAP_KEY}&center=${lat},${lon}&radius=${radius}&coord_type_input=gcj02&coord_type_output=gcj02`
+        `https://api.map.baidu.com/traffic/v1/around?ak=${process.env.BAIDU_MAP_KEY}&center=${lat},${lon}&radius=${radius}&coord_type_input=gcj02&coord_type_output=gcj02`
       )
       .then(response => response.data)
     const trafficMsg = get(res, 'description').replace(/,/g, '，')
@@ -170,7 +167,7 @@ export class ThirdPartyService {
   async fetchWeatherByCityCode(cityCode: string): Promise<IWeatherResponse> {
     const res = await this.juheClient
       .get(
-        `${process.env.THIRD_PARTY_CN_PREFIX_URL || ''}https://apis.juhe.cn/simpleWeather/query?city=${cityCode}&key=${process.env.JUHE_WEATHER_API_KEY}`,
+        `https://apis.juhe.cn/simpleWeather/query?city=${cityCode}&key=${process.env.JUHE_WEATHER_API_KEY}`,
         redisCache({ type: 'PX', value: 2 * 3600 * 1000 })
       )
       .then(response => response.data)
@@ -193,7 +190,7 @@ export class ThirdPartyService {
     const dateStr = now.format('YYYY-MM-DD')
     const isWorkday = await this.juheClient
       .get(
-        `${process.env.THIRD_PARTY_CN_PREFIX_URL || ''}https://apis.juhe.cn/fapig/calendar/day?key=${process.env.JUHE_WORKDAY_API_KEY}&date=${dateStr}`,
+        `https://apis.juhe.cn/fapig/calendar/day?key=${process.env.JUHE_WORKDAY_API_KEY}&date=${dateStr}`,
         redisCacheMonth()
       )
       .then(response => response.data.result.statusDesc === '工作日')
