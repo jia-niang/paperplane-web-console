@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { create } from 'zustand'
 
@@ -28,6 +29,22 @@ export function useBiz() {
 
   const isAddCompany = companyId === BIZ_ADD_URL
   const isAddWorkplace = workplaceId === BIZ_ADD_URL
+
+  useEffect(() => {
+    // 编辑时，预期外直接修改路由，应自动退出编辑模式
+    if (lock === 'workplace' && !workplaceId && !isAddWorkplace) {
+      setLock(null)
+    } else if (lock === 'company' && !companyId && !isAddCompany) {
+      setLock(null)
+    }
+
+    // 直接通过路由 URL 进入 /new 时，应自动进入编辑模式
+    if (!lock && isAddWorkplace) {
+      setLock('workplace')
+    } else if (!lock && isAddCompany) {
+      setLock('company')
+    }
+  }, [companyId, isAddCompany, isAddWorkplace, lock, setLock, workplaceId])
 
   function toCompany(companyId: string | boolean) {
     if (companyId === true) {
