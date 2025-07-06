@@ -36,9 +36,9 @@ export class DailyOffworkRecorderService {
 
     this.logger.log(`[${date}] 工作日流水记录开始`)
 
-    const isWorkDay = await this.thirdParty.todayIsWorkdayApi()
+    const { isWorkDay, isNormalWeekend } = await this.thirdParty.workdayApi()
     await this.prisma.workdayRecord.deleteMany({ where: { date } })
-    const result = await this.prisma.workdayRecord.create({ data: { date, isWorkDay } })
+    const result = await this.prisma.workdayRecord.create({ data: { date, isWorkDay, isNormalWeekend } })
 
     this.logger.log(`[${date}] 工作日流水记录完成`)
 
@@ -141,13 +141,18 @@ export class DailyOffworkRecorderService {
         { retries: 3 }
       )
 
-      const file = Buffer.from(await page.screenshot())
-      await page.close()
-      browser.close()
+      const result = await retry(
+        async () => {
+          const file = Buffer.from(await page.screenshot())
+          await page.close()
+          browser.close()
 
-      this.logger.log(` 合成图完成，准备上传对象存储`)
+          this.logger.log(` 合成图完成，准备上传对象存储`)
 
-      const result = await uploadFile(imageKey, file).then(fileInfo => fileInfo.fileUrl)
+          return await uploadFile(imageKey, file).then(fileInfo => fileInfo.fileUrl)
+        },
+        { retries: 3 }
+      )
 
       return result
     } finally {
@@ -170,13 +175,18 @@ export class DailyOffworkRecorderService {
         { retries: 3 }
       )
 
-      const file = Buffer.from(await page.screenshot())
-      await page.close()
-      browser.close()
+      const result = await retry(
+        async () => {
+          const file = Buffer.from(await page.screenshot())
+          await page.close()
+          browser.close()
 
-      this.logger.log(` 交通图完成，准备上传对象存储`)
+          this.logger.log(` 交通图完成，准备上传对象存储`)
 
-      const result = await uploadFile(imageKey, file).then(fileInfo => fileInfo.fileUrl)
+          return await uploadFile(imageKey, file).then(fileInfo => fileInfo.fileUrl)
+        },
+        { retries: 3 }
+      )
 
       return result
     } finally {

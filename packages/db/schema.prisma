@@ -37,13 +37,22 @@ model User {
 
 // ##################### 业务管理 #####################
 
+// 工作日特殊配置
+enum CompanyWorkdayType {
+  DEFAULT
+  ADD_SAT
+  ADD_SUN
+  ADD_WEEKEND
+}
+
 // 公司
 model Company {
-  id               String  @id @default(cuid())
+  id               String             @id @default(cuid())
   company          String
   stockCode        String?
   salaryDate       Int?
   offworkTimeOfDay Int?
+  workdayOption    CompanyWorkdayType @default(DEFAULT)
 
   allDailyRecords  DailyCompanyRecord[]
   allWorkplaces    Workplace[]
@@ -114,9 +123,10 @@ model MessageRobot {
 
 // 工作日流水记录
 model WorkdayRecord {
-  id        String  @id @default(cuid())
-  date      String
-  isWorkDay Boolean
+  id              String  @id @default(cuid())
+  date            String
+  isWorkDay       Boolean
+  isNormalWeekend Boolean @default(false)
 
   allCompanyRecords     DailyCompanyRecord[]
   allWorkplaceRecords   DailyWorkplaceRecord[]
@@ -342,10 +352,10 @@ model GitReport {
 
 // 短网址类型
 enum ShortsType {
-  SYSTEM // 系统级短链，为 4 位 HEX
-  OFFWORK // 系统级下班提醒短链
-  ALIAS // 别名短链，用户自行指定
-  USER // 用户级短链，8 位 HEX
+  SYSTEM
+  OFFWORK
+  ALIAS
+  USER
 }
 
 // 短网址记录

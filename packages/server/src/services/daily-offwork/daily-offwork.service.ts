@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { DailyWorkplaceRecord } from '@repo/db'
+import { CompanyWorkdayType, DailyWorkplaceRecord } from '@repo/db'
 import dayjs from 'dayjs'
 import { omit } from 'lodash'
 import { PrismaService } from 'nestjs-prisma'
@@ -142,8 +142,30 @@ export class DailyOffworkService {
             )
 
             continue
-          } else if (!workdayRecord.isWorkDay && !ignoreWorkday) {
-            this.logger.log(`[${workdayRecord.date}] 不是工作日，已跳过推送消息`)
+          }
+
+          let shouldSend = workdayRecord.isWorkDay
+
+          const workday = dayjs(workdayRecord.date)
+          if (
+            !ignoreWorkday &&
+            !shouldSend &&
+            workdayRecord.isNormalWeekend &&
+            company.workdayOption !== CompanyWorkdayType.DEFAULT
+          ) {
+            if (
+              (workday.day() === 6 &&
+                [CompanyWorkdayType.ADD_SAT, CompanyWorkdayType.ADD_WEEKEND].includes(company.workdayOption as any)) ||
+              (workday.day() === 0 &&
+                [CompanyWorkdayType.ADD_SUN, CompanyWorkdayType.ADD_WEEKEND].includes(company.workdayOption as any))
+            ) {
+              this.logger.log(`[${workdayRecord.date}] 是普通周末，公司 [${company.id}] 配置了特殊工作日，需发送`)
+              shouldSend = true
+            }
+          }
+
+          if (!ignoreWorkday && !shouldSend) {
+            this.logger.log(`[${workdayRecord.date}] 不是发送日，已跳过推送消息`)
 
             continue
           }

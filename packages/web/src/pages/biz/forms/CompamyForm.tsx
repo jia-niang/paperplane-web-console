@@ -1,8 +1,19 @@
-import { Company } from '@repo/db'
+import { Company, CompanyWorkdayType } from '@repo/db'
 import { useEffect, useMemo } from 'react'
 import { Outlet } from 'react-router'
 import { mutate } from 'swr'
-import { Col, Form, Input, InputNumber, Loading, Popconfirm, Space, SubmitContext, TimePicker } from 'tdesign-react'
+import {
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  Loading,
+  Popconfirm,
+  Select,
+  Space,
+  SubmitContext,
+  TimePicker,
+} from 'tdesign-react'
 
 import { addCompanyApi, deleteCompanyApi, editCompanyApi } from '@/apis/biz'
 import Title from '@/components/text/Title'
@@ -16,10 +27,21 @@ import { required, useBiz, urlId } from '../common'
 
 const { FormItem, useForm } = Form
 
+const workdayTypeOptions = [
+  { value: CompanyWorkdayType.DEFAULT, label: '默认' },
+  { value: CompanyWorkdayType.ADD_SAT, label: '周六作为工作日' },
+  { value: CompanyWorkdayType.ADD_SUN, label: '周日作为工作日' },
+  { value: CompanyWorkdayType.ADD_WEEKEND, label: '周末均为工作日' },
+]
+
 const disableTime = () => ({
   hour: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 22, 23, 24],
 })
-const defaultCompany: Partial<Company> = { offworkTimeOfDay: '18:00' as unknown as number, salaryDate: 1 }
+const defaultCompany: Partial<Company> = {
+  offworkTimeOfDay: '18:00' as unknown as number,
+  salaryDate: 1,
+  workdayOption: CompanyWorkdayType.DEFAULT,
+}
 
 export default function CompanyForm(): RC {
   const [form] = useForm()
@@ -95,6 +117,10 @@ export default function CompanyForm(): RC {
               }
             >
               <InputNumber max={28} min={-28} autoWidth />
+            </FormItem>
+
+            <FormItem label="调整工作日" name="workdayOption" rules={required}>
+              <Select options={workdayTypeOptions} />
             </FormItem>
 
             <FormItem label="下班时间" name="offworkTimeOfDay" rules={required}>

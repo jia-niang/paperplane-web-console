@@ -188,17 +188,20 @@ export class ThirdPartyService {
   }
 
   /** 拉取工作日 */
-  async todayIsWorkdayApi(): Promise<boolean> {
+  async workdayApi(): Promise<{ isWorkDay: boolean; isNormalWeekend: boolean }> {
     const now = dayjs()
     const dateStr = now.format('YYYY-MM-DD')
-    const isWorkday = await this.juheClient
+    const workdayApiResult = await this.juheClient
       .get(
         `${process.env.THIRD_PARTY_CN_PREFIX_URL || ''}https://apis.juhe.cn/fapig/calendar/day?key=${process.env.JUHE_WORKDAY_API_KEY}&date=${dateStr}`,
         redisCacheMonth()
       )
-      .then(response => response.data.result.statusDesc === '工作日')
+      .then(response => response.data.result)
 
-    return isWorkday
+    return {
+      isWorkDay: workdayApiResult.statusDesc === '工作日',
+      isNormalWeekend: workdayApiResult.statusDesc === '周末',
+    }
   }
 }
 
