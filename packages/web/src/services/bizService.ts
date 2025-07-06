@@ -1,4 +1,4 @@
-import { Company, Workplace } from '@repo/db'
+import { Company, CompanyWorkdayType, Workplace } from '@repo/db'
 import dayjs from 'dayjs'
 import useSWR from 'swr'
 
@@ -63,3 +63,10 @@ export const oilPriceProvinces = provinces.map(t => ({
     .replace('维吾尔', ''),
   value: t.name,
 }))
+
+export const workdayTypeOptions = [
+  { value: CompanyWorkdayType.DEFAULT, label: '默认' },
+  { value: CompanyWorkdayType.ADD_SAT, label: '周六作为工作日' },
+  { value: CompanyWorkdayType.ADD_SUN, label: '周日作为工作日' },
+  { value: CompanyWorkdayType.ADD_WEEKEND, label: '周六、周日都作为工作日' },
+]

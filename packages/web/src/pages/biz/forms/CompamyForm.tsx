@@ -17,7 +17,12 @@ import {
 
 import { addCompanyApi, deleteCompanyApi, editCompanyApi } from '@/apis/biz'
 import Title from '@/components/text/Title'
-import { converCompany2FormData, converFormData2Company, useCompanyByIdSWR } from '@/services/bizService'
+import {
+  converCompany2FormData,
+  converFormData2Company,
+  useCompanyByIdSWR,
+  workdayTypeOptions,
+} from '@/services/bizService'
 import { useCustomRoute } from '@/services/routerService'
 
 import BizCancelButton from '../buttons/BizCancelButton'
@@ -26,13 +31,6 @@ import BizOkButton from '../buttons/BizOkButton'
 import { required, useBiz, urlId } from '../common'
 
 const { FormItem, useForm } = Form
-
-const workdayTypeOptions = [
-  { value: CompanyWorkdayType.DEFAULT, label: '默认' },
-  { value: CompanyWorkdayType.ADD_SAT, label: '周六作为工作日' },
-  { value: CompanyWorkdayType.ADD_SUN, label: '周日作为工作日' },
-  { value: CompanyWorkdayType.ADD_WEEKEND, label: '周末均为工作日' },
-]
 
 const disableTime = () => ({
   hour: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 22, 23, 24],
