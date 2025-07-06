@@ -24,7 +24,7 @@ export default function HomePage(): RC {
         <HomeEntryCard iconImage={robotIcon} bgImage={robotBg} href="/robot">
           <div className="text-decoration-none ml-[18px] text-center text-white">
             <div className="text-[30px]">OA 机器人</div>
-            <div className="text-[18px]">（企微/钉钉/飞书）</div>
+            <div className="text-[18px]">(企微/钉钉/飞书)</div>
           </div>
         </HomeEntryCard>
 
