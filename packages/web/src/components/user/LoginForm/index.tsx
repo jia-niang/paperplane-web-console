@@ -74,8 +74,15 @@ export default function LoginForm(): RC {
           <Button onClick={() => void form.submit()} loading={isLoading} type="button" variant="base">
             {isLoading ? '登录中' : '登录账号'}
           </Button>
-          <Button href={githubHref} icon={<LogoGithubIcon />} shape="circle" ghost></Button>
-          <Button href={giteaHref} shape="round" ghost>
+          <Button
+            onClick={() => void setIsLoading(true)}
+            loading={isLoading}
+            href={githubHref}
+            icon={<LogoGithubIcon />}
+            shape="circle"
+            ghost
+          ></Button>
+          <Button onClick={() => void setIsLoading(true)} loading={isLoading} href={giteaHref} shape="round" ghost>
             Gitea
           </Button>
         </Space>
