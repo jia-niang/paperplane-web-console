@@ -48,6 +48,7 @@ export default function BizPage(): RC {
             <Tree
               data={companiesTree}
               actived={[companyId as string]}
+              expanded={[ROOT_ID]}
               disabled={!!lock}
               onActive={([id]) => {
                 if (![undefined, ROOT_ID, companyId].includes(id as string)) {
@@ -76,6 +77,7 @@ export default function BizPage(): RC {
               data={workplacesTree}
               actived={[workplaceId as string]}
               disabled={!!lock}
+              expanded={[ROOT_ID]}
               onActive={([id]) => {
                 if (![undefined, ROOT_ID, workplaceId].includes(id as string)) {
                   toWorkplace(id as string)
