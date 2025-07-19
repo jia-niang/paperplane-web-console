@@ -1,7 +1,7 @@
 import { MessageRobotType, Role } from '@repo/db'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AddIcon, CaretDownSmallIcon, CaretRightSmallIcon, CloudIcon, LoadingIcon } from 'tdesign-icons-react'
-import { Button, Collapse, Tree } from 'tdesign-react'
+import { Button, Collapse, Space, Tree } from 'tdesign-react'
 
 import { fetchCompanyRobotByIdsApi, fetchUserRobotByIdApi, listCompanyRobotsByCompanyIdApi } from '@/apis/robots'
 import dingtalkRobotIcon from '@/assets/icon/robot-icons/logo-dingtalk.svg'
@@ -136,9 +136,8 @@ export default function RobotSelector(): RC {
   }, [companyId, companyTree, menuLock, storageType])
 
   return (
-    <div className="robot-page__selector">
+    <Space className="robot-page__selector mt-4 w-full" direction="vertical">
       <Button
-        className="mt-4"
         variant={isAddRobot ? 'outline' : 'base'}
         theme="primary"
         onClick={() => void toAddForm()}
@@ -157,7 +156,6 @@ export default function RobotSelector(): RC {
             setCollapse(newValue[0] as RobotStorageType)
           }
         }}
-        className="mt-4"
         expandOnRowClick
         expandMutex
       >
@@ -229,6 +227,6 @@ export default function RobotSelector(): RC {
       {currentUser ? null : (
         <div className="mt-2 text-[var(--td-text-color-placeholder)]">登录账号后，可以云端储存机器人配置。</div>
       )}
-    </div>
+    </Space>
   )
 }

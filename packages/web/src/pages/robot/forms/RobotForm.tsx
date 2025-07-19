@@ -162,7 +162,13 @@ export default function RobotForm(): RC {
           </FormItem>
 
           {isAddRobot ? (
-            <Alert className="mb-4 px-3 py-3" theme="info" title="配置指南" message={robotTipsMap[robotType]} />
+            <Alert
+              className="mb-4"
+              style={{ padding: '12px' }}
+              theme="info"
+              title="配置指南"
+              message={robotTipsMap[robotType]}
+            />
           ) : null}
 
           <FormItem
