@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import { useState } from 'react'
 import { LogoGithubIcon } from 'tdesign-icons-react'
 import { Form, Input, Button, InputAdornment, notification, Space } from 'tdesign-react'
@@ -49,13 +48,7 @@ export default function LoginForm(): RC {
       disabled={isLoading}
       onSubmit={submitMessageHandler}
       labelWidth="10px"
-      css={css`
-        padding: 10px 0;
-        justify-content: center;
-        .t-form__label {
-          color: #fff;
-        }
-      `}
+      className="justify-center px-0 py-[10px]"
     >
       <FormItem name="name">
         <InputAdornment prepend="用户名">

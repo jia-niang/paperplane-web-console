@@ -1,0 +1,16 @@
+.header__breadcrumb {
+  &__item {
+    &:last-child,
+    .t-breadcrumb__inner,
+    .t-breadcrumb__inner-text,
+    .t-breadcrumb__inner:active,
+    .t-link:hover,
+    .t-breadcrumb__separator .t-icon,
+    .t-breadcrumb__inner:hover {
+      color: #fff;
+      font-size: 20px;
+      line-height: 20px;
+      animation: none;
+    }
+  }
+}

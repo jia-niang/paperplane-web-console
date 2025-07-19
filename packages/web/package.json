@@ -14,9 +14,6 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@emotion/cache": "^11.14.0",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
     "@loadable/component": "^5.16.4",
     "@repo/db": "workspace:^",
     "ahooks": "^3.8.4",

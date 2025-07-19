@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import { useLocalStorageState } from 'ahooks'
 import { SetState } from 'ahooks/lib/createUseStorageState'
 import dayjs from 'dayjs'
@@ -19,11 +18,11 @@ import {
 import { Button, Col, Popconfirm, Radio, Row, Space, Tabs, Tag, Textarea, Tooltip, notification } from 'tdesign-react'
 
 import { gptMultipleChatApi } from '@/apis/ai'
-import openAiIcon from '@/assets/icon/logo-openai.svg?no-inline'
 import PageLayout from '@/components/layout/PageLayout'
 import { useGptSetting } from '@/services/gptService'
 import { SK_GPT_RECORDS } from '@/utils/clientStore'
 
+import './index.scss'
 import '@/styles/highlight.scss'
 
 const { TabPanel } = Tabs
@@ -71,58 +70,7 @@ export default function GPTPage(): RC {
     (children: string) => {
       return Markdown ? (
         <Markdown
-          css={css`
-            p {
-              margin: 1em 0;
-
-              &:first-of-type {
-                margin-top: 0;
-              }
-              &:last-of-type {
-                margin-bottom: 0;
-              }
-            }
-
-            ul,
-            ol {
-              list-style: disc;
-              margin-left: 20px;
-              margin-bottom: 1em;
-
-              li {
-                margin: 0.5em 0;
-              }
-            }
-
-            p > code,
-            li > code {
-              background: #f4f4f4;
-              border-radius: 4px;
-              padding: 2px 4px;
-            }
-
-            pre {
-              border-radius: 6px;
-              padding: 10px 12px;
-              background: #f2f2f3;
-              overflow-x: auto;
-
-              &::-webkit-scrollbar {
-                width: 8px;
-                height: 8px;
-                background-color: #f9f9f9;
-                border-radius: 0 0 3px 3px;
-              }
-              &::-webkit-scrollbar-thumb {
-                background-color: rgba(131, 128, 128, 0.3);
-                border-radius: 0 0 3px 3px;
-              }
-              &::-webkit-scrollbar-track {
-                background-color: transparent;
-                border-radius: 0 0 3px 3px;
-              }
-            }
-          `}
+          className="gptpage__markdown"
           children={children}
           components={
             highlight
@@ -146,16 +94,7 @@ export default function GPTPage(): RC {
           }
         />
       ) : (
-        <div
-          css={css`
-            padding: 12px 0;
-            font-size: 14px;
-            line-height: 22px;
-            white-space: pre-wrap;
-          `}
-        >
-          {children}
-        </div>
+        <div className="whitespace-pre-wrap px-0 py-[12px] text-[14px] leading-[22px]">{children}</div>
       )
     },
     [Markdown, highlight]
@@ -188,14 +127,14 @@ export default function GPTPage(): RC {
   }
 
   return (
-    <PageLayout css={{ paddingBottom: 48 }}>
+    <PageLayout className="gptpage pb-12">
       <Row gutter={12}>
         <Col span={10}>
-          <Space css={{ width: '100%' }} size="small" direction="vertical">
+          <Space className="w-full" size="small" direction="vertical">
             <div className="pa-text pa-vc">
               向 AI 提问
               <Tooltip content="提问/回答历史仅储存在浏览器缓存中，请及时保存">
-                <InfoCircleIcon css={{ margin: '0 4px', color: 'var(--td-gray-color-5)' }} />
+                <InfoCircleIcon className="mx-1 my-0 text-[var(--td-gray-color-5)]" />
               </Tooltip>
               ：
             </div>
@@ -224,7 +163,7 @@ export default function GPTPage(): RC {
             <div className="pa-text pa-vc">
               回答数
               <Tooltip content="选择生成多个回答，会导致回答速度变慢">
-                <InfoCircleIcon css={{ margin: '0 4px', color: 'var(--td-gray-color-5)' }} />
+                <InfoCircleIcon className="mx-1 my-0 text-[var(--td-gray-color-5)]" />
               </Tooltip>
               ：
             </div>
@@ -281,69 +220,28 @@ export default function GPTPage(): RC {
       {!record ? null : (
         <Row gutter={12} style={{ marginTop: 48, position: 'relative' }}>
           <Col span={10}>
-            <Space css={{ width: '100%' }} direction="vertical">
+            <Space className="w-full" direction="vertical">
               <div
-                css={css`
-                  padding: 12px;
-                  border-radius: 6px;
-                  background: var(--td-brand-color-7);
-                  background-image: linear-gradient(90deg, var(--td-brand-color-7), #e3419e);
-                `}
+                className="rounded-[6px] bg-[var(--td-brand-color-7)] p-[12px]"
+                style={{ backgroundImage: `linear-gradient(90deg, var(--td-brand-color-7), #e3419e)` }}
               >
-                <div
-                  className="pa-text pa-vc pa-fff"
-                  css={css`
-                    position: relative;
-
-                    &::before {
-                      content: '';
-                      position: absolute;
-                      top: 10px;
-                      right: 10px;
-                      width: 45px;
-                      height: 45px;
-                      background-image: url('${openAiIcon}');
-                      background-size: contain;
-                    }
-                  `}
-                >
+                <div className="gptpage__gpt-icon pa-text pa-vc pa-fff relative">
                   提出的问题
                   <Tooltip content={dayjs(record.timestamp).format('YYYY-MM-DD HH:mm:ss')}>
-                    <ChatBubbleHelpIcon css={{ margin: '0 4px', color: 'var(--td-gray-color-5)' }} />
+                    <ChatBubbleHelpIcon className="mx-1 my-0 text-[var(--td-gray-color-5)]" />
                   </Tooltip>
                   ：
                 </div>
 
-                <div
-                  className="pa-fff"
-                  css={css`
-                    padding: 12px 0;
-                    padding-right: 80px;
-                    margin: 0 auto 12px;
-                    white-space: pre-wrap;
-                  `}
-                >
+                <div className="pa-fff mx-auto mb-[12px] mt-0 whitespace-pre-wrap px-0 py-[12px] pr-[80px]">
                   {record.question}
                 </div>
 
-                <div
-                  css={css`
-                    position: relative;
-                  `}
-                >
-                  <div
-                    className="pa-text pa-vc pa-fff"
-                    css={css`
-                      position: absolute;
-                      top: 0;
-                      left: 0;
-                      height: var(--td-comp-size-xxl);
-                      z-index: 2;
-                    `}
-                  >
+                <div className="relative">
+                  <div className="pa-text pa-vc pa-fff t-0 l-0 z-2 absolute h-[var(--td-comp-size-xxl)]">
                     AI 的回答
                     <Tooltip content="目前基于 OpenAI ChatGPT 4o">
-                      <InfoCircleIcon css={{ margin: '0 4px', color: 'var(--td-gray-color-5)' }} />
+                      <InfoCircleIcon className="color-[var(--td-gray-color-5)] mx-1 my-0" />
                     </Tooltip>
                     ：
                   </div>
@@ -354,42 +252,7 @@ export default function GPTPage(): RC {
                     theme="card"
                     value={tabIndex}
                     onChange={e => void setTabIndex(Number(e))}
-                    css={css`
-                      background-color: transparent !important;
-
-                      .t-tabs__nav-scroll {
-                        justify-content: right;
-                      }
-                      .t-tabs__nav--card {
-                        background-color: transparent;
-                      }
-                      .t-tabs__nav--card.t-tabs__nav-item:last-of-type {
-                        border-right: none;
-                      }
-                      .t-tabs__nav--card.t-tabs__nav-item:not(:first-of-type) {
-                        border-left: none;
-                      }
-                      .t-tabs__nav--card.t-tabs__nav-item {
-                        color: var(--td-brand-color);
-                        border-bottom: none;
-
-                        &:not(.t-is-active) {
-                          color: #fff;
-                        }
-                      }
-                      .t-tabs__content {
-                        background-color: #fff;
-                        border-radius: 4px 0 4px 4px;
-                        padding: 12px 12px;
-                      }
-                      .t-tabs__nav--card {
-                        overflow: hidden;
-                        border-radius: 6px 6px 0 0;
-                      }
-                      .t-tabs__nav--card.t-tabs__nav-item:not(.t-is-disabled) :not(.t-is-active):hover {
-                        color: var(--brand-main);
-                      }
-                    `}
+                    className="gptpage__tab"
                   >
                     {record.answers.map((answer, index) => (
                       <TabPanel key={index} value={index} label={`回答 ${index + 1}`}>
@@ -404,27 +267,17 @@ export default function GPTPage(): RC {
 
           <Col style={{ position: 'sticky', right: 12, top: 12 }} span={2}>
             <div
-              css={css`
-                padding: 4px;
-                border-radius: 6px;
-                background: var(--td-brand-color-7);
-                background-image: linear-gradient(90deg, #e3419e, #ff7747);
-              `}
+              className="rounded-[6px] bg-[var(--td-brand-color-7)] p-1"
+              style={{ backgroundImage: `linear-gradient(90deg, #e3419e, #ff7747)` }}
             >
-              <div
-                css={css`
-                  padding: 12px;
-                  border-radius: 3px;
-                  background: #fff;
-                `}
-              >
-                <Space css={{ width: '100%' }} direction="vertical" align="center">
-                  <div className="pa-text" css={{ textAlign: 'center' }}>
+              <div className="rounded-[3px] bg-white p-[12px]">
+                <Space className="w-full" direction="vertical" align="center">
+                  <div className="pa-text text-center">
                     {cursor <= 0 ? '当前回答' : `第 ${records.length - cursor}/${records.length} 个`}
                   </div>
 
                   {isSaveHistory ? (
-                    <Space size="small" css={{ width: '100%' }}>
+                    <Space size="small" className="w-full">
                       <Button
                         onClick={() => void setCursor(c => c + 1)}
                         disabled={cursor >= records.length - 1}

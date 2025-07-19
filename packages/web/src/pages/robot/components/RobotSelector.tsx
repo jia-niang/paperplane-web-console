@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import { MessageRobotType, Role } from '@repo/db'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AddIcon, CaretDownSmallIcon, CaretRightSmallIcon, CloudIcon, LoadingIcon } from 'tdesign-icons-react'
@@ -13,6 +12,8 @@ import { RobotStorageType, useLocalRobots, useUserRobotsSWR } from '@/services/r
 import { useAccess, useCurrentUser } from '@/services/userService'
 
 import { defaultRobot, MessageRobotFormData, robotEmitter, useRobot } from '../common'
+
+import './RobotSelector.scss'
 
 const empty: any[] = []
 
@@ -135,7 +136,7 @@ export default function RobotSelector(): RC {
   }, [companyId, companyTree, menuLock, storageType])
 
   return (
-    <>
+    <div className="robot-page__selector">
       <Button
         className="mt-4"
         variant={isAddRobot ? 'outline' : 'base'}
@@ -156,11 +157,6 @@ export default function RobotSelector(): RC {
             setCollapse(newValue[0] as RobotStorageType)
           }
         }}
-        css={css`
-          .t-collapse-panel__body {
-            background: transparent;
-          }
-        `}
         className="mt-4"
         expandOnRowClick
         expandMutex
@@ -233,6 +229,6 @@ export default function RobotSelector(): RC {
       {currentUser ? null : (
         <div className="mt-2 text-[var(--td-text-color-placeholder)]">登录账号后，可以云端储存机器人配置。</div>
       )}
-    </>
+    </div>
   )
 }

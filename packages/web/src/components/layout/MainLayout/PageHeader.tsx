@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import Atropos from 'atropos/react'
 import { motion, AnimatePresence } from 'motion/react'
 import { NavLink, useLocation } from 'react-router'
@@ -8,6 +7,8 @@ import UserToolbar from '@/components/user/UserToolbar'
 
 import CustomBreadcrumb from './CustomBreadcrumb'
 import { usePageHeader } from './usePageHeader'
+
+import './PageHeader.scss'
 
 export default function PageHeader(): RC {
   const location = useLocation()
@@ -47,47 +48,13 @@ export default function PageHeader(): RC {
           <UserToolbar className="ml-auto" />
         </div>
 
-        <div
-          css={css`
-            position: relative;
-            display: flex;
-            flex-wrap: wrap;
-            margin: 0 auto;
-            border-radius: 6px;
-            justify-content: center;
-            align-items: center;
-            background: #d46d72;
-            background-image: linear-gradient(90deg, #963db3, #bf3caf, #e3419e, #fe4b83, #ff5e64, #ff7747);
-
-            /* 顶部三角条 */
-            &::before {
-              content: '';
-              position: absolute;
-              left: 0;
-              right: 0;
-              top: -10px;
-              height: 10px;
-              clip-path: polygon(50px 0, 40px 100%, 60px 100%);
-              background: #d46d72;
-              background-image: linear-gradient(90deg, #963db3, #bf3caf, #e3419e, #fe4b83, #ff5e64, #ff7747);
-            }
-          `}
-        >
+        <div className="header__headerbar">
           <Atropos
             shadow={false}
             duration={150}
             activeOffset={10}
             highlight={false}
-            css={css`
-              display: inline-block;
-              width: 960px;
-              height: 120px;
-              display: inline-block;
-              text-align: center;
-              padding: 0 20px;
-              color: #fff;
-              user-select: none;
-            `}
+            className="header__headerbar__atropos"
           >
             <motion.div
               key="title"

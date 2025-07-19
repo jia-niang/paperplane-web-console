@@ -1,0 +1,104 @@
+.gptpage {
+  &__markdown {
+    p {
+      margin: 1em 0;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+
+    ul,
+    ol {
+      list-style: disc;
+      margin-left: 20px;
+      margin-bottom: 1em;
+
+      li {
+        margin: 0.5em 0;
+      }
+    }
+
+    p > code,
+    li > code {
+      background: #f4f4f4;
+      border-radius: 4px;
+      padding: 2px 4px;
+    }
+
+    pre {
+      border-radius: 6px;
+      padding: 10px 12px;
+      background: #f2f2f3;
+      overflow-x: auto;
+
+      &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+        background-color: #f9f9f9;
+        border-radius: 0 0 3px 3px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(131, 128, 128, 0.3);
+        border-radius: 0 0 3px 3px;
+      }
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+        border-radius: 0 0 3px 3px;
+      }
+    }
+  }
+
+  &__gpt-icon {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 45px;
+      height: 45px;
+      background-size: contain;
+      background-image: url(@/assets/icon/logo-openai.svg);
+    }
+  }
+
+  &__tab {
+    background-color: transparent !important;
+
+    .t-tabs__nav-scroll {
+      justify-content: right;
+    }
+    .t-tabs__nav--card {
+      background-color: transparent;
+    }
+    .t-tabs__nav--card.t-tabs__nav-item:last-of-type {
+      border-right: none;
+    }
+    .t-tabs__nav--card.t-tabs__nav-item:not(:first-of-type) {
+      border-left: none;
+    }
+    .t-tabs__nav--card.t-tabs__nav-item {
+      color: var(--td-brand-color);
+      border-bottom: none;
+
+      &:not(.t-is-active) {
+        color: #fff;
+      }
+    }
+    .t-tabs__content {
+      background-color: #fff;
+      border-radius: 4px 0 4px 4px;
+      padding: 12px 12px;
+    }
+    .t-tabs__nav--card {
+      overflow: hidden;
+      border-radius: 6px 6px 0 0;
+    }
+    .t-tabs__nav--card.t-tabs__nav-item:not(.t-is-disabled) :not(.t-is-active):hover {
+      color: var(--brand-main);
+    }
+  }
+}

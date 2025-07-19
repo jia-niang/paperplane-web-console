@@ -35,12 +35,7 @@ export default defineConfig(({ mode, command }) => {
       },
     },
 
-    plugins: [
-      react({
-        jsxImportSource: '@emotion/react',
-      }),
-      visualizer(),
-    ],
+    plugins: [react(), visualizer()],
 
     optimizeDeps: {
       include: ['@repo/db'],
