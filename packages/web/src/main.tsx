@@ -22,10 +22,10 @@ const emotionCacheConfig = createCache({ key: 'paperplane-web-console-default', 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <SWRConfig value={{ refreshWhenHidden: false }}>
-    <ConfigProvider globalConfig={globalConfig}>
-      <CacheProvider value={emotionCacheConfig}>
+    <CacheProvider value={emotionCacheConfig}>
+      <ConfigProvider globalConfig={globalConfig}>
         <RouterProvider router={browserRouter} />
-      </CacheProvider>
-    </ConfigProvider>
+      </ConfigProvider>
+    </CacheProvider>
   </SWRConfig>
 )
