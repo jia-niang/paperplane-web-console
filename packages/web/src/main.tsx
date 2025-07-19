@@ -12,8 +12,6 @@ import { browserRouter } from '@/router/routes'
 import { ensureClientId } from '@/utils/clientId'
 
 import '@/styles/global.scss'
-import '@/styles/tailwind.css'
-import '@/styles/theme.scss'
 
 dayjs.locale('zh-cn')
 ensureClientId()

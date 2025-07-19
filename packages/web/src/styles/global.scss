@@ -2,6 +2,9 @@
 @use 'tdesign-react/es/style/index.css' as *;
 @use 'atropos/scss' as *;
 
+@use '@/styles/tailwind.css' as *;
+@use '@/styles/theme.scss' as *;
+
 @use './fonts/source-code-pro/index.scss' as *;
 @use './fonts/fz-yansong/index.scss' as *;
 @use './fonts/swift/index.scss' as *;
