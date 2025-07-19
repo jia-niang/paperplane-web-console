@@ -1,25 +1,35 @@
-import { Company, CompanyWorkdayType, Workplace } from '@repo/db'
+import { Company, CompanyWorkdayType, Role, Workplace } from '@repo/db'
 import dayjs from 'dayjs'
 import useSWR from 'swr'
 
 import { provinces } from '@/utils/chinaDivision'
 import { client } from '@/utils/client'
 
+import { useAccess } from './userService'
+
 export function useAllCompaniesSWR() {
-  return useSWR<Company[]>(`/business/company`, client)
+  const isStaff = useAccess(Role.STAFF)
+
+  return useSWR<Company[]>(() => (isStaff ? `/business/company` : null), client)
 }
 
 export function useCompanyByIdSWR(id?: string) {
-  return useSWR<Company>(() => (id ? `/business/company/${id}` : null), client)
+  const isStaff = useAccess(Role.STAFF)
+
+  return useSWR<Company>(() => (isStaff && id ? `/business/company/${id}` : null), client)
 }
 
 export function useWorkplacesByCompanyIdSWR(companyId?: string) {
-  return useSWR<Workplace[]>(() => (companyId ? `/business/company/${companyId}/workplace` : null), client)
+  const isStaff = useAccess(Role.STAFF)
+
+  return useSWR<Workplace[]>(() => (isStaff && companyId ? `/business/company/${companyId}/workplace` : null), client)
 }
 
 export function useWorkplaceByPathIdsSWR(companyId?: string, workplaceId?: string) {
+  const isStaff = useAccess(Role.STAFF)
+
   return useSWR<Workplace>(
-    () => (companyId && workplaceId ? `/business/company/${companyId}/workplace/${workplaceId}` : null),
+    () => (isStaff && companyId && workplaceId ? `/business/company/${companyId}/workplace/${workplaceId}` : null),
     client
   )
 }

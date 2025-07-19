@@ -1,27 +1,11 @@
-import { clientStore, LF_CLIENT_ID } from './clientStore'
-
-function uuid(len: number = 8): string {
-  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-  const uuid: string[] = []
-  const radix = 16
-
-  for (let i = 0; i < len; i++) {
-    uuid[i] = chars[0 | (Math.random() * radix)]
-  }
-
-  return uuid.join('')
-}
+import { clientStore, SK_CLIENT_ID } from './clientStore'
+import { hexId } from './random'
 
 /** 获取客户端 ID */
 export function ensureClientId() {
-  const storagedClientId = clientStore.getItem(LF_CLIENT_ID)
+  clientStore.transact(SK_CLIENT_ID, (id: string) => {
+    return id || hexId()
+  })
 
-  if (storagedClientId) {
-    return storagedClientId
-  }
-
-  const newClientId = uuid()
-  clientStore.setItem(LF_CLIENT_ID, newClientId)
-
-  return newClientId
+  return clientStore.get(SK_CLIENT_ID)
 }

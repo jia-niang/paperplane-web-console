@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import { HomeIcon } from 'tdesign-icons-react'
 import { Breadcrumb } from 'tdesign-react'
 
-import { useCustomRoutesForBreadcrumb } from '@/services/routerService'
+import { useCurrentBreadcrumbs } from '@/services/routerService'
 
 const { BreadcrumbItem } = Breadcrumb
 
@@ -12,7 +12,7 @@ export default function CustomBreadcrumb(): RC {
   const navigate = useNavigate()
   const routerForBreadcrumbItem = useMemo(() => ({ push: navigate }), [navigate])
 
-  const breadcrumbs = useCustomRoutesForBreadcrumb()
+  const breadcrumbs = useCurrentBreadcrumbs()
 
   return (
     <Breadcrumb className="justify-center py-[10px]" maxItemWidth="120px">

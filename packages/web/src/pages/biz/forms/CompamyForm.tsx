@@ -2,20 +2,13 @@ import { Company, CompanyWorkdayType } from '@repo/db'
 import { useEffect, useMemo } from 'react'
 import { Outlet } from 'react-router'
 import { mutate } from 'swr'
-import {
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  Loading,
-  Popconfirm,
-  Select,
-  Space,
-  SubmitContext,
-  TimePicker,
-} from 'tdesign-react'
+import { Col, Form, Input, InputNumber, Loading, Select, Space, SubmitContext, TimePicker } from 'tdesign-react'
 
 import { addCompanyApi, deleteCompanyApi, editCompanyApi } from '@/apis/biz'
+import FormCancelButton from '@/components/buttons/small-form-buttons/FormCancelButton'
+import FormDeleteButton from '@/components/buttons/small-form-buttons/FormDeleteButton'
+import FormEditButton from '@/components/buttons/small-form-buttons/FormEditButton'
+import FormOkButton from '@/components/buttons/small-form-buttons/FormOkButton'
 import Title from '@/components/text/Title'
 import {
   converCompany2FormData,
@@ -25,9 +18,6 @@ import {
 } from '@/services/bizService'
 import { useCustomRoute } from '@/services/routerService'
 
-import BizCancelButton from '../buttons/BizCancelButton'
-import BizEditButton from '../buttons/BizEditButton'
-import BizOkButton from '../buttons/BizOkButton'
 import { required, useBiz, urlId } from '../common'
 
 const { FormItem, useForm } = Form
@@ -133,10 +123,10 @@ export default function CompanyForm(): RC {
           <Space>
             {!isAddCompany && lock !== 'company' ? (
               <>
-                <BizEditButton onClick={() => void setLock('company')} disabled={!!lock}>
+                <FormEditButton onClick={() => void setLock('company')} disabled={!!lock}>
                   编辑
-                </BizEditButton>
-                <Popconfirm
+                </FormEditButton>
+                <FormDeleteButton
                   onConfirm={async () => {
                     await deleteCompanyApi(companyId!)
                     await mutate(`/business/company`)
@@ -149,29 +139,27 @@ export default function CompanyForm(): RC {
                       属于此公司的所有工作地点也会一并被删除。
                     </>
                   }
-                  showArrow
+                  disabled={!!lock}
                 >
-                  <>
-                    <BizCancelButton disabled={!!lock}>删除</BizCancelButton>
-                  </>
-                </Popconfirm>
+                  删除
+                </FormDeleteButton>
               </>
             ) : !isAddCompany && lock === 'company' ? (
               <>
-                <BizOkButton onClick={() => void form.submit()}>完成编辑</BizOkButton>
-                <BizCancelButton
+                <FormOkButton onClick={() => void form.submit()}>完成编辑</FormOkButton>
+                <FormCancelButton
                   onClick={() => {
                     setLock(null)
                     form.reset()
                   }}
                 >
                   放弃修改
-                </BizCancelButton>
+                </FormCancelButton>
               </>
             ) : (
               <>
-                <BizOkButton onClick={() => void form.submit()}>完成新建</BizOkButton>
-                <BizCancelButton onClick={() => void toCompany(false)}>放弃新建</BizCancelButton>
+                <FormOkButton onClick={() => void form.submit()}>完成新建</FormOkButton>
+                <FormCancelButton onClick={() => void toCompany(false)}>放弃新建</FormCancelButton>
               </>
             )}
           </Space>

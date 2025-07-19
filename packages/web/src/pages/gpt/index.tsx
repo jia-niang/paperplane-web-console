@@ -22,7 +22,7 @@ import { gptMultipleChatApi } from '@/apis/ai'
 import openAiIcon from '@/assets/icon/logo-openai.svg?no-inline'
 import PageLayout from '@/components/layout/PageLayout'
 import { useGptSetting } from '@/services/gptService'
-import { SK_GPT_RECORDS } from '@/utils/storeKey'
+import { SK_GPT_RECORDS } from '@/utils/clientStore'
 
 import '@/styles/highlight.scss'
 

@@ -1,16 +1,17 @@
 import { Workplace } from '@repo/db'
 import { useEffect } from 'react'
 import { mutate } from 'swr'
-import { Col, Form, Input, Loading, Popconfirm, Select, Space, SubmitContext } from 'tdesign-react'
+import { Col, Form, Input, Loading, Select, Space, SubmitContext } from 'tdesign-react'
 
 import { addWorkplaceApi, deleteWorkplaceApi, editWorkplaceApi } from '@/apis/biz'
+import FormCancelButton from '@/components/buttons/small-form-buttons/FormCancelButton'
+import FormDeleteButton from '@/components/buttons/small-form-buttons/FormDeleteButton'
+import FormEditButton from '@/components/buttons/small-form-buttons/FormEditButton'
+import FormOkButton from '@/components/buttons/small-form-buttons/FormOkButton'
 import Title from '@/components/text/Title'
 import { oilPriceProvinces, useWorkplaceByPathIdsSWR } from '@/services/bizService'
 import { useCustomRoute } from '@/services/routerService'
 
-import BizCancelButton from '../buttons/BizCancelButton'
-import BizEditButton from '../buttons/BizEditButton'
-import BizOkButton from '../buttons/BizOkButton'
 import { required, urlId, useBiz } from '../common'
 
 const { FormItem, useForm } = Form
@@ -112,39 +113,37 @@ export default function WorkplaceForm(): RC {
         <Space>
           {!isAddWorkplace && lock !== 'workplace' ? (
             <>
-              <BizEditButton onClick={() => void setLock('workplace')} disabled={!!lock}>
+              <FormEditButton onClick={() => void setLock('workplace')} disabled={!!lock}>
                 编辑
-              </BizEditButton>
-              <Popconfirm
+              </FormEditButton>
+              <FormDeleteButton
                 onConfirm={async () => {
                   await deleteWorkplaceApi(companyId!, workplaceId!)
                   await mutate(`/business/company/${companyId}/workplace`)
                   toWorkplace(false)
                 }}
                 content="确认删除此工作地点吗？"
-                showArrow
+                disabled={!!lock}
               >
-                <>
-                  <BizCancelButton disabled={!!lock}>删除</BizCancelButton>
-                </>
-              </Popconfirm>
+                删除
+              </FormDeleteButton>
             </>
           ) : !isAddWorkplace && lock === 'workplace' ? (
             <>
-              <BizOkButton onClick={() => void form.submit()}>完成编辑</BizOkButton>
-              <BizCancelButton
+              <FormOkButton onClick={() => void form.submit()}>完成编辑</FormOkButton>
+              <FormCancelButton
                 onClick={() => {
                   setLock(null)
                   form.reset()
                 }}
               >
                 放弃修改
-              </BizCancelButton>
+              </FormCancelButton>
             </>
           ) : (
             <>
-              <BizOkButton onClick={() => void form.submit()}>完成新建</BizOkButton>
-              <BizCancelButton onClick={() => void toWorkplace(false)}>放弃新建</BizCancelButton>
+              <FormOkButton onClick={() => void form.submit()}>完成新建</FormOkButton>
+              <FormCancelButton onClick={() => void toWorkplace(false)}>放弃新建</FormCancelButton>
             </>
           )}
         </Space>

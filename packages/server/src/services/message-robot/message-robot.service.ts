@@ -19,7 +19,7 @@ export class MessageRobotService {
     private readonly userService: UserService
   ) {}
 
-  async addUserRobot(userId: string, robot: Prisma.MessageRobotUncheckedCreateInput): Promise<MessageRobot> {
+  async addUserRobot(userId: string, robot: Prisma.MessageRobotUncheckedCreateInput) {
     robot.userId = userId
     robot.companyId = null
 
@@ -77,11 +77,11 @@ export class MessageRobotService {
     return this.sendJSONByRobotConfig(robotConfig, json)
   }
 
-  async addCompanyRobot(companyId: string, robot: MessageRobot) {
+  async addCompanyRobot(companyId: string, robot: Prisma.MessageRobotUncheckedCreateInput) {
     robot.userId = null
     robot.companyId = companyId
 
-    return
+    return this.prisma.messageRobot.create({ data: robot })
   }
 
   async listCompanyRobots(companyId: string) {

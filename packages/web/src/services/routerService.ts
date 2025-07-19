@@ -11,6 +11,9 @@ import { traverseTree } from '@/utils/traverseTree'
 export interface ICustomBreadcrumbOptions {
   title?: string
   breadcrumb?: ReactNode
+
+  /** 如果需要多级面包屑，此配置可在 breadcrumb 的面包屑前面插入任意个节点 */
+  insertBeforeBreadcrumbs?: { breadcrumb: ReactNode; link?: string; id?: string }[]
 }
 
 const initCustomBreadcrumb = {}
@@ -52,11 +55,24 @@ const useRouterStore = create<IRouterStore>()(
 function useCustomRouteStack(): ICustomRoute[] {
   const customBreadcrumb = useRouterStore(t => t.customBreadcrumb)
   const matchesRoutes = useMatches()
-  const currentRoutes = useMemo(() => {
-    return uniqBy(matchesRoutes, 'pathname').map(item => {
-      const matchCustomConfig = customBreadcrumb[item.pathname]
 
-      return {
+  const currentRoutes = useMemo(() => {
+    const result: ICustomRoute[] = []
+    uniqBy(matchesRoutes, 'pathname').forEach(item => {
+      const matchCustomConfig = customBreadcrumb[item.pathname]
+      const insertConfigs = matchCustomConfig?.insertBeforeBreadcrumbs
+
+      if (matchCustomConfig?.breadcrumb && Array.isArray(insertConfigs)) {
+        insertConfigs.forEach((insertItem, insertIdx) => {
+          result.push({
+            id: insertItem.id || `insert.${insertIdx}_${item.id}`,
+            link: insertItem.link || item.pathname,
+            breadcrumb: insertItem.breadcrumb,
+          })
+        })
+      }
+
+      result.push({
         id: item.id,
         link: item.pathname,
         title: matchCustomConfig?.title || item.handle.title,
@@ -66,8 +82,10 @@ function useCustomRouteStack(): ICustomRoute[] {
           item.handle.breadcrumb ||
           item.handle.title ||
           `(未知)`,
-      }
+      })
     })
+
+    return result
   }, [matchesRoutes, customBreadcrumb])
 
   return currentRoutes
@@ -76,12 +94,12 @@ function useCustomRouteStack(): ICustomRoute[] {
 export interface ICustomRoute {
   id: string
   link?: string
-  title: string
+  title?: string
   breadcrumb: ReactNode
 }
 
 /** 面包屑导航专用的 route 栈 */
-export function useCustomRoutesForBreadcrumb(): ICustomRoute[] {
+export function useCurrentBreadcrumbs(): ICustomRoute[] {
   const currentRoutes = useCustomRouteStack()
   const pathname = useLocation().pathname
   const [result, setResult] = useState(() => currentRoutes)

@@ -1,8 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { Workplace, Company } from '@repo/db'
 
+import { StaffRole } from '@/app/role.decorator'
+
 import { BusinessService } from './business.service'
 
+@StaffRole()
 @Controller('business')
 export class BusinessController {
   constructor(private readonly businessService: BusinessService) {}

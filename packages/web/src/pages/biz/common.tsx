@@ -37,14 +37,16 @@ export function useBiz() {
     } else if (lock === 'company' && !companyId && !isAddCompany) {
       setLock(null)
     }
+  }, [companyId, workplaceId, isAddCompany, isAddWorkplace, lock, setLock])
 
+  useEffect(() => {
     // 直接通过路由 URL 进入 /new 时，应自动进入编辑模式
-    if (!lock && isAddWorkplace) {
-      setLock('workplace')
-    } else if (!lock && isAddCompany) {
+    if (isAddCompany) {
       setLock('company')
+    } else if (isAddWorkplace) {
+      setLock('workplace')
     }
-  }, [companyId, isAddCompany, isAddWorkplace, lock, setLock, workplaceId])
+  }, [isAddCompany, isAddWorkplace, setLock])
 
   function toCompany(companyId: string | boolean) {
     if (companyId === true) {
@@ -54,6 +56,7 @@ export function useBiz() {
       setLock(null)
       navigate(`/biz`)
     } else {
+      setLock(null)
       navigate(`/biz/company/${companyId}`)
     }
   }
@@ -66,6 +69,7 @@ export function useBiz() {
       setLock(null)
       navigate(`/biz/company/${companyId}`)
     } else {
+      setLock(null)
       navigate(`/biz/company/${companyId}/workplace/${workplaceId}`)
     }
   }

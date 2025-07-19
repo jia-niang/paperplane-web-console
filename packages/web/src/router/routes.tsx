@@ -1,4 +1,3 @@
-import { MessageRobotType } from '@repo/db'
 import { ReactNode } from 'react'
 import { createBrowserRouter, Navigate, RouteObject } from 'react-router'
 
@@ -6,6 +5,8 @@ import MainLayout from '@/components/layout/MainLayout'
 import BizLoading from '@/pages/biz/loading'
 import Page404 from '@/pages/fallbacks/page-404'
 import HomePage from '@/pages/home'
+import RobotLoading from '@/pages/robot/loading'
+import { ROBOT_ADD_URL } from '@/services/robotService'
 import { handleRouteTree } from '@/services/routerService'
 
 import lazy from './lazy'
@@ -36,11 +37,26 @@ const routerConfig: RouteObjectType[] = handleRouteTree([
         element: lazy(() => import('@/pages/gpt')),
       },
 
-      { path: 'robot', element: <Navigate to={MessageRobotType.WXBIZ.toLowerCase()} replace /> },
+      { path: 'robot', element: <Navigate to={`/robot/${ROBOT_ADD_URL}`} replace /> },
       {
-        path: 'robot/:robotType',
+        path: 'robot',
         title: 'OA 机器人',
         element: lazy(() => import('@/pages/robot')),
+        children: [
+          {
+            path: `${ROBOT_ADD_URL}`,
+            breadcrumb: '新的机器人',
+            element: lazy(() => import('@/pages/robot/forms/RobotForm'), { fallback: <RobotLoading /> }),
+          },
+          {
+            path: `:storageType/:companyId/robots/:robotId`,
+            element: lazy(() => import('@/pages/robot/forms/RobotForm'), { fallback: <RobotLoading /> }),
+          },
+          {
+            path: `:storageType/:robotId`,
+            element: lazy(() => import('@/pages/robot/forms/RobotForm'), { fallback: <RobotLoading /> }),
+          },
+        ],
       },
 
       {

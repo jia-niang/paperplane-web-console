@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
-import { MessageRobot, MessageRobotType, Prisma } from '@repo/db'
+import { MessageRobotType, Prisma } from '@repo/db'
 
 import { Public, UserId } from '@/app/auth.decorator'
+import { StaffRole } from '@/app/role.decorator'
 
 import { MessageRobotService } from './message-robot.service'
 
@@ -16,7 +17,7 @@ export class MessageRobotController {
   constructor(private readonly messageRobotService: MessageRobotService) {}
 
   @Post('/current')
-  async addUserRobot(@UserId() userId: string, @Body() robot: Prisma.MessageRobotUncheckedCreateInput) {
+  async addUserRobot(@UserId() userId: string, @Body() robot: Prisma.MessageRobotCreateInput) {
     return this.messageRobotService.addUserRobot(userId, robot)
   }
 
@@ -54,21 +55,25 @@ export class MessageRobotController {
     return this.messageRobotService.sendJSONByUserRobotId(userId, id, body)
   }
 
+  @StaffRole()
   @Post('/company/:companyId/robot')
-  async addCompanyRobot(@Param('companyId') companyId: string, @Body() robot: MessageRobot) {
+  async addCompanyRobot(@Param('companyId') companyId: string, @Body() robot: Prisma.MessageRobotCreateInput) {
     return this.messageRobotService.addCompanyRobot(companyId, robot)
   }
 
+  @StaffRole()
   @Get('/company/:companyId/robot')
   async listCompanyRobots(@Param('companyId') companyId: string) {
     return this.messageRobotService.listCompanyRobots(companyId)
   }
 
+  @StaffRole()
   @Get('/company/:companyId/robot/:id')
   async getCompanyRobotById(@Param('companyId') companyId: string, @Param('id') id: string) {
     return this.messageRobotService.getCompanyRobotById(companyId, id)
   }
 
+  @StaffRole()
   @Put('/company/:companyId/robot/:id')
   async updateCompanyRobot(
     @Param('companyId') companyId: string,
@@ -78,11 +83,13 @@ export class MessageRobotController {
     return this.messageRobotService.updateCompanyRobot(companyId, id, robot)
   }
 
+  @StaffRole()
   @Delete('/company/:companyId/robot/:id')
   async deleteCompanyRobot(@Param('companyId') companyId: string, @Param('id') id: string) {
-    return this.messageRobotService.deleteUserRobot(companyId, id)
+    return this.messageRobotService.deleteCompanyRobot(companyId, id)
   }
 
+  @StaffRole()
   @Post('/company/:companyId/robot/:id/send-text')
   async sendTextByCompanyRobotId(
     @Param('companyId') companyId: string,
@@ -92,6 +99,7 @@ export class MessageRobotController {
     return this.messageRobotService.sendTextByCompanyRobotId(companyId, id, body.text)
   }
 
+  @StaffRole()
   @Post('/company/:companyId/robot/:id/send')
   async sendMessageByCompanyRobotId(
     @Param('companyId') companyId: string,
