@@ -428,8 +428,8 @@ importers:
         specifier: ^0.4.2
         version: 0.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tdesign-react:
-        specifier: ^1.12.3
-        version: 1.12.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.13.1
+        version: 1.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zustand:
         specifier: ^5.0.2
         version: 5.0.2(@types/react@18.3.18)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1))
@@ -7079,8 +7079,8 @@ packages:
       react: '>=16.13.1'
       react-dom: '>=16.13.1'
 
-  tdesign-react@1.12.3:
-    resolution: {integrity: sha512-zpGPUrxoGvK3ZMFIAM1GmFI2LEYzPfQSALK0egR/RSGuVaQmNSqgonGATz0N1/quAqlZjdRqVH5w6IOJ5ruyKA==}
+  tdesign-react@1.13.1:
+    resolution: {integrity: sha512-SPQNIoMFYUJraH83cu6F2VvQgX19XaVPwrQ/iMxk9f8jqrltcncXcoQwmT3rdqFPu1w0u9x68Kap4BZUmLwxRA==}
     peerDependencies:
       react: '>=16.13.1'
       react-dom: '>=16.13.1'
@@ -15980,7 +15980,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  tdesign-react@1.12.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  tdesign-react@1.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.26.10
       '@popperjs/core': 2.11.8
