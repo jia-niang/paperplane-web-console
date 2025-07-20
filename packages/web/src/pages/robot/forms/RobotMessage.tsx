@@ -98,15 +98,15 @@ export default function RobotMessage(props: IRobotMessageProps): RC {
           <Textarea placeholder="输入消息内容" />
         </FormItem>
 
+        <FormItem name="atAll" label="@所有人">
+          <Switch />
+        </FormItem>
+
         {isAtAll ? null : (
           <FormItem name="atList" label="@用户" help="输入 @ 用户的手机号，按回车键完成输入，支持多个">
             <TagInput placeholder="请输入手机号" />
           </FormItem>
         )}
-
-        <FormItem name="atAll" label="@所有人">
-          <Switch />
-        </FormItem>
       </Form>
 
       <Space>
