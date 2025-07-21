@@ -1,5 +1,5 @@
 import { MessageRobotType, Role } from '@repo/db'
-import { useEffect, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { mutate } from 'swr'
 import { Alert, Col, Form, Input, Radio, Select, Space, SubmitContext, Textarea } from 'tdesign-react'
 
@@ -26,7 +26,6 @@ import {
   feishuExtraAuthenticationTips,
   MessageRobotFormData,
   required,
-  robotTipsMap,
   useRobotEditForm,
 } from '../common'
 import RobotMessage from './RobotMessage'
@@ -36,6 +35,12 @@ const feishuPrefix = 'https://open.feishu.cn/open-apis/bot/v2/hook/'
 const wxbizPrefix = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key='
 
 const { FormItem, useForm, useWatch } = Form
+
+const robotTipsMap: Record<MessageRobotType, ReactNode> = {
+  [MessageRobotType.DINGTALK]: <>群管理 → 添加机器人 → 自定义；安全设置仅支持“加签”。</>,
+  [MessageRobotType.FEISHU]: <>群机器人 → 添加 → 自定义机器人；安全设置仅支持“签名校验”。</>,
+  [MessageRobotType.WXBIZ]: <>群设置 → 添加群机器人 → 新创建。</>,
+}
 
 /** OA 机器人发送表单 */
 export default function RobotForm(): RC {
@@ -82,47 +87,59 @@ export default function RobotForm(): RC {
       return
     }
 
-    const { __storageType, __companyId, ...robotData } = robotForm.getFieldsValue(true) as MessageRobotFormData
+    const robotFormResult = robotForm.getFieldsValue(true) as MessageRobotFormData
 
     if (isAddRobot) {
-      setLoading(true)
-      try {
-        if (__storageType === RobotStorageType.LOCAL) {
-          const newRobot = addLocalRobot(robotData)
-          select(RobotStorageType.LOCAL, null, newRobot.id)
-        } else if (__storageType === RobotStorageType.USER) {
-          const newRobot = await addUserRobotApi(robotData)
-          await mutate(`/message-robot/current`)
-          select(RobotStorageType.USER, null, newRobot.id)
-        } else if (__storageType === RobotStorageType.COMPANY) {
-          const newRobot = await addCompanyRobotApi(__companyId!, robotData)
-          await mutate(`/message-robot/company/${__companyId}/robot`)
-          robotEmitter.emit('companyRefresh', __companyId!)
-          select(RobotStorageType.COMPANY, __companyId!, newRobot.id)
-        }
-      } finally {
-        setLoading(false)
-      }
+      await addRobotHandler(robotFormResult)
     } else {
-      setLoading(true)
-      try {
-        if (__storageType === RobotStorageType.LOCAL) {
-          const newRobot = editLocalRobot(robotData)
-          setRobot({ ...newRobot, __storageType })
-        } else if (__storageType === RobotStorageType.USER) {
-          const newRobot = await editUserRobotApi(robotData)
-          await mutate(`/message-robot/current`)
-          setRobot({ ...newRobot, __storageType })
-        } else if (__storageType === RobotStorageType.COMPANY) {
-          const newRobot = await editCompanyRobotApi(__companyId!, robotData)
-          await mutate(`/message-robot/company/${__companyId}/robot`)
-          robotEmitter.emit('companyRefresh', __companyId!)
-          setRobot({ ...newRobot, __storageType, __companyId })
-        }
-      } finally {
-        setLock(true)
-        setLoading(false)
+      await editRobotHandler(robotFormResult)
+    }
+  }
+
+  const addRobotHandler = async (robotFormResult: MessageRobotFormData) => {
+    const { __storageType, __companyId, ...robotData } = robotFormResult
+
+    setLoading(true)
+    try {
+      if (__storageType === RobotStorageType.LOCAL) {
+        const newRobot = addLocalRobot(robotData)
+        select(RobotStorageType.LOCAL, null, newRobot.id)
+      } else if (__storageType === RobotStorageType.USER) {
+        const newRobot = await addUserRobotApi(robotData)
+        await mutate(`/message-robot/current`)
+        select(RobotStorageType.USER, null, newRobot.id)
+      } else if (__storageType === RobotStorageType.COMPANY) {
+        const newRobot = await addCompanyRobotApi(__companyId!, robotData)
+        await mutate(`/message-robot/company/${__companyId}/robot`)
+        robotEmitter.emit('companyRefresh', __companyId!)
+        select(RobotStorageType.COMPANY, __companyId!, newRobot.id)
       }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const editRobotHandler = async (robotFormResult: MessageRobotFormData) => {
+    const { __storageType, __companyId, ...robotData } = robotFormResult
+
+    setLoading(true)
+    try {
+      if (__storageType === RobotStorageType.LOCAL) {
+        const newRobot = editLocalRobot(robotData)
+        setRobot({ ...newRobot, __storageType })
+      } else if (__storageType === RobotStorageType.USER) {
+        const newRobot = await editUserRobotApi(robotData)
+        await mutate(`/message-robot/current`)
+        setRobot({ ...newRobot, __storageType })
+      } else if (__storageType === RobotStorageType.COMPANY) {
+        const newRobot = await editCompanyRobotApi(__companyId!, robotData)
+        await mutate(`/message-robot/company/${__companyId}/robot`)
+        robotEmitter.emit('companyRefresh', __companyId!)
+        setRobot({ ...newRobot, __storageType, __companyId })
+      }
+    } finally {
+      setLock(true)
+      setLoading(false)
     }
   }
 

@@ -1,6 +1,6 @@
 import { MessageRobot, MessageRobotType } from '@repo/db'
 import mitt from 'mitt'
-import { ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useMatch, useNavigate, useParams } from 'react-router'
 import { create } from 'zustand'
 
@@ -90,9 +90,3 @@ export const feishuExtraAuthenticationTips = (
     </a>
   </>
 )
-
-export const robotTipsMap: Record<MessageRobotType, ReactNode> = {
-  [MessageRobotType.DINGTALK]: <>群管理 → 添加机器人 → 自定义；安全设置仅支持“加签”。</>,
-  [MessageRobotType.FEISHU]: <>群机器人 → 添加 → 自定义机器人；安全设置仅支持“签名校验”。</>,
-  [MessageRobotType.WXBIZ]: <>群设置 → 添加群机器人 → 新创建。</>,
-}
