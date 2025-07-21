@@ -22,7 +22,7 @@ const useBizLock = create<ILockStore>()(set => ({
   setLock: lock => void set({ lock }),
 }))
 
-export function useBiz() {
+export function useBizEditForm() {
   const { lock, setLock } = useBizLock()
   const { companyId, workplaceId } = useParams<{ companyId?: string; workplaceId?: string }>()
   const navigate = useNavigate()

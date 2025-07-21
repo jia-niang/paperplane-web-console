@@ -7,13 +7,13 @@ import PageLayout from '@/components/layout/PageLayout'
 import Title from '@/components/text/Title'
 import { useAllCompaniesSWR, useWorkplacesByCompanyIdSWR } from '@/services/bizService'
 
-import { urlId, useBiz } from './common'
+import { urlId, useBizEditForm } from './common'
 
 const ROOT_ID = '_root'
 const empty: any[] = []
 
 export default function BizPage(): RC {
-  const { lock, companyId, workplaceId, toCompany, toWorkplace } = useBiz()
+  const { lock, companyId, workplaceId, toCompany, toWorkplace } = useBizEditForm()
 
   const { data: companyList, isLoading: companyListLoading } = useAllCompaniesSWR()
   const { data: workplaceList, isLoading: workplaceListLoading } = useWorkplacesByCompanyIdSWR(urlId(companyId))

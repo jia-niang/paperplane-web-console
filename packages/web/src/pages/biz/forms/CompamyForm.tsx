@@ -18,7 +18,7 @@ import {
 } from '@/services/bizService'
 import { useCustomRoute } from '@/services/routerService'
 
-import { required, useBiz, urlId } from '../common'
+import { required, useBizEditForm, urlId } from '../common'
 
 const { FormItem, useForm } = Form
 
@@ -33,7 +33,7 @@ const defaultCompany: Partial<Company> = {
 
 export default function CompanyForm(): RC {
   const [form] = useForm()
-  const { lock, setLock, companyId, isAddCompany, toCompany } = useBiz()
+  const { lock, setLock, companyId, isAddCompany, toCompany } = useBizEditForm()
 
   const { data, isLoading, mutate: refresh } = useCompanyByIdSWR(urlId(companyId))
   const formData = useMemo(() => converCompany2FormData(data), [data])

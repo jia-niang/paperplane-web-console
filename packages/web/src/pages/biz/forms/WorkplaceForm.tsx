@@ -12,7 +12,7 @@ import Title from '@/components/text/Title'
 import { oilPriceProvinces, useWorkplaceByPathIdsSWR } from '@/services/bizService'
 import { useCustomRoute } from '@/services/routerService'
 
-import { required, urlId, useBiz } from '../common'
+import { required, urlId, useBizEditForm } from '../common'
 
 const { FormItem, useForm } = Form
 
@@ -20,7 +20,7 @@ const defaultWorkplace: Partial<Workplace> = {}
 
 export default function WorkplaceForm(): RC {
   const [form] = useForm()
-  const { lock, setLock, companyId, workplaceId, isAddWorkplace, toWorkplace } = useBiz()
+  const { lock, setLock, companyId, workplaceId, isAddWorkplace, toWorkplace } = useBizEditForm()
 
   const { data, isLoading, mutate: refresh } = useWorkplaceByPathIdsSWR(companyId, urlId(workplaceId))
 
