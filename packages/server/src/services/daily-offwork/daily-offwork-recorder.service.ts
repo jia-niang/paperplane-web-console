@@ -141,12 +141,12 @@ export class DailyOffworkRecorderService {
         { retries: 3 }
       )
 
+      const file = Buffer.from(await page.screenshot())
+      await page.close()
+      browser.close()
+
       const result = await retry(
         async () => {
-          const file = Buffer.from(await page.screenshot())
-          await page.close()
-          browser.close()
-
           this.logger.log(` 合成图完成，准备上传对象存储`)
 
           return await uploadFile(imageKey, file).then(fileInfo => fileInfo.fileUrl)
@@ -175,12 +175,12 @@ export class DailyOffworkRecorderService {
         { retries: 3 }
       )
 
+      const file = Buffer.from(await page.screenshot())
+      await page.close()
+      browser.close()
+
       const result = await retry(
         async () => {
-          const file = Buffer.from(await page.screenshot())
-          await page.close()
-          browser.close()
-
           this.logger.log(` 交通图完成，准备上传对象存储`)
 
           return await uploadFile(imageKey, file).then(fileInfo => fileInfo.fileUrl)
