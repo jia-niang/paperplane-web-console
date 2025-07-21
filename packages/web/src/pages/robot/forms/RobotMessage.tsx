@@ -34,7 +34,8 @@ export default function RobotMessage(props: IRobotMessageProps): RC {
 
     const { type, accessToken, secret } = robotForm.getFieldsValue(true)
     const robotValidate = await robotForm.validateOnly({ fields: ['accessToken', 'secret'] })
-    if (!robotValidate) {
+
+    if (robotValidate !== true) {
       notification.error({ title: '发送失败', content: '机器人配置输入有误，请检查修正后重试' })
 
       return
