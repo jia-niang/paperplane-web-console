@@ -11,7 +11,7 @@ import { useAllCompaniesSWR } from '@/services/bizService'
 import { RobotStorageType, useLocalRobots, useUserRobotsSWR } from '@/services/robotService'
 import { useAccess, useCurrentUser } from '@/services/userService'
 
-import { defaultRobot, MessageRobotFormData, robotEmitter, useRobot } from '../common'
+import { defaultRobot, MessageRobotFormData, robotEmitter, useRobotEditForm } from '../common'
 
 import './RobotSelector.scss'
 
@@ -45,7 +45,7 @@ export default function RobotSelector(): RC {
   const [collapse, setCollapse] = useState<RobotStorageType>(() =>
     currentUser ? RobotStorageType.USER : RobotStorageType.LOCAL
   )
-  const { lock, setRobot, isAddRobot, storageType, companyId, robotId, select, toAddForm } = useRobot()
+  const { lock, setRobot, isAddRobot, storageType, companyId, robotId, select, toAddForm } = useRobotEditForm()
 
   const menuLock = isAddRobot || lock
 

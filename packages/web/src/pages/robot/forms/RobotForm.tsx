@@ -27,7 +27,7 @@ import {
   MessageRobotFormData,
   required,
   robotTipsMap,
-  useRobot,
+  useRobotEditForm,
 } from '../common'
 import RobotMessage from './RobotMessage'
 
@@ -41,7 +41,8 @@ const { FormItem, useForm, useWatch } = Form
 export default function RobotForm(): RC {
   const [loading, setLoading] = useState(false)
 
-  const { robot, lock, setLock, isAddRobot, storageType, select, companyId, robotId, toAddForm, setRobot } = useRobot()
+  const { robot, lock, setLock, isAddRobot, storageType, select, companyId, robotId, toAddForm, setRobot } =
+    useRobotEditForm()
   const currentUser = useCurrentUser()
   const isStaff = useAccess(Role.STAFF)
 

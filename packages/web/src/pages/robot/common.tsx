@@ -46,7 +46,7 @@ const useRobotStore = create<IRobotLock>()(set => ({
   setRobot: robot => void set({ robot }),
 }))
 
-export function useRobot() {
+export function useRobotEditForm() {
   const { storageType, companyId, robotId } = useParams<{
     storageType?: RobotStorageType
     companyId?: string
