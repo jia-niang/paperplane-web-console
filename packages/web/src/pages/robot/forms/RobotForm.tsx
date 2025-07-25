@@ -180,8 +180,7 @@ export default function RobotForm(): RC {
 
           {isAddRobot ? (
             <Alert
-              className="mb-4"
-              style={{ padding: '12px' }}
+              style={{ padding: '12px', margin: '16px 0' }}
               theme="info"
               title="配置指南"
               message={robotTipsMap[robotType]}
@@ -215,8 +214,7 @@ export default function RobotForm(): RC {
           {robotType === MessageRobotType.FEISHU ? (
             <>
               <Alert
-                className="mt-4"
-                style={{ padding: '12px' }}
+                style={{ padding: '12px', margin: '16px 0' }}
                 theme="info"
                 title="关于 AppId 和 AppSecret"
                 message={

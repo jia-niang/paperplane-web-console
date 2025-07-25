@@ -145,15 +145,13 @@ export default function RobotMessage(props: IRobotMessageProps): RC {
             {robotType === MessageRobotType.WXBIZ ? (
               <>
                 <Alert
-                  className="mt-4"
-                  style={{ padding: '12px', whiteSpace: 'pre-wrap' }}
+                  style={{ padding: '12px', margin: '16px 0', whiteSpace: 'pre-wrap' }}
                   theme="info"
                   title="支持的 Markdown 格式"
                   message={`基础格式：\n# 标题，**加粗**，[链接](url)，\`行内代码\`，> 引用\n\n支持颜色文字：\n<font color="info">文本</font>\n\n其中 color 取值 "info" 为绿色，取值 "comment" 为灰色，取值 "warning" 为橙红色。`}
                 />
                 <Alert
-                  className="mt-4"
-                  style={{ padding: '12px', whiteSpace: 'pre-wrap' }}
+                  style={{ padding: '12px', margin: '16px 0', whiteSpace: 'pre-wrap' }}
                   theme="error"
                   title="不支持的格式"
                   message={`无法使用“@”功能；不支持任何形式的图片。`}
@@ -161,16 +159,14 @@ export default function RobotMessage(props: IRobotMessageProps): RC {
               </>
             ) : robotType === MessageRobotType.DINGTALK ? (
               <Alert
-                className="mt-4"
-                style={{ padding: '12px', whiteSpace: 'pre-wrap' }}
+                style={{ padding: '12px', margin: '16px 0', whiteSpace: 'pre-wrap' }}
                 theme="info"
                 title="支持的 Markdown 格式"
                 message={`基础格式：\n# 标题，**加粗**，*斜体*，> 引用，[链接](url)，- 无序列表，1. 有序列表。\n\n支持插入图片：\n![](图片URL)`}
               />
             ) : robotType === MessageRobotType.FEISHU ? (
               <Alert
-                className="mt-4"
-                style={{ padding: '12px', whiteSpace: 'pre-wrap' }}
+                style={{ padding: '12px', margin: '16px 0', whiteSpace: 'pre-wrap' }}
                 theme="error"
                 title="关于飞书富文本消息"
                 message="飞书原生不支持 Markdown 消息，提供的富文本消息仅支持超链接和“@用户”这两种语法。"
@@ -192,8 +188,7 @@ export default function RobotMessage(props: IRobotMessageProps): RC {
                 </FormItem>
 
                 <Alert
-                  className="mt-4"
-                  style={{ padding: '12px', whiteSpace: 'pre-wrap' }}
+                  style={{ padding: '12px', margin: '16px 0', whiteSpace: 'pre-wrap' }}
                   theme="info"
                   title="关于发送图片"
                   message="钉钉机器人使用 Markdown 消息来实现发图，需提供 Markdown 标题，默认为“[图片]”。"
@@ -201,16 +196,14 @@ export default function RobotMessage(props: IRobotMessageProps): RC {
               </>
             ) : robotType === MessageRobotType.WXBIZ ? (
               <Alert
-                className="mt-4"
-                style={{ padding: '12px', whiteSpace: 'pre-wrap' }}
+                style={{ padding: '12px', margin: '16px 0', whiteSpace: 'pre-wrap' }}
                 theme="info"
                 title="关于发送图片"
                 message="企业微信只支持 png、jpg 格式图片，图片文件不能超过 2MB，如果文件过大会自动压缩。"
               />
             ) : robotType === MessageRobotType.FEISHU ? (
               <Alert
-                className="mt-4"
-                style={{ padding: '12px', whiteSpace: 'pre-wrap' }}
+                style={{ padding: '12px', margin: '16px 0', whiteSpace: 'pre-wrap' }}
                 theme="info"
                 title="关于发送图片"
                 message="此功能需飞书平台应用开通相关权限，并正确配置 AppId 和 AppSecret。"
@@ -250,8 +243,7 @@ export default function RobotMessage(props: IRobotMessageProps): RC {
 
         {atList?.length > 0 && [MessageRobotType.DINGTALK, MessageRobotType.FEISHU].includes(robotType as any) ? (
           <Alert
-            className="mt-4"
-            style={{ padding: '12px' }}
+            style={{ padding: '12px', margin: '16px 0' }}
             theme="info"
             title="关于“@用户”功能"
             message="默认“@用户XXX”会追加在消息末尾，可通过消息中的“@手机号”来调整文本的位置。"
@@ -260,8 +252,7 @@ export default function RobotMessage(props: IRobotMessageProps): RC {
 
         {atList?.length > 0 && robotType === MessageRobotType.FEISHU ? (
           <Alert
-            className="mt-4"
-            style={{ padding: '12px' }}
+            style={{ padding: '12px', margin: '16px 0' }}
             theme="info"
             title="关于飞书相关权限"
             message="此功能需飞书平台应用开通相关权限，并正确配置 AppId 和 AppSecret。"
