@@ -33,6 +33,7 @@ import { GitHelperController } from './services/git-helper/git-helper.controller
 import { GitHelperService } from './services/git-helper/git-helper.service'
 import { MessageQueueController } from './services/message-queue/message-queue.controller'
 import { MessageQueueService } from './services/message-queue/message-queue.service'
+import { MessageRobotGeneratorService } from './services/message-robot/message-robot-generator.service'
 import { MessageRobotController } from './services/message-robot/message-robot.controller'
 import { MessageRobotService } from './services/message-robot/message-robot.service'
 import { OA2Service } from './services/oa2/oa2.service'
@@ -129,6 +130,7 @@ export const rabbitmqConfig: RmqOptions = {
     DailyOffworkService,
     ThirdPartyService,
     MessageRobotService,
+    MessageRobotGeneratorService,
     DockerStatusService,
     UserService,
     ShortsService,

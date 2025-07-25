@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common'
-import { MessageRobot, MessageRobotType, Prisma } from '@repo/db'
+import { MessageRobotType, Prisma } from '@repo/db'
 import axios from 'axios'
 import { PrismaService } from 'nestjs-prisma'
 
-import { feishuUpload, handleWxBizImage } from '@/utils/robotHelper'
+import { hexId } from '@/utils/random'
 
+import { S3Service } from '../s3/s3.service'
 import { UserService } from '../user/user.service'
+import { MessageRobotGeneratorService } from './message-robot-generator.service'
 import { feishuRobotSign, dingtalkRobotSign } from './robot-sign'
 
 const wxbizRobotUrl = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=`
@@ -16,8 +18,12 @@ const feishuRobotUrl = `https://open.feishu.cn/open-apis/bot/v2/hook/`
 export class MessageRobotService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly gen: MessageRobotGeneratorService,
+    private readonly s3: S3Service
   ) {}
+
+  // 用户机器人
 
   async addUserRobot(userId: string, robot: Prisma.MessageRobotUncheckedCreateInput) {
     robot.userId = userId
@@ -65,17 +71,22 @@ export class MessageRobotService {
     return false
   }
 
-  async sendTextByUserRobotId(userId: string, id: string, text: string) {
-    await this.prisma.messageRobot.findFirstOrThrow({ where: { id, userId } })
-
-    return this.sendTextByRobotId(id, text)
-  }
+  // 用户机器人 发送消息
 
   async sendJSONByUserRobotId(userId: string, id: string, json: object) {
     const robotConfig = await this.prisma.messageRobot.findFirstOrThrow({ where: { id, userId } })
 
-    return this.sendJSONByRobotConfig(robotConfig, json)
+    return this.sendBase({ type: robotConfig.type, auth: robotConfig as IMessageRobotAuth, json })
   }
+
+  async sendTextByUserRobotId(userId: string, id: string, body: ITextMessageBody) {
+    const robotConfig = await this.prisma.messageRobot.findFirstOrThrow({ where: { id, userId } })
+    const json = await this.gen.text({ type: robotConfig.type, auth: robotConfig as IMessageRobotAuth, ...body })
+
+    return this.sendBase({ type: robotConfig.type, auth: robotConfig as IMessageRobotAuth, json })
+  }
+
+  // 公司机器人
 
   async addCompanyRobot(companyId: string, robot: Prisma.MessageRobotUncheckedCreateInput) {
     robot.userId = null
@@ -118,101 +129,82 @@ export class MessageRobotService {
     return false
   }
 
-  async sendTextByCompanyRobotId(companyId: string, id: string, text: string) {
-    await this.prisma.messageRobot.findFirstOrThrow({ where: { id, companyId } })
-
-    return this.sendTextByRobotId(id, text)
-  }
+  // 公司机器人 发送消息
 
   async sendJSONByCompanyRobotId(companyId: string, id: string, json: object) {
-    const robotConfig = await this.prisma.messageRobot.findFirstOrThrow({
-      where: { id, companyId },
-    })
+    const robotConfig = await this.prisma.messageRobot.findFirstOrThrow({ where: { id, companyId } })
 
-    return this.sendJSONByRobotConfig(robotConfig, json)
+    return this.sendBase({ type: robotConfig.type, auth: robotConfig as IMessageRobotAuth, json })
   }
 
-  /** 提供机器人 ID，发送纯文本 */
-  async sendTextByRobotId(id: string, text: string) {
+  async sendTextByCompanyRobotId(companyId: string, id: string, body: ITextMessageBody) {
+    const robotConfig = await this.prisma.messageRobot.findFirstOrThrow({ where: { id, companyId } })
+    const json = await this.gen.text({ type: robotConfig.type, auth: robotConfig as IMessageRobotAuth, ...body })
+
+    return this.sendBase({ type: robotConfig.type, auth: robotConfig as IMessageRobotAuth, json })
+  }
+
+  // 本地机器人
+
+  /** 内部使用，提供机器人 ID，发送纯文本 */
+  async sendTextByRobotId(id: string, body: ITextMessageBody) {
     const robotConfig = await this.prisma.messageRobot.findFirstOrThrow({ where: { id } })
+    const json = await this.gen.text({ type: robotConfig.type, auth: robotConfig as IMessageRobotAuth, ...body })
 
-    if (robotConfig.type === MessageRobotType.DINGTALK) {
-      return this.sendJSONByRobotConfig(robotConfig, { msgtype: 'text', text: { content: text } })
-    } else if (robotConfig.type === MessageRobotType.FEISHU) {
-      return this.sendJSONByRobotConfig(robotConfig, { msg_type: 'text', content: { text } })
-    } else if (robotConfig.type === MessageRobotType.WXBIZ) {
-      return this.sendJSONByRobotConfig(robotConfig, { msgtype: 'text', text: { content: text } })
-    } else {
-      throw new Error('未知的机器人类型')
-    }
+    return this.sendBase({ type: robotConfig.type, auth: robotConfig as IMessageRobotAuth, json })
   }
 
-  /** 提供机器人 ID，发送一张图片，可以配置艾特全体 */
-  async sendImageByRobotId(id: string, imageUrl: string, options?: { atAll?: boolean; dingtalkTitle?: string }) {
+  /** 内部使用，提供机器人 ID，发送一张图片 */
+  async sendImageByRobotId(id: string, body: IImageMessageBody) {
     const robotConfig = await this.prisma.messageRobot.findFirstOrThrow({ where: { id } })
+    const json = await this.gen.image({ type: robotConfig.type, auth: robotConfig as IMessageRobotAuth, ...body })
 
-    const { type, extraAuthentication } = robotConfig
-    const imageExtraAuthentication = extraAuthentication as IMessageExtraAuthentication
-
-    const { atAll, dingtalkTitle } = { atAll: false, dingtalkTitle: '', ...options }
-
-    if (type === MessageRobotType.DINGTALK) {
-      return this.sendJSONByRobotConfig(robotConfig, {
-        msgtype: 'markdown',
-        markdown: { title: dingtalkTitle, text: `![](${imageUrl})` },
-        at: { isAtAll: atAll },
-      })
-    } else if (type === MessageRobotType.FEISHU) {
-      if (atAll) {
-        await this.sendJSONByRobotConfig(robotConfig, {
-          msg_type: 'text',
-          content: { text: '<at user_id="all">所有人</at>' },
-        })
-      }
-
-      const feishuImageKey = await feishuUpload(
-        imageUrl,
-        imageExtraAuthentication?.feishuUploadAppId || '',
-        imageExtraAuthentication?.feishuUploadAppSecret || ''
-      )
-
-      return this.sendJSONByRobotConfig(robotConfig, {
-        msg_type: 'image',
-        content: { image_key: feishuImageKey },
-      })
-    } else if (type === MessageRobotType.WXBIZ) {
-      if (atAll) {
-        await this.sendJSONByRobotConfig(robotConfig, {
-          msgtype: 'text',
-          text: { content: '', mentioned_mobile_list: ['@all'] },
-        })
-      }
-
-      return this.sendJSONByRobotConfig(robotConfig, {
-        msgtype: 'image',
-        image: await handleWxBizImage(imageUrl),
-      })
-    } else {
-      throw new Error('未知的机器人类型')
-    }
+    return this.sendBase({ type: robotConfig.type, auth: robotConfig as IMessageRobotAuth, json })
   }
 
-  /** 提供机器人的 MessageRobot 格式配置，发送原始 JSON 消息 */
-  async sendJSONByRobotConfig(robotConfig: MessageRobot, messageBody: object) {
-    const { type, accessToken, secret } = robotConfig
+  // 即配即用机器人
 
-    return this.sendJSONByFullConfig(type, messageBody, { accessToken: accessToken!, secret: secret! })
+  /** 发送纯文本 */
+  async sendBaseText(config: ITextMessageBody & IRobotMessageSendConfig) {
+    const json = await this.gen.text(config)
+
+    return this.sendBase({ type: config.type, auth: config.auth, json })
+  }
+
+  /** 发送 Markdown */
+  async sendBaseMarkdown(config: IMarkdownMessageBody & IRobotMessageSendConfig) {
+    const { type, auth } = config
+    const json = await this.gen.markdown(config)
+
+    return this.sendBase({ type, auth, json })
+  }
+
+  /** 发送图片 */
+  async sendBaseImage(config: IImageMessageBody & IRobotMessageSendConfig) {
+    const { type, auth } = config
+    const json = await this.gen.image(config)
+
+    return this.sendBase({ type, auth, json })
+  }
+
+  /** 上传图片预签名 */
+  async basePresignImage(body: { ext: string }) {
+    const random = hexId(12)
+    const path = `/usercontent/message-robot/${random}.${body.ext}`
+
+    return await this.s3.uploadSign(path)
   }
 
   /** 提供机器人完整配置（类型、令牌、密钥）来发送原始 JSON 消息 */
-  async sendJSONByFullConfig(type: MessageRobotType, messageBody: object, authBody: IMessageRobotAuth) {
-    const { accessToken, secret } = authBody
+  async sendBase(config: IJsonMessageBody & IRobotMessageSendConfig) {
+    const { type, json } = config
+    const { accessToken, secret } = config.auth
 
     if (type === MessageRobotType.DINGTALK) {
       const { sign, timestamp } = dingtalkRobotSign(secret!)
 
       return axios
-        .post(dintalkRobotUrl + accessToken + `&timestamp=${timestamp}&sign=${sign}`, messageBody)
+        .post(dintalkRobotUrl + accessToken + `&timestamp=${timestamp}&sign=${sign}`, json)
         .then(res => res.data)
         .then(res => {
           if (res.errcode !== 0) {
@@ -225,7 +217,7 @@ export class MessageRobotService {
       const { sign, timestamp } = feishuRobotSign(secret!)
 
       return axios
-        .post(feishuRobotUrl + accessToken, { timestamp: String(timestamp), sign, ...messageBody })
+        .post(feishuRobotUrl + accessToken, { timestamp: String(timestamp), sign, ...json })
         .then(res => res.data)
         .then(res => {
           if (res.code !== 0) {
@@ -236,7 +228,7 @@ export class MessageRobotService {
         })
     } else if (type === MessageRobotType.WXBIZ) {
       return axios
-        .post(wxbizRobotUrl + accessToken, messageBody)
+        .post(wxbizRobotUrl + accessToken, json)
         .then(res => res.data)
         .then(res => {
           if (res.errcode !== 0) {

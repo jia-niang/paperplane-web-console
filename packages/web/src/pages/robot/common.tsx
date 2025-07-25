@@ -77,16 +77,3 @@ export function useRobotEditForm() {
 
   return { lock, setLock, robot, setRobot, storageType, companyId, robotId, isAddRobot, select, toAddForm }
 }
-
-export const feishuExtraAuthenticationTips = (
-  <>
-    用于上传图片，如果用不到图片功能则可不填，
-    <a
-      className="text-[var(--brand-main)]"
-      href="https://open.feishu.cn/document/server-docs/im-v1/image/create"
-      target="_blank"
-    >
-      参考文档
-    </a>
-  </>
-)

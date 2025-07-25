@@ -5,11 +5,7 @@ import sharp from 'sharp'
 import { Readable } from 'stream'
 
 export async function feishuUpload(imageUrl: string, appId: string, appSecret: string): Promise<string> {
-  const client = new Client({
-    appId,
-    appSecret,
-    disableTokenCache: false,
-  })
+  const client = new Client({ appId, appSecret, disableTokenCache: false })
 
   const image = await axios.get(imageUrl, { responseType: 'arraybuffer' }).then(res => res.data)
 
@@ -24,8 +20,37 @@ export async function feishuUpload(imageUrl: string, appId: string, appSecret: s
     .then(res => res!.image_key!)
 }
 
+export async function feishuQueryUserIdByMobiles(mobiles: string[], appId: string, appSecret: string) {
+  const client = new Client({ appId, appSecret, disableTokenCache: false })
+
+  const clientResult = await client.contact.v3.user
+    .batchGetId({
+      params: { user_id_type: 'user_id' },
+      data: { emails: [], mobiles, include_resigned: false },
+    })
+    .then(res => res.data?.user_list || [])
+
+  const moblieMap = {}
+  clientResult.forEach(t => {
+    if (t.mobile) {
+      moblieMap[t.mobile] = t.user_id
+    }
+  })
+
+  return { userIdList: clientResult.map(t => t.user_id), moblieMap }
+}
+
 async function defaultReduceSizeByFile(file: Buffer): Promise<Buffer> {
-  return sharp(file).toFormat('jpeg').toBuffer()
+  const sf = sharp(file)
+  let quality = 100
+  let result = await sf.toFormat('jpeg', { quality }).toBuffer()
+
+  while (result.length > 2 * 1024 * 1024) {
+    quality -= 10
+    result = await sf.toFormat('jpeg', { quality }).toBuffer()
+  }
+
+  return result
 }
 
 export interface IHandleWxBizImageOption {

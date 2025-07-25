@@ -1,20 +1,16 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
-import { MessageRobotType, Prisma } from '@repo/db'
+import { Prisma } from '@repo/db'
 
 import { Public, UserId } from '@/app/auth.decorator'
 import { StaffRole } from '@/app/role.decorator'
 
 import { MessageRobotService } from './message-robot.service'
 
-export interface ICustomSendBody {
-  type: MessageRobotType
-  auth: IMessageRobotAuth
-  body: object
-}
-
 @Controller('/message-robot')
 export class MessageRobotController {
   constructor(private readonly messageRobotService: MessageRobotService) {}
+
+  // 用户机器人
 
   @Post('/current')
   async addUserRobot(@UserId() userId: string, @Body() robot: Prisma.MessageRobotCreateInput) {
@@ -45,15 +41,19 @@ export class MessageRobotController {
     return this.messageRobotService.deleteUserRobot(userId, id)
   }
 
-  @Post('/current/:id/send-text')
-  async sendTextByUserRobotId(@UserId() userId: string, @Param('id') id: string, @Body() body: { text: string }) {
-    return this.messageRobotService.sendTextByUserRobotId(userId, id, body.text)
-  }
+  // 用户机器人 发送相关
 
   @Post('/current/:id/send')
   async sendMessageByUserRobotId(@UserId() userId: string, @Param('id') id: string, @Body() body: object) {
     return this.messageRobotService.sendJSONByUserRobotId(userId, id, body)
   }
+
+  @Post('/current/:id/send/text')
+  async sendTextByUserRobotId(@UserId() userId: string, @Param('id') id: string, @Body() body: ITextMessageBody) {
+    return this.messageRobotService.sendTextByUserRobotId(userId, id, body)
+  }
+
+  // 公司机器人
 
   @StaffRole()
   @Post('/company/:companyId/robot')
@@ -89,15 +89,7 @@ export class MessageRobotController {
     return this.messageRobotService.deleteCompanyRobot(companyId, id)
   }
 
-  @StaffRole()
-  @Post('/company/:companyId/robot/:id/send-text')
-  async sendTextByCompanyRobotId(
-    @Param('companyId') companyId: string,
-    @Param('id') id: string,
-    @Body() body: { text: string }
-  ) {
-    return this.messageRobotService.sendTextByCompanyRobotId(companyId, id, body.text)
-  }
+  // 公司机器人 发送相关
 
   @StaffRole()
   @Post('/company/:companyId/robot/:id/send')
@@ -109,16 +101,47 @@ export class MessageRobotController {
     return this.messageRobotService.sendJSONByCompanyRobotId(companyId, id, body)
   }
 
+  @StaffRole()
+  @Post('/company/:companyId/robot/:id/send/text')
+  async sendTextByCompanyRobotId(
+    @Param('companyId') companyId: string,
+    @Param('id') id: string,
+    @Body() body: ITextMessageBody
+  ) {
+    return this.messageRobotService.sendTextByCompanyRobotId(companyId, id, body)
+  }
+
+  // 即配即用机器人
+
   @Public()
-  @Post('/custom-send')
-  async customSend(@Body() formData: ICustomSendBody) {
-    const { type, auth, body } = formData
-    const result = await this.messageRobotService.sendJSONByFullConfig(
-      type.toUpperCase() as MessageRobotType,
-      body,
-      auth
-    )
+  @Post('/custom/send')
+  async customSend(@Body() body: IJsonMessageBody & IRobotMessageSendConfig) {
+    const result = await this.messageRobotService.sendBase(body)
 
     return result
+  }
+
+  @Public()
+  @Post('/custom/send/text')
+  async customSendText(@Body() body: ITextMessageBody & IRobotMessageSendConfig) {
+    return this.messageRobotService.sendBaseText(body)
+  }
+
+  @Public()
+  @Post('/custom/send/markdown')
+  async customSendMarkdown(@Body() body: IMarkdownMessageBody & IRobotMessageSendConfig) {
+    return this.messageRobotService.sendBaseMarkdown(body)
+  }
+
+  @Public()
+  @Post('/custom/send/image')
+  async customSendImage(@Body() body: IImageMessageBody & IRobotMessageSendConfig) {
+    return this.messageRobotService.sendBaseImage(body)
+  }
+
+  @Public()
+  @Post('/custom/upload-presign/image')
+  async customUploadPresignImage(@Body() body: { ext: string }) {
+    return this.messageRobotService.basePresignImage(body)
   }
 }

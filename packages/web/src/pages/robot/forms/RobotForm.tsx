@@ -21,13 +21,7 @@ import { RobotStorageType, useLocalRobots } from '@/services/robotService'
 import { useCustomRoute } from '@/services/routerService'
 import { useAccess, useCurrentUser } from '@/services/userService'
 
-import {
-  robotEmitter,
-  feishuExtraAuthenticationTips,
-  MessageRobotFormData,
-  required,
-  useRobotEditForm,
-} from '../common'
+import { robotEmitter, MessageRobotFormData, required, useRobotEditForm } from '../common'
 import RobotMessage from './RobotMessage'
 
 const dingtalkPrefix = 'https://oapi.dingtalk.com/robot/send?access_token='
@@ -96,24 +90,32 @@ export default function RobotForm(): RC {
     }
   }
 
+  const robotRefresh = async (type: RobotStorageType, companyId?: string, robotId?: string) => {
+    if (type === RobotStorageType.USER) {
+      await mutate(`/message-robot/current`)
+      await mutate(`/message-robot/current/${robotId}`)
+    } else if (type === RobotStorageType.COMPANY) {
+      await mutate(`/message-robot/company/${companyId}/robot`)
+      await mutate(`/message-robot/current/${companyId}/robot/${robotId}`)
+      robotEmitter.emit('companyRefresh', companyId!)
+    }
+  }
+
   const addRobotHandler = async (robotFormResult: MessageRobotFormData) => {
     const { __storageType, __companyId, ...robotData } = robotFormResult
 
     setLoading(true)
     try {
-      if (__storageType === RobotStorageType.LOCAL) {
-        const newRobot = addLocalRobot(robotData)
-        select(RobotStorageType.LOCAL, null, newRobot.id)
-      } else if (__storageType === RobotStorageType.USER) {
-        const newRobot = await addUserRobotApi(robotData)
-        await mutate(`/message-robot/current`)
-        select(RobotStorageType.USER, null, newRobot.id)
-      } else if (__storageType === RobotStorageType.COMPANY) {
-        const newRobot = await addCompanyRobotApi(__companyId!, robotData)
-        await mutate(`/message-robot/company/${__companyId}/robot`)
-        robotEmitter.emit('companyRefresh', __companyId!)
-        select(RobotStorageType.COMPANY, __companyId!, newRobot.id)
-      }
+      const newRobot =
+        __storageType === RobotStorageType.LOCAL
+          ? addLocalRobot(robotData)
+          : __storageType === RobotStorageType.USER
+            ? await addUserRobotApi(robotData)
+            : await addCompanyRobotApi(__companyId!, robotData)
+
+      await robotRefresh(__storageType!, companyId, newRobot.id)
+
+      select(__storageType!, __companyId || null, newRobot.id)
     } finally {
       setLoading(false)
     }
@@ -124,19 +126,16 @@ export default function RobotForm(): RC {
 
     setLoading(true)
     try {
-      if (__storageType === RobotStorageType.LOCAL) {
-        const newRobot = editLocalRobot(robotData)
-        setRobot({ ...newRobot, __storageType })
-      } else if (__storageType === RobotStorageType.USER) {
-        const newRobot = await editUserRobotApi(robotData)
-        await mutate(`/message-robot/current`)
-        setRobot({ ...newRobot, __storageType })
-      } else if (__storageType === RobotStorageType.COMPANY) {
-        const newRobot = await editCompanyRobotApi(__companyId!, robotData)
-        await mutate(`/message-robot/company/${__companyId}/robot`)
-        robotEmitter.emit('companyRefresh', __companyId!)
-        setRobot({ ...newRobot, __storageType, __companyId })
-      }
+      const newRobot =
+        __storageType === RobotStorageType.LOCAL
+          ? editLocalRobot(robotData)
+          : __storageType === RobotStorageType.USER
+            ? await editUserRobotApi(robotData)
+            : await editCompanyRobotApi(__companyId!, robotData)
+
+      await robotRefresh(__storageType!, companyId, newRobot.id)
+
+      setRobot({ ...newRobot, __storageType, __companyId })
     } finally {
       setLock(true)
       setLoading(false)
@@ -215,10 +214,33 @@ export default function RobotForm(): RC {
 
           {robotType === MessageRobotType.FEISHU ? (
             <>
+              <Alert
+                className="mt-4"
+                style={{ padding: '12px' }}
+                theme="info"
+                title="关于 AppId 和 AppSecret"
+                message={
+                  <>
+                    飞书发送图片和“@用户”需要
+                    <a
+                      className="mx-1 text-[var(--brand-main)]"
+                      href="https://open.feishu.cn/app?lang=zh-CN"
+                      target="_blank"
+                    >
+                      点此链接
+                    </a>
+                    创建平台应用，在下方填入平台应用的 AppId 和 AppSecret。
+                    <br />
+                    在“开发配置”→“权限管理”中给应用开通“获取与上传图片或文件资源”权限，机器人才可以发送图片；给应用开通“通过手机号或邮箱获取用户
+                    ID”和“获取用户 user ID”权限，机器人才能“@用户”。
+                  </>
+                }
+              />
+
               <FormItem
                 name={['extraAuthentication', 'feishuUploadAppId']}
                 label="飞书 AppId"
-                help={feishuExtraAuthenticationTips}
+                help="用于上传图片，用不到图片功能则可不填"
               >
                 <Input />
               </FormItem>
@@ -226,7 +248,7 @@ export default function RobotForm(): RC {
               <FormItem
                 name={['extraAuthentication', 'feishuUploadAppSecret']}
                 label="飞书 AppSecret"
-                help={feishuExtraAuthenticationTips}
+                help="同上，如果用不到图片功能则可不填"
               >
                 <Input />
               </FormItem>

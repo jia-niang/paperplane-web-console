@@ -30,9 +30,7 @@ export class DailyOffworkSenderService {
       })
     }
 
-    await this.robot.sendImageByRobotId(robotSetting.messageRobotId, imageUrl, {
-      atAll: true,
-      dingtalkTitle: '下班了',
-    })
+    await this.robot.sendTextByRobotId(robotSetting.messageRobotId, { text: `下班了`, atAll: true })
+    await this.robot.sendImageByRobotId(robotSetting.messageRobotId, { imageUrl })
   }
 }

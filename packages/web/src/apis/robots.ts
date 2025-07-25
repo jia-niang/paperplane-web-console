@@ -42,38 +42,26 @@ export async function deleteCompanyRobotApi(companyId: string, robotId: string) 
   return client.delete(`/message-robot/company/${companyId}/robot/${robotId}`)
 }
 
-export async function sendRobotMessageApi(type: MessageRobotType, body: object, authBody: IMessageRobotAuth) {
-  return client.post('/message-robot/custom-send', { type, body, auth: authBody })
+export async function sendRobotMessageApi(type: MessageRobotType, auth: IMessageRobotAuth, json: object) {
+  return client.post('/message-robot/custom/send', { type, auth, json })
 }
 
-export async function universalSendRobotTextMessageApi(
+export async function sendRobotMessageTextApi(type: MessageRobotType, auth: IMessageRobotAuth, body: ITextMessageBody) {
+  return client.post('/message-robot/custom/send/text', { ...body, type, auth })
+}
+
+export async function sendRobotMessageMarkdownApi(
   type: MessageRobotType,
-  text: string,
-  authBody: IMessageRobotAuth,
-  atList: string[],
-  atAll?: boolean
+  auth: IMessageRobotAuth,
+  body: IMarkdownMessageBody
 ) {
-  let messageBody = {}
+  return client.post('/message-robot/custom/send/markdown', { ...body, type, auth })
+}
 
-  if (type === MessageRobotType.DINGTALK) {
-    messageBody = {
-      msgtype: 'text',
-      text: { content: text },
-      at: { atMobiles: atList, isAtAll: atAll },
-    }
-  } else if (type === MessageRobotType.WXBIZ) {
-    messageBody = {
-      msgtype: 'text',
-      text: { content: text, mentioned_mobile_list: atAll ? ['@all'] : atList },
-    }
-  } else if (type === MessageRobotType.FEISHU) {
-    messageBody = {
-      msg_type: 'text',
-      content: { text: atAll ? `${text} <at user_id="all">所有人</at>` : text },
-    }
-  } else {
-    throw new Error('机器人类型错误')
-  }
+export async function sendRobotImageApi(type: MessageRobotType, auth: IMessageRobotAuth, body: IImageMessageBody) {
+  return client.post('/message-robot/custom/send/image', { ...body, type, auth })
+}
 
-  return sendRobotMessageApi(type, messageBody, authBody)
+export async function robotUploadPresignImageApi(ext: string): Promise<{ preSignUrl: string; publicUrl: string }> {
+  return client.post('/message-robot/custom/upload-presign/image', { ext })
 }
