@@ -18,7 +18,10 @@ export default function HomePage(): RC {
     <PageLayout>
       <div className="mb-[-60px] mr-[-60px]">
         <HomeEntryCard iconImage={openAiIcon} bgImage={openAiBg} href="/gpt">
-          <div className="text-decoration-none ml-[18px] text-[40px] text-white">GPT-4o</div>
+          <div className="text-decoration-none ml-[18px] text-center text-white">
+            <div className="text-[34px]">生成式 AI</div>
+            <div className="text-[20px]">GPT 5 Chat</div>
+          </div>
         </HomeEntryCard>
 
         <HomeEntryCard iconImage={robotIcon} bgImage={robotBg} href="/robot">

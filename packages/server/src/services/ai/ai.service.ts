@@ -38,6 +38,11 @@ export class AiService {
   }
 
   async multipleChat(prompt: string, n = 1, options?: IAiChatOptions) {
+    const temperatureArray = n === 1 ? [1] : n === 2 ? [1, 1.3] : [0.5, 1, 1.5]
+    if (process.env.AI_PARAM_N_FALLBACK_PARALLEL) {
+      return Promise.all(temperatureArray.map(temperature => this.chat(prompt, { ...options, temperature })))
+    }
+
     return this.client.chat.completions
       .create({
         ...options,

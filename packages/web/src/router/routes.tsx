@@ -33,7 +33,7 @@ const routerConfig: RouteObjectType[] = handleRouteTree([
 
       {
         path: 'gpt',
-        title: 'GPT-4o',
+        title: '生成式 AI',
         element: lazy(() => import('@/pages/gpt')),
       },
 
