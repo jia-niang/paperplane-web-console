@@ -132,33 +132,12 @@ pnpm build
 
 ## 关于基础镜像
 
-因为使用到 `puppeteer`、`git` 等工具，对运行环境有要求，Node.js 基础镜像无法满足需求，需要使用特定的基础镜像来运行。
-注意，请不要使用 `-slim`、`-alpine` 类型的镜像，它们缺少一些指令（例如 `ps`）会导致某些功能运行时报错。
+因为使用到 `puppeteer`、`canvas` 等工具，对运行环境有要求，Node.js 基础镜像无法满足需求，需要使用特定的基础镜像来运行。
+注意，直接使用 `-slim`、`-alpine` 类型的镜像时，可能会因为缺少一些命令导致某些功能运行时报错，例如 `slim` 镜像缺少 `ps` 命令，会导致 `git` 运行出错。
 
-在文件 `Dockerfile` 中可以看到使用 [`paperplanecc/paperplane-api-base`](https://hub.docker.com/r/paperplanecc/paperplane-api-base) 作为基础镜像。  
+在文件 `Dockerfile` 中可以看到使用 [`paperplanecc/baseline-node20-puppeteer`](https://hub.docker.com/r/paperplanecc/baseline-node20-puppeteer) 作为基础镜像。  
 此镜像是专门为本项目准备、已事前构建好的。
 
-也可以自行构建基础镜像，此处给出基础镜像的构建方式：
-
-```Dockerfile
-FROM node:20.13.0
-
-RUN apt-get update
-
-RUN apt-get install -y git
-
-RUN apt-get install -y chromium --no-install-recommends
-
-RUN apt-get install -y fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf fonts-noto-color-emoji  --no-install-recommends
-
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
-ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium
-
-RUN npm i -g pnpm
-```
-
-构建的步骤中需要访问 Google，请确保具备国际互联网访问能力。  
 因为 Chrome 在非 macOS 的 arm64 平台没有提供二进制包，所以使用 Chromium 浏览器。
 
 ## macOS 的 Docker 问题

@@ -18,7 +18,7 @@ trigger:
 
 steps:
   - name: prepare
-    image: node:20.13.0
+    image: paperplanecc/baseline-node20:1.0.0
     commands:
       - npx -y docker-deps
 
