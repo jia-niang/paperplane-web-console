@@ -7,11 +7,16 @@
 
 services:
   paperplane-web-console-local:
-    image: paperplanecc/paperplane-api-base:1.2.0
+    image: paperplanecc/baseline-node20-puppeteer:1.0.0
     container_name: paperplane-web-console-local
     working_dir: /paperplane-web-console
+    init: true
+    cap_add:
+      - SYS_ADMIN
     volumes:
       - ./:/paperplane-web-console:cached
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     ports:
       - '6100:6100'
       - '6200:6200'
