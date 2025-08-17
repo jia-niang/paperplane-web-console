@@ -1,4 +1,4 @@
-FROM paperplanecc/paperplane-api-base:1.2.0
+FROM paperplanecc/baseline-node20-puppeteer:1.0.0
 
 EXPOSE 6100
 WORKDIR /paperplane-web-console
