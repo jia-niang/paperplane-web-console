@@ -22,6 +22,5 @@
     "db:migrate": { "cache": false },
     "db:deploy": { "cache": false }
   },
-  "envMode": "loose",
-  "dangerouslyDisablePackageManagerCheck": true
+  "envMode": "loose"
 }
