@@ -9,14 +9,14 @@ datasource db {
 
 // ##################### 用户与身份 #####################
 
-// 身份
+/// 用户身份
 enum Role {
   ADMIN
   STAFF
   USER
 }
 
-// 用户
+/// 用户
 model User {
   id String @id @default(cuid())
 
@@ -37,15 +37,19 @@ model User {
 
 // ##################### 业务管理 #####################
 
-// 工作日特殊配置
+/// 工作日特殊配置
 enum CompanyWorkdayType {
+  /// 默认，即双休
   DEFAULT
+  /// 将周六添加为工作日
   ADD_SAT
+  /// 将周日添加为工作日
   ADD_SUN
+  /// 将周末两天均添加为工作日
   ADD_WEEKEND
 }
 
-// 公司
+/// 公司
 model Company {
   id               String             @id @default(cuid())
   company          String
@@ -66,7 +70,7 @@ model Company {
   deletedAt DateTime?
 }
 
-// 工作地点
+/// 工作地点
 model Workplace {
   id           String  @id @default(cuid())
   city         String
@@ -89,20 +93,24 @@ model Workplace {
   @@map("City")
 }
 
-// 消息机器人类型
+/// 消息机器人类型
 enum MessageRobotType {
+  /// 钉钉
   DINGTALK
+  /// 企业微信
   WXBIZ
+  /// 飞书
   FEISHU
 }
 
-// 消息机器人
+/// 消息机器人
 model MessageRobot {
   id                  String           @id @default(cuid())
   name                String
   type                MessageRobotType
   accessToken         String?
   secret              String?
+  /// 额外配置，例如飞书用的发图鉴权
   extraAuthentication Json?
   desc                String?
 
@@ -121,11 +129,12 @@ model MessageRobot {
 
 // ##################### 每日下班提醒 #####################
 
-// 工作日流水记录
+/// 工作日流水记录
 model WorkdayRecord {
   id              String  @id @default(cuid())
   date            String
   isWorkDay       Boolean
+  /// 是否是普通周末，即会受公司 "workdayOption" 字段控制，可能被当做工作日处理
   isNormalWeekend Boolean @default(false)
 
   allCompanyRecords     DailyCompanyRecord[]
@@ -137,7 +146,7 @@ model WorkdayRecord {
   deletedAt DateTime?
 }
 
-// 每日公司状况记录
+/// 每日公司状况记录
 model DailyCompanyRecord {
   id             String  @id @default(cuid())
   salaryDate     String?
@@ -158,7 +167,7 @@ model DailyCompanyRecord {
   deletedAt DateTime?
 }
 
-// 每日工作地点状况记录
+/// 每日工作地点状况记录
 model DailyWorkplaceRecord {
   id                  String  @id @default(cuid())
   todayWeather        String?
@@ -189,7 +198,7 @@ model DailyWorkplaceRecord {
   @@map("DailyCityRecord")
 }
 
-// Offwork 视图记录表
+/// Offwork 视图记录表
 model OffworkViewRecord {
   id              String @id @default(cuid())
   date            String
@@ -215,7 +224,7 @@ model OffworkViewRecord {
   deletedAt DateTime?
 }
 
-// Offwork 公司-地点-机器人配置表
+/// Offwork 公司-地点-机器人配置表
 model OffworkNoticeSetting {
   id       String  @id @default(cuid())
   disabled Boolean @default(false)
@@ -234,7 +243,7 @@ model OffworkNoticeSetting {
   deletedAt DateTime?
 }
 
-// Offwork 订阅的邮件列表
+/// Offwork 订阅的邮件列表
 model OffworkNoticeMailSubscription {
   id       String  @id @default(cuid())
   disabled Boolean @default(false)
@@ -251,7 +260,7 @@ model OffworkNoticeMailSubscription {
 
 // ##################### Git 智能周报 #####################
 
-// Git 仓库状态
+/// Git 仓库状态
 enum GitCommonStatus {
   INIT
   READY
@@ -259,7 +268,7 @@ enum GitCommonStatus {
   ERROR
 }
 
-// Git 项目
+/// Git 项目
 model GitProject {
   id String @id @default(cuid())
 
@@ -277,7 +286,7 @@ model GitProject {
   GitReport GitReport[]
 }
 
-// Git 仓库
+/// Git 仓库
 model GitRepo {
   id String @id @default(cuid())
 
@@ -296,7 +305,7 @@ model GitRepo {
   gitProjectId String?
 }
 
-// Git 用户
+/// Git 用户
 model GitStaff {
   id String @id @default(cuid())
 
@@ -313,7 +322,7 @@ model GitStaff {
   GitReport    GitReport[]
 }
 
-// Git 提交记录
+/// Git 提交记录
 model GitCommit {
   id String @id @default(cuid())
 
@@ -332,7 +341,7 @@ model GitCommit {
   gitRepoId String?
 }
 
-// Git 报告
+/// Git 报告
 model GitReport {
   id String @id @default(cuid())
 
@@ -350,15 +359,19 @@ model GitReport {
 
 // ##################### 短网址 #####################
 
-// 短网址类型
+/// 短网址级别
 enum ShortsType {
+  /// 系统级别
   SYSTEM
+  /// 每日下班提醒专用
   OFFWORK
+  /// 网站别名，即手动提供短网址 Key
   ALIAS
+  /// 由用户提交
   USER
 }
 
-// 短网址记录
+/// 短网址记录
 model Shorts {
   id String @id @default(cuid())
 
