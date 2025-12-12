@@ -1,4 +1,4 @@
-FROM paperplanecc/baseline-node20-puppeteer:1.0.0
+FROM paperplanecc/baseline-node20-puppeteer:2025.11.30
 
 EXPOSE 6100
 WORKDIR /paperplane-web-console
