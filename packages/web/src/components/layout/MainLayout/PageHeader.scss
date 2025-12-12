@@ -1,11 +1,13 @@
 .header__headerbar {
   position: relative;
-  display: flex;
   flex-wrap: wrap;
+  height: 120px;
   margin: 0 auto;
   border-radius: 6px;
-  justify-content: center;
-  align-items: center;
+  display: flow-root;
+  text-align: center;
+  color: #fff;
+  user-select: none;
   background: #d46d72;
   background-image: linear-gradient(90deg, #963db3, #bf3caf, #e3419e, #fe4b83, #ff5e64, #ff7747);
 
@@ -20,16 +22,5 @@
     clip-path: polygon(50px 0, 40px 100%, 60px 100%);
     background: #d46d72;
     background-image: linear-gradient(90deg, #963db3, #bf3caf, #e3419e, #fe4b83, #ff5e64, #ff7747);
-  }
-
-  &__atropos {
-    display: inline-block;
-    width: 960px;
-    height: 120px;
-    display: inline-block;
-    text-align: center;
-    padding: 0 20px;
-    color: #fff;
-    user-select: none;
   }
 }

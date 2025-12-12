@@ -16,7 +16,7 @@ export default function CustomBreadcrumb(): RC {
   const breadcrumbs = useCurrentBreadcrumbs()
 
   return (
-    <Breadcrumb className="header__breadcrumb justify-center py-[10px]" maxItemWidth="120px">
+    <Breadcrumb className="header__breadcrumb justify-center pt-[10px]" maxItemWidth="120px">
       {breadcrumbs.map(item => {
         return (
           <BreadcrumbItem

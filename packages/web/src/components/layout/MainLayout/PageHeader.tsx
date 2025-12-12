@@ -1,4 +1,3 @@
-import Atropos from 'atropos/react'
 import { motion, AnimatePresence } from 'motion/react'
 import { NavLink, useLocation } from 'react-router'
 import { Link, Space } from 'tdesign-react'
@@ -49,49 +48,40 @@ export default function PageHeader(): RC {
         </div>
 
         <div className="header__headerbar">
-          <Atropos
-            shadow={false}
-            duration={150}
-            activeOffset={10}
-            highlight={false}
-            className="header__headerbar__atropos"
+          <motion.div
+            key="title"
+            initial={{
+              fontFamily: 'swift',
+              fontSize: '50px',
+              lineHeight: '50px',
+              margin: '35px 0 35px',
+            }}
+            animate={
+              isHomepage && !pageHeader.toolbar
+                ? undefined
+                : {
+                    fontSize: '40px',
+                    lineHeight: '40px',
+                    margin: '18px 0 8px',
+                  }
+            }
           >
-            <motion.div
-              key="title"
-              initial={{
-                fontFamily: 'swift',
-                fontSize: '50px',
-                lineHeight: '50px',
-                margin: '35px 0 35px',
-              }}
-              animate={
-                isHomepage && !pageHeader.toolbar
-                  ? undefined
-                  : {
-                      fontSize: '40px',
-                      lineHeight: '40px',
-                      margin: '18px 0 8px',
-                    }
-              }
-            >
-              <NavLink to="/">PaperPlane Web Console</NavLink>
-            </motion.div>
+            <NavLink to="/">PaperPlane Web Console</NavLink>
+          </motion.div>
+          <AnimatePresence>
+            {pageHeader.toolbar ? (
+              <motion.div
+                className="overflow-hidden"
+                initial={{ maxHeight: '0px' }}
+                animate={{ maxHeight: '60px' }}
+                exit={{ maxHeight: '0px' }}
+              >
+                {pageHeader.toolbar}
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
 
-            <AnimatePresence>
-              {pageHeader.toolbar ? (
-                <motion.div
-                  className="overflow-hidden"
-                  initial={{ maxHeight: '0px' }}
-                  animate={{ maxHeight: '60px' }}
-                  exit={{ maxHeight: '0px' }}
-                >
-                  {pageHeader.toolbar}
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
-
-            <CustomBreadcrumb />
-          </Atropos>
+          <CustomBreadcrumb />
         </div>
       </div>
     </header>
